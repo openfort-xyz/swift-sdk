@@ -26,3 +26,9 @@ public class Openfort {
         fatalError("Not implemented yet")
     }
 }
+
+private extension Openfort {
+    func authManager() -> AuthManagerProtocol {
+        fatalError("")
+    }
+}
