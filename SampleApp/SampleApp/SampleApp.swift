@@ -1,5 +1,5 @@
 //
-//  SampleAppApp.swift
+//  SampleApp.swift
 //  SampleApp
 //
 //  Created by Marc Flores on 22/5/25.

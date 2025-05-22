@@ -1,6 +1,8 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
-public struct Openfort {
-    public static let text = "Hello Openfort!"
+public class Openfort {
+    public init(_ sdkConfiguration: OpenfortSDKConfiguration) {
+        
+    }
 }
