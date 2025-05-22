@@ -16,7 +16,8 @@ struct ContentView: View {
             ),
             shieldConfiguration: .init(
                 shieldPublishableKey: "56ca3248-d8a4-499c-b07b-aa9d50a2b577",
-                shieldEncryptionKey: "ApIULM96wggoEnYQ5x+TO5KRiYiHZdcNQ7wKtV1dvulp"
+                shieldEncryptionKey: "ApIULM96wggoEnYQ5x+TO5KRiYiHZdcNQ7wKtV1dvulp",
+                debug: true
             )
         )
     )
