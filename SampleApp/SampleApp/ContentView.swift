@@ -30,6 +30,16 @@ struct ContentView: View {
             Text("Hi there")
         }
         .padding()
+        .task {
+            do {
+                _ = try await openfort.signUpWith(
+                    email: ObscuredConstants.Auth.username,
+                    password: ObscuredConstants.Auth.password
+                )
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 
