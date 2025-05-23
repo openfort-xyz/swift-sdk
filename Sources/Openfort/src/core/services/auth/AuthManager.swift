@@ -12,12 +12,20 @@ protocol AuthManagerProtocol {
         email: String,
         password: String,
         ecosystemGame: String?
-    ) async throws -> AuthResponse
+    ) async throws
 }
 
 final class AuthManager: AuthManagerProtocol {
-    func loginEmailPassword(email: String, password: String, ecosystemGame: String?) async throws -> AuthResponse {
-        fatalError("Not implemented yet")
+    
+    private let backendAPI = BackendAPIClient()
+    
+    func loginEmailPassword(email: String, password: String, ecosystemGame: String?) async throws {
+        try await backendAPI.authentication(
+            .login(
+                username: email,
+                password: password
+            )
+        )
     }
     
     init(publishableKey: String, openfortURL: String) {

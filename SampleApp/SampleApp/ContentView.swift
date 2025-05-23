@@ -32,7 +32,7 @@ struct ContentView: View {
         .padding()
         .task {
             do {
-                _ = try await openfort.signUpWith(
+                try await openfort.logInWith(
                     email: ObscuredConstants.Auth.username,
                     password: ObscuredConstants.Auth.password
                 )

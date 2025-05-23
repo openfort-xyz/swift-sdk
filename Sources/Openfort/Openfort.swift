@@ -1,13 +1,18 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
 
 public class Openfort {
+    
+    private lazy var authManager = AuthManager(publishableKey: "", openfortURL: "")
+    
     public init(_ sdkConfiguration: OpenfortSDKConfiguration) {
         
     }
     
-    public func logInWith(email: String, password: String) async throws -> Bool {
-        fatalError("Not implemented yet")
+    public func logInWith(email: String, password: String) async throws {
+        try await authManager.loginEmailPassword(
+            email: email,
+            password: password,
+            ecosystemGame: nil
+        )
     }
     
     public func signUpWith(email: String, password: String) async throws -> Bool {
@@ -24,11 +29,5 @@ public class Openfort {
     
     public func exportPrivateKey() async throws -> String {
         fatalError("Not implemented yet")
-    }
-}
-
-private extension Openfort {
-    func authManager() -> AuthManagerProtocol {
-        fatalError("")
     }
 }

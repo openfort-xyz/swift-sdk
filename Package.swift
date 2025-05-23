@@ -14,14 +14,19 @@ let package = Package(
             name: "Openfort",
             targets: ["Openfort"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.0.0")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Openfort"),
+            name: "Openfort",
+            dependencies: ["Alamofire"]
+        ),
         .testTarget(
             name: "OpenfortTests",
             dependencies: ["Openfort"]
-        ),
+        )
     ]
 )
