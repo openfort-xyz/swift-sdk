@@ -11,9 +11,9 @@ enum AuthenticationAPI: BaseRequest {
 
     var parameters: [String : any Sendable]? {
         switch self {
-        case .login(let username, let password):
+        case .login(let email, let password):
             [
-                "email": username,
+                "email": email,
                 "password": password
             ]
         default:
@@ -24,6 +24,7 @@ enum AuthenticationAPI: BaseRequest {
     var path: String {
         switch self {
         case .login: C.Urls.base + "iam/v1/password/login"
+        case .getUser: C.Urls.base + "iam/v1/me"
         }
     }
     
@@ -31,9 +32,11 @@ enum AuthenticationAPI: BaseRequest {
     var method: HTTPMethod {
         switch self {
         case .login: .post
+        default: .get
         }
     }
     
     
-    case login(username: String, password: String)
+    case login(email: String, password: String)
+    case getUser
 }

@@ -10,31 +10,33 @@ import Foundation
 
 
 protocol NetworkWrapperProtocol {
-    func request(_ request: BaseRequest) async throws
+    func request<D: Decodable>(_ request: BaseRequest) async throws -> D where D : Sendable
 }
 
 final class NetworkWrapper: NetworkWrapperProtocol, @unchecked Sendable {
     private var session: Session!
     private let config: OpenfortSDKConfiguration
+    private let secured: SecuredServiceProtocol
     
-    init(config: OpenfortSDKConfiguration) {
+    init(config: OpenfortSDKConfiguration, secured: SecuredServiceProtocol) {
         self.config = config
+        self.secured = secured
         self.session = Session(
             configuration: URLSessionConfiguration.af.default,
             interceptor: self
         )
     }
     
-    func request(_ request: BaseRequest) async throws {
+    func request<D: Decodable>(_ request: any BaseRequest) async throws -> D where D: Sendable {
         let urlRequest = try request.asURLRequest()
         return try await withCheckedThrowingContinuation { continuation in
             session.request(urlRequest)
                 .validate()
-                .response { response in
+                .responseDecodable(of: D.self) { response in
                     self.printBody(data: response.data, request: request)
                     switch response.result {
                     case .success(let data):
-                        continuation.resume(with: .success(()))
+                        continuation.resume(with: .success((data)))
                         
                     case .failure(let error):
                         continuation.resume(throwing: error)
@@ -51,6 +53,14 @@ extension NetworkWrapper: RequestInterceptor {
             name: "Authorization",
             value: "Bearer \(config.baseConfiguration.publishableKey)"
         )
+        
+        if let auth = secured.getAuth() {
+            request.headers.add(
+                name: "X-Player-Token",
+                value: auth.token
+            )
+        }
+        
         completion(.success(request))
     }
 }

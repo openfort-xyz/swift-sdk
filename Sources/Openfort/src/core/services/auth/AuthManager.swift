@@ -18,17 +18,19 @@ protocol AuthManagerProtocol {
 final class AuthManager: AuthManagerProtocol {
     
     private let config: OpenfortSDKConfiguration
+    private let secured = SecuredService()
     private lazy var backendAPI = BackendAPIClient(
-        config: config
+        config: config,
+        secured: secured
     )
     
     func loginEmailPassword(email: String, password: String, ecosystemGame: String?) async throws {
-        try await backendAPI.authentication(
-            .login(
-                username: email,
-                password: password
-            )
+        let result = try await backendAPI.loginWith(
+            email: email,
+            password: password
         )
+        secured.setAuth(data: result)
+        let user = try await backendAPI.getUser()
     }
     
     init(config: OpenfortSDKConfiguration) {

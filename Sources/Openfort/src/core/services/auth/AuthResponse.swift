@@ -7,31 +7,25 @@
 
 import Foundation
 
-public struct AuthResponse: Codable {
-    let player: AuthPlayerResponse
-    let token: String
-    let refreshToken: String
-}
-
-public struct LinkedAccountResponse: Codable {
+public struct LinkedAccountResponse: Codable, Sendable {
     let provider: AuthProvider
     let email: String?
-    let externalUserId: String
+    let externalUserId: String?
     let verified: Bool?
-    let disabled: Bool
-    let walletClientType: String
+    let disabled: Bool?
+    let walletClientType: String?
     let connectorType: String?
     let updatedAt: Double?
     let address: String?
 }
 
-public struct AuthPlayerResponse: Codable {
+public struct AuthPlayerResponse: Codable, Sendable {
     let player: AuthPlayerResponse.Player?
     let id: String
     let createdAt: Double
     let linkedAccounts: [LinkedAccountResponse]
     
-    public struct Player: Codable {
+    public struct Player: Codable, Sendable {
         let id: String
         let createdAt: Double
         let name: String
