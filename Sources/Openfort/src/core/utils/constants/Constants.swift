@@ -9,6 +9,6 @@ import Foundation
 
 enum C {
     enum Urls {
-        static let base = "https://api.openfort.xyz"
+        static let base = "https://api.openfort.xyz/"
     }
 }

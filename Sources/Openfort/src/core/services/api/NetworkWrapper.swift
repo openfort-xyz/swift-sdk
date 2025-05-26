@@ -13,12 +13,15 @@ protocol NetworkWrapperProtocol {
     func request(_ request: BaseRequest) async throws
 }
 
-final class NetworkWrapper: NetworkWrapperProtocol {
+final class NetworkWrapper: NetworkWrapperProtocol, @unchecked Sendable {
     private var session: Session!
+    private let config: OpenfortSDKConfiguration
     
-    init() {
+    init(config: OpenfortSDKConfiguration) {
+        self.config = config
         self.session = Session(
-            configuration: URLSessionConfiguration.af.default
+            configuration: URLSessionConfiguration.af.default,
+            interceptor: self
         )
     }
     
@@ -28,16 +31,27 @@ final class NetworkWrapper: NetworkWrapperProtocol {
             session.request(urlRequest)
                 .validate()
                 .response { response in
+                    self.printBody(data: response.data, request: request)
                     switch response.result {
                     case .success(let data):
                         continuation.resume(with: .success(()))
                         
                     case .failure(let error):
-                        self.printBody(data: response.data, request: request)
                         continuation.resume(throwing: error)
                     }
                 }
         }
+    }
+}
+
+extension NetworkWrapper: RequestInterceptor {
+    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, any Error>) -> Void) {
+        var request = urlRequest
+        request.headers.add(
+            name: "Authorization",
+            value: "Bearer \(config.baseConfiguration.publishableKey)"
+        )
+        completion(.success(request))
     }
 }
 

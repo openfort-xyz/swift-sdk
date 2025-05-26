@@ -17,7 +17,10 @@ protocol AuthManagerProtocol {
 
 final class AuthManager: AuthManagerProtocol {
     
-    private let backendAPI = BackendAPIClient()
+    private let config: OpenfortSDKConfiguration
+    private lazy var backendAPI = BackendAPIClient(
+        config: config
+    )
     
     func loginEmailPassword(email: String, password: String, ecosystemGame: String?) async throws {
         try await backendAPI.authentication(
@@ -28,7 +31,7 @@ final class AuthManager: AuthManagerProtocol {
         )
     }
     
-    init(publishableKey: String, openfortURL: String) {
-        
+    init(config: OpenfortSDKConfiguration) {
+        self.config = config
     }
 }

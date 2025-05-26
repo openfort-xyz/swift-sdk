@@ -13,7 +13,7 @@ enum AuthenticationAPI: BaseRequest {
         switch self {
         case .login(let username, let password):
             [
-                "username": username,
+                "email": username,
                 "password": password
             ]
         default:
@@ -23,7 +23,7 @@ enum AuthenticationAPI: BaseRequest {
     
     var path: String {
         switch self {
-        case .login: C.Urls.base + "/iam/v1/oidc/login"
+        case .login: C.Urls.base + "iam/v1/password/login"
         }
     }
     

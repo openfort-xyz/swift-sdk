@@ -33,8 +33,8 @@ struct ContentView: View {
         .task {
             do {
                 try await openfort.logInWith(
-                    email: ObscuredConstants.Auth.username,
-                    password: ObscuredConstants.Auth.password
+                    email: "testing@fort.dev",
+                    password: "B3sF!JxJD3@727q"
                 )
             } catch {
                 print(error.localizedDescription)

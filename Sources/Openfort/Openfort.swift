@@ -1,10 +1,12 @@
 
 public class Openfort {
-    
-    private lazy var authManager = AuthManager(publishableKey: "", openfortURL: "")
+    private let config: OpenfortSDKConfiguration
+    private lazy var authManager = AuthManager(
+        config: config
+    )
     
     public init(_ sdkConfiguration: OpenfortSDKConfiguration) {
-        
+        self.config = sdkConfiguration
     }
     
     public func logInWith(email: String, password: String) async throws {

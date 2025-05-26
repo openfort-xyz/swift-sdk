@@ -11,7 +11,15 @@ protocol BackendAPIClientProtocol {
 
 final class BackendAPIClient: BackendAPIClientProtocol {
     
-    private let networkWrapper = NetworkWrapper()
+    private let config: OpenfortSDKConfiguration
+    
+    private lazy var networkWrapper = NetworkWrapper(
+        config: config
+    )
+    
+    init(config: OpenfortSDKConfiguration) {
+        self.config = config
+    }
     
     func authentication(_ request: AuthenticationAPI) async throws {
         try await networkWrapper.request(request)
