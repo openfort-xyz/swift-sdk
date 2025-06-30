@@ -218,6 +218,20 @@
                     encryptionSession: r
                 })
             }
+            
+            logInWithEmailPasswordSync({
+                email: t,
+                password: e,
+                ecosystemGame: r
+            }){
+                this.logInWithEmailPassword(t, e, r)
+                        .then(result => {
+                            window.webkit.messageHandlers.userHandler.postMessage({ success: true, data: result });
+                        })
+                        .catch(error => {
+                            window.webkit.messageHandlers.userHandler.postMessage({ success: false, error: error && error.message ? error.message : String(error) });
+                        });
+            }
             async logInWithEmailPassword({
                 email: t,
                 password: e,
@@ -227,6 +241,7 @@
                     n = await this.authManager.loginEmailPassword(t, e, r);
                 return "action" in n || (i && i.player !== n.player.id && this.logout(), new(0, m.Authentication)("jwt", n.token, n.player.id, n.refreshToken).save(this.storage)), n
             }
+            
             async signUpGuest() {
                 let t = m.Authentication.fromStorage(this.storage),
                     e = await this.authManager.registerGuest();
@@ -444,6 +459,7 @@
                 }
                 return this.iAuthManager
             }
+            
             async getUser() {
                 await this.validateAndRefreshToken();
                 let t = m.Authentication.fromStorage(this.storage);
