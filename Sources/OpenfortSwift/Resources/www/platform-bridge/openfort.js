@@ -219,19 +219,7 @@
                 })
             }
             
-            logInWithEmailPasswordSync({
-                email: t,
-                password: e,
-                ecosystemGame: r
-            }){
-                this.logInWithEmailPassword(t, e, r)
-                        .then(result => {
-                            window.webkit.messageHandlers.userHandler.postMessage({ success: true, data: result });
-                        })
-                        .catch(error => {
-                            window.webkit.messageHandlers.userHandler.postMessage({ success: false, error: error && error.message ? error.message : String(error) });
-                        });
-            }
+            
             async logInWithEmailPassword({
                 email: t,
                 password: e,
