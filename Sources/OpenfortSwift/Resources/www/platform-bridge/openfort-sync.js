@@ -22,3 +22,10 @@ window.logInWithEmailPasswordSync = function({ email, password, ecosystemGame })
 window.signUpGuestSync = function() {
     handleResult('signUpGuest', window.openfort.signUpGuest());
 };
+
+window.signUpWithEmailPasswordSync = function({ email, password, ecosystemGame }) {
+    handleResult(
+        'signUpWithEmailPassword',
+        window.openfort.signupEmailPassword(email, password, ecosystemGame)
+    );
+};
