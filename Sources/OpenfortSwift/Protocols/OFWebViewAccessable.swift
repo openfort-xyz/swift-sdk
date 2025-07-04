@@ -7,6 +7,6 @@
 import WebKit
 
 @MainActor
-protocol OFWebViewAccessable{
+public protocol OFWebViewAccessable{
     var webView: WKWebView? { get }
 }
