@@ -12,7 +12,7 @@ public protocol OFAuthorizable: OFWebViewAccessable {
 }
 
 extension OFAuthorizable {
-    public func loginWith(_ email: String, _ password: String, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
+    public func loginWith(_ email: String, _ password: String, completion: @escaping (Result<OFAuthorizationResponsable, Error>) -> Void) {
         let js = "window.logInWithEmailPasswordSync({email: '\(email)', password: '\(password)'})"
         self.webView?.evaluateJavaScript(js, completionHandler: { result, error in
             if let error = error {

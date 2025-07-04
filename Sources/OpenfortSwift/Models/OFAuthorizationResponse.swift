@@ -6,7 +6,7 @@
 //
 
 
-public struct OFAuthorizationResponse: Decodable {
+public struct OFAuthorizationResponse: Decodable, OFAuthorizationResponsable {
     // Common fields
     public let token: String?
     public let refreshToken: String?
