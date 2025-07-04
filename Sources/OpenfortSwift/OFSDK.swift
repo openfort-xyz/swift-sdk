@@ -13,10 +13,10 @@ open class OFSDK: NSObject, OFAuthorizable {
     private var coordinator = OFWebViewCoordinator()
     private var messageHandler = OFScriptMessageHandler()
 
-    var webView: WKWebView?
+    public var webView: WKWebView?
     
     @MainActor
-    override init () {
+    public override init () {
         super.init()
         self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
     }
