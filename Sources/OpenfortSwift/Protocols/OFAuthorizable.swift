@@ -12,23 +12,61 @@ public protocol OFAuthorizable: OFWebViewAccessable {
 }
 
 extension OFAuthorizable {
-    public func loginWith(_ email: String, _ password: String, completion: @escaping (Result<OFAuthorizationResponsable, Error>) -> Void) {
+    public func loginWith(_ email: String, _ password: String, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
         let js = "window.logInWithEmailPasswordSync({email: '\(email)', password: '\(password)'})"
-        self.webView?.evaluateJavaScript(js, completionHandler: { result, error in
+        evaluateAndDecode(js: js, errorDomain: "OFLoginWithEmailPasswordErrorDomain", completion: completion)
+    }
+    
+    func signUpGuest(completion: @escaping (Result<OFSignUpResponse?, Error>) -> Void) {
+        let js = "window.signUpGuestSync();"
+        evaluateAndDecode(js: js, errorDomain: "OFSingUpGestErrorDomain", completion: completion)
+    }
+    
+    func signUpWith(email: String, password: String, ecosystemGame: String?, completion: @escaping (Result<OFSignUpResponse, Error>) -> Void) {
+        var js = "window.signUpWithEmailPasswordSync({email: '\(email)', password: '\(password)'"
+        if let game = ecosystemGame {
+            js += ", ecosystemGame: '\(game)'"
+        }
+        js += "});"
+        evaluateAndDecode(js: js, errorDomain: "OFSignUpWithEmailPasswordErrorDomain", completion: completion)
+    }
+
+    func linkEmailPassword(email: String, password: String, authToken: String, ecosystemGame: String?, completion: @escaping (Result<OFLinkEmailPasswordResponse, Error>) -> Void) {
+        var js = "window.linkEmailPasswordSync({email: '\(email)', password: '\(password)', authToken: '\(authToken)'"
+        if let game = ecosystemGame {
+            js += ", ecosystemGame: '\(game)'"
+        }
+        js += "});"
+        evaluateAndDecode(js: js, errorDomain: "OFLinkEmailPasswordErrorDomain", completion: completion)
+    }
+    
+    private func evaluateAndDecode<T: Decodable>(
+        js: String,
+        errorDomain: String,
+        completion: @escaping (Result<T, Error>) -> Void
+    ) {
+        webView?.evaluateJavaScript(js) { result, error in
             if let error = error {
                 completion(.failure(error))
-            } else if let resultString = result as? String {
-                let data = Data(resultString.utf8)
+            } else if let result = result {
                 do {
-                    let response = try JSONDecoder().decode(OFAuthorizationResponse.self, from: data)
-                    completion(.success(response))
+                    let data: Data
+                    if let str = result as? String {
+                        data = Data(str.utf8)
+                    } else if let dict = result as? [String: Any] {
+                        data = try JSONSerialization.data(withJSONObject: dict, options: [])
+                    } else {
+                        completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected result type"])))
+                        return
+                    }
+                    let decoded = try JSONDecoder().decode(T.self, from: data)
+                    completion(.success(decoded))
                 } catch {
                     completion(.failure(error))
                 }
             } else {
-                let decodingError = NSError(domain: "OFAuthorizableErrorDomain", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid result type or unable to decode response"])
-                completion(.failure(decodingError))
+                completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No result received"])))
             }
-        })
+        }
     }
 }

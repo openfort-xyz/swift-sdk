@@ -29,3 +29,10 @@ window.signUpWithEmailPasswordSync = function({ email, password, ecosystemGame }
         window.openfort.signupEmailPassword(email, password, ecosystemGame)
     );
 };
+
+window.linkEmailPasswordSync = function({ email, password, authToken, ecosystemGame }) {
+    handleResult(
+        'linkEmailPassword',
+        window.openfort.linkEmailPassword(email, password, authToken, ecosystemGame)
+    );
+};
