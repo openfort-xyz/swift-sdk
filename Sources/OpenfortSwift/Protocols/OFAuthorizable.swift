@@ -40,6 +40,12 @@ extension OFAuthorizable {
         evaluateAndDecode(js: js, errorDomain: "OFLinkEmailPasswordErrorDomain", completion: completion)
     }
     
+    
+    func unlinkEmailPassword(email: String, authToken: String, completion: @escaping (Result<OFUnlinkEmailPasswordResponse, Error>) -> Void) {
+        let js = "window.unlinkEmailPasswordSync({email: '\(email)', authToken: '\(authToken)'})"
+        evaluateAndDecode(js: js, errorDomain: "OFUnlinkEmailPasswordErrorDomain", completion: completion)
+    }
+    
     private func evaluateAndDecode<T: Decodable>(
         js: String,
         errorDomain: String,

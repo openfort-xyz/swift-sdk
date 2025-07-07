@@ -36,3 +36,10 @@ window.linkEmailPasswordSync = function({ email, password, authToken, ecosystemG
         window.openfort.linkEmailPassword(email, password, authToken, ecosystemGame)
     );
 };
+
+window.unlinkEmailPasswordSync = function({ email, authToken }) {
+    handleResult(
+        'unlinkEmailPassword',
+        window.openfort.unlinkEmailPassword(email, authToken)
+    );
+};
