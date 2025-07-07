@@ -17,12 +17,12 @@ extension OFAuthorizable {
         evaluateAndDecode(js: js, errorDomain: "OFLoginWithEmailPasswordErrorDomain", completion: completion)
     }
     
-    func signUpGuest(completion: @escaping (Result<OFSignUpResponse?, Error>) -> Void) {
+    public func signUpGuest(completion: @escaping (Result<OFSignUpResponse?, Error>) -> Void) {
         let js = "window.signUpGuestSync();"
         evaluateAndDecode(js: js, errorDomain: "OFSingUpGestErrorDomain", completion: completion)
     }
     
-    func signUpWith(email: String, password: String, ecosystemGame: String?, completion: @escaping (Result<OFSignUpResponse, Error>) -> Void) {
+    public func signUpWith(email: String, password: String, ecosystemGame: String?, completion: @escaping (Result<OFSignUpResponse, Error>) -> Void) {
         var js = "window.signUpWithEmailPasswordSync({email: '\(email)', password: '\(password)'"
         if let game = ecosystemGame {
             js += ", ecosystemGame: '\(game)'"
@@ -31,7 +31,7 @@ extension OFAuthorizable {
         evaluateAndDecode(js: js, errorDomain: "OFSignUpWithEmailPasswordErrorDomain", completion: completion)
     }
 
-    func linkEmailPassword(email: String, password: String, authToken: String, ecosystemGame: String?, completion: @escaping (Result<OFLinkEmailPasswordResponse, Error>) -> Void) {
+    public func linkEmailPassword(email: String, password: String, authToken: String, ecosystemGame: String?, completion: @escaping (Result<OFLinkEmailPasswordResponse, Error>) -> Void) {
         var js = "window.linkEmailPasswordSync({email: '\(email)', password: '\(password)', authToken: '\(authToken)'"
         if let game = ecosystemGame {
             js += ", ecosystemGame: '\(game)'"
@@ -41,7 +41,7 @@ extension OFAuthorizable {
     }
     
     
-    func unlinkEmailPassword(email: String, authToken: String, completion: @escaping (Result<OFUnlinkEmailPasswordResponse, Error>) -> Void) {
+    public func unlinkEmailPassword(email: String, authToken: String, completion: @escaping (Result<OFUnlinkEmailPasswordResponse, Error>) -> Void) {
         let js = "window.unlinkEmailPasswordSync({email: '\(email)', authToken: '\(authToken)'})"
         evaluateAndDecode(js: js, errorDomain: "OFUnlinkEmailPasswordErrorDomain", completion: completion)
     }
