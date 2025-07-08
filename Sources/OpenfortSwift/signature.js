@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       shieldEncryptionKey: '/cC/ElEv1bCHxvbE/UUH+bLIf8nSLZOrxj8TkKChiY4=',
     },
   });
-
+    
   const auth = firebaseApp.auth();
 
   const signMessage = async (message) => {

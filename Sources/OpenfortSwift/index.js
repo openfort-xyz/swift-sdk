@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       shieldEncryptionKey: '/cC/ElEv1bCHxvbE/UUH+bLIf8nSLZOrxj8TkKChiY4=',
     },
   });
-    window.openfort = openfort;
+    
+  window.openfort = openfort;
+    
   const auth = firebaseApp.auth();
 
   const signInButton = document.getElementById('quickstart-sign-in');
