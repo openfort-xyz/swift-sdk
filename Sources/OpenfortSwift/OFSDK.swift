@@ -22,6 +22,6 @@ open class OFSDK: NSObject, OFAuthorizable {
     }
     
     private var contentUrl: URL {
-        Bundle.main.url(forResource: "index", withExtension: "html")!
+        Bundle.module.url(forResource: "index", withExtension: "html")!
     }
 }
