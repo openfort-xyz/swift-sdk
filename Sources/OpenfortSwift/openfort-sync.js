@@ -16,7 +16,7 @@ function handleResult(method, promise) {
 }
 
 window.logInWithEmailPasswordSync = function({ email, password, ecosystemGame }) {
-    handleResult('loginWithEmailPassword', window.openfort.loginWithEmailPassword({email: email, password: password, ecosystemGame: ecosystemGame }));
+    handleResult('loginWithEmailPassword', window.openfort.authInstance.logInWithEmailPassword({ email, password, ecosystemGame }));
 };
 
 window.signUpGuestSync = function() {
@@ -26,20 +26,20 @@ window.signUpGuestSync = function() {
 window.signUpWithEmailPasswordSync = function({ email, password, ecosystemGame }) {
     handleResult(
         'signUpWithEmailPassword',
-        window.openfort.signupEmailPassword(email, password, ecosystemGame)
+        window.openfort.authInstance.signupEmailPassword(email, password, ecosystemGame)
     );
 };
 
 window.linkEmailPasswordSync = function({ email, password, authToken, ecosystemGame }) {
     handleResult(
         'linkEmailPassword',
-        window.openfort.linkEmailPassword(email, password, authToken, ecosystemGame)
+        window.openfort.authInstance.linkEmailPassword(email, password, authToken, ecosystemGame)
     );
 };
 
 window.unlinkEmailPasswordSync = function({ email, authToken }) {
     handleResult(
         'unlinkEmailPassword',
-        window.openfort.unlinkEmailPassword(email, authToken)
+        window.openfort.authInstance.unlinkEmailPassword(email, authToken)
     );
 };
