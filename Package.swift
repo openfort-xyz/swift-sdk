@@ -20,7 +20,10 @@ let package = Package(
         .target(
             name: "OpenfortSwift",
             resources: [
-                    .process("index.html")
+                    .process("index.html"),
+                    .process("index.js"),
+                    .process("openfort.js"),
+                    .process("openfort-sync.js"),
                 ]
         ),
         
