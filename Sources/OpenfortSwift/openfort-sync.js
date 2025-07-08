@@ -15,8 +15,8 @@ function handleResult(method, promise) {
         });
 }
 
-window.logInWithEmailPasswordSync = function({ email, password }) {
-    handleResult('logInWithEmailPassword', window.openfort.logInWithEmailPassword({ email: email, password: password }));
+window.logInWithEmailPasswordSync = function({ email, password, ecosystemGame }) {
+    handleResult('logInWithEmailPassword', window.openfort.logInWithEmailPassword({ email: email, password: password ecosystemGame: ecosystemGame }));
 };
 
 window.signUpGuestSync = function() {
