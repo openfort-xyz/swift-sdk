@@ -16,7 +16,7 @@ function handleResult(method, promise) {
 }
 
 window.logInWithEmailPasswordSync = function({ email, password, ecosystemGame }) {
-    handleResult('loginWithEmailPassword', window.openfort.logInWithEmailPassword({email: email, password: password, ecosystemGame: ecosystemGame }));
+    handleResult('loginWithEmailPassword', window.openfort.loginWithEmailPassword({email: email, password: password, ecosystemGame: ecosystemGame }));
 };
 
 window.signUpGuestSync = function() {
