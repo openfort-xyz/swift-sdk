@@ -5,7 +5,7 @@
 //  Created by Pavel Gurkovskii on 2025-07-04.
 //
 
-public protocol OFAuthorizationResponsable: Decodable {
+public protocol OFAuthorizationResponseProtocol {
     var token: String? { get }
     var refreshToken: String? { get }
     var player: OFPlayerInfo? { get }
@@ -13,12 +13,12 @@ public protocol OFAuthorizationResponsable: Decodable {
     var details: OFAuthorizationResponse.ActionDetails? { get }
 }
 
-public protocol OFPlayerInfoResponsable: Decodable {
+public protocol OFPlayerInfoResponsable {
     var id: String? { get }
     var email: String? { get }
 }
 
-public struct OFAuthorizationResponse: OFAuthorizationResponsable {
+public struct OFAuthorizationResponse: OFAuthorizationResponseProtocol, Decodable {
     // Common fields
     public let token: String?
     public let refreshToken: String?
@@ -38,7 +38,7 @@ public struct OFAuthorizationResponse: OFAuthorizationResponsable {
     }
 }
 
-public struct OFPlayerInfo: OFPlayerInfoResponsable {
+public struct OFPlayerInfo: OFPlayerInfoResponsable, Decodable {
     public let id: String?
     public let email: String?
     // Add other fields as needed

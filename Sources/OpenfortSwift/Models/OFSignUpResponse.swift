@@ -5,7 +5,7 @@
 //  Created by Pavel Gurkovskii on 2025-07-04.
 //
 
-public protocol OFSignUpResponsable: Decodable {
+public protocol OFSignUpResponseProtocol {
     var token: String? { get }
     var refreshToken: String? { get }
     var player: OFPlayerInfo? { get }
@@ -14,7 +14,7 @@ public protocol OFSignUpResponsable: Decodable {
     
 }
 
-public struct OFSignUpResponse: OFSignUpResponsable {
+public struct OFSignUpResponse: OFSignUpResponseProtocol, Decodable {
     public let token: String?
     public let refreshToken: String?
     public let player: OFPlayerInfo?

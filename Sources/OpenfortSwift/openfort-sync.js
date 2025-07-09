@@ -43,3 +43,39 @@ window.unlinkEmailPasswordSync = function({ email, authToken }) {
         window.openfort.authInstance.unlinkEmailPassword(email, authToken)
     );
 };
+
+window.logOutSync = function() {
+    handleResult('logOut', window.openfort.authInstance.logOut());
+};
+
+window.getSessionSync = function() {
+    handleResult('getSession', window.openfort.authInstance.getSession());
+};
+
+window.sendPasswordResetEmailSync = function({ email }) {
+    handleResult('sendPasswordResetEmail', window.openfort.authInstance.sendPasswordResetEmail(email));
+};
+
+window.updatePasswordSync = function({ password }) {
+    handleResult('updatePassword', window.openfort.authInstance.updatePassword(password));
+};
+
+window.getUserSync = function() {
+    handleResult('getUser', window.openfort.authInstance.getUser());
+};
+
+window.sendVerificationEmailSync = function() {
+    handleResult('sendVerificationEmail', window.openfort.authInstance.sendVerificationEmail());
+};
+
+window.isUserVerifiedSync = function() {
+    handleResult('isUserVerified', window.openfort.authInstance.isUserVerified());
+};
+
+window.reauthenticateWithPasswordSync = function({ password }) {
+    handleResult('reauthenticateWithPassword', window.openfort.authInstance.reauthenticateWithPassword(password));
+};
+
+window.deleteUserSync = function() {
+    handleResult('deleteUser', window.openfort.authInstance.deleteUser());
+};
