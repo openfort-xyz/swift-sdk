@@ -44,10 +44,6 @@ window.unlinkEmailPasswordSync = function({ email, authToken }) {
     );
 };
 
-window.logOutSync = function() {
-    handleResult('logOut', window.openfort.authInstance.logOut());
-};
-
 window.getSessionSync = function() {
     handleResult('getSession', window.openfort.authInstance.getSession());
 };
@@ -78,4 +74,72 @@ window.reauthenticateWithPasswordSync = function({ password }) {
 
 window.deleteUserSync = function() {
     handleResult('deleteUser', window.openfort.authInstance.deleteUser());
+};
+
+window.resetPasswordSync = function({ email, newPassword }) {
+    handleResult('resetPassword', window.openfort.authInstance.resetPassword(email, newPassword));
+};
+
+window.requestResetPasswordSync = function({ email }) {
+    handleResult('requestResetPassword', window.openfort.authInstance.requestResetPassword(email));
+};
+
+window.requestEmailVerificationSync = function({ email }) {
+    handleResult('requestEmailVerification', window.openfort.authInstance.requestEmailVerification(email));
+};
+
+window.verifyEmailSync = function({ token }) {
+    handleResult('verifyEmail', window.openfort.authInstance.verifyEmail(token));
+};
+
+window.initOAuthSync = function({ provider }) {
+    handleResult('initOAuth', window.openfort.authInstance.initOAuth(provider));
+};
+
+window.unlinkOAuthSync = function({ provider }) {
+    handleResult('unlinkOAuth', window.openfort.authInstance.unlinkOAuth(provider));
+};
+
+window.loginWithIdTokenSync = function({ idToken }) {
+    handleResult('loginWithIdToken', window.openfort.authInstance.loginWithIdToken(idToken));
+};
+
+window.linkWalletSync = function({ walletAddress }) {
+    handleResult('linkWallet', window.openfort.authInstance.linkWallet(walletAddress));
+};
+
+window.logoutSync = function() {
+    handleResult('logout', window.openfort.authInstance.logout());
+};
+
+window.initLinkOAuthSync = function({ provider }) {
+    handleResult('initLinkOAuth', window.openfort.authInstance.initLinkOAuth(provider));
+};
+
+window.poolOAuthSync = function({ poolId }) {
+    handleResult('poolOAuth', window.openfort.authInstance.poolOAuth(poolId));
+};
+
+window.initSIWESync = function({ siweData }) {
+    handleResult('initSIWE', window.openfort.authInstance.initSIWE(siweData));
+};
+
+window.unlinkWalletSync = function({ walletAddress }) {
+    handleResult('unlinkWallet', window.openfort.authInstance.unlinkWallet(walletAddress));
+};
+
+window.linkThirdPartyProviderSync = function({ provider, credentials }) {
+    handleResult('linkThirdPartyProvider', window.openfort.authInstance.linkThirdPartyProvider(provider, credentials));
+};
+
+window.authenticateWithThirdPartyProviderSync = function({ provider, credentials }) {
+    handleResult('authenticateWithThirdPartyProvider', window.openfort.authInstance.authenticateWithThirdPartyProvider(provider, credentials));
+};
+
+window.authenticateWithSIWESync = function({ siweData }) {
+    handleResult('authenticateWithSIWE', window.openfort.authInstance.authenticateWithSIWE(siweData));
+};
+
+window.storeCredentialsSync = function({ credentials }) {
+    handleResult('storeCredentials', window.openfort.authInstance.storeCredentials(credentials));
 };
