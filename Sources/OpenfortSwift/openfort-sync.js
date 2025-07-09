@@ -195,3 +195,40 @@ window.getEmbeddedStateSync = function() {
 window.getURLSync = function() {
     handleResult('getURL', window.openfort.embeddedWalletInstance.getURL());
 };
+
+// ProxyInstance sync methods
+
+window.sendSignatureTransactionIntentRequestSync = function({ params }) {
+    handleResult(
+        'sendSignatureTransactionIntentRequest',
+        window.openfort.proxyInstance.sendSignatureTransactionIntentRequest(params)
+    );
+};
+
+window.sendSignatureSessionRequestSync = function({ params }) {
+    handleResult(
+        'sendSignatureSessionRequest',
+        window.openfort.proxyInstance.sendSignatureSessionRequest(params)
+    );
+};
+
+// UserInstance sync methods
+
+window.getUserInstanceSync = function({ key }) {
+    handleResult(
+        'getUserInstance',
+        window.openfort.userInstance.get(key)
+    );
+};
+
+// Openfort sync methods
+
+window.getAccessTokenSync = function() {
+    handleResult('getAccessToken', window.openfort.getAccessToken());
+};
+
+window.validateAndRefreshTokenSync = function() {
+    handleResult('validateAndRefreshToken', window.openfort.validateAndRefreshToken());
+};
+
+
