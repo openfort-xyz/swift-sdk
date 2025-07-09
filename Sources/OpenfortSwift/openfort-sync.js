@@ -15,6 +15,8 @@ function handleResult(method, promise) {
         });
 }
 
+// AuthInstance sync methods
+
 window.logInWithEmailPasswordSync = function({ email, password, ecosystemGame }) {
     handleResult('loginWithEmailPassword', window.openfort.authInstance.logInWithEmailPassword({ email, password, ecosystemGame }));
 };
@@ -142,4 +144,54 @@ window.authenticateWithSIWESync = function({ siweData }) {
 
 window.storeCredentialsSync = function({ credentials }) {
     handleResult('storeCredentials', window.openfort.authInstance.storeCredentials(credentials));
+};
+
+// EmbeddedWalletInstance sync methods
+
+window.getIframeManagerSync = function() {
+    handleResult('getIframeManager', window.openfort.embeddedWalletInstance.getIframeManager());
+};
+
+window.signTypedDataSync = function({ typedData }) {
+    handleResult('signTypedData', window.openfort.embeddedWalletInstance.signTypedData(typedData));
+};
+
+window.getSync = function({ key }) {
+    handleResult('get', window.openfort.embeddedWalletInstance.get(key));
+};
+
+window.getEthereumProviderSync = function() {
+    handleResult('getEthereumProvider', window.openfort.embeddedWalletInstance.getEthereumProvider());
+};
+
+window.configureSync = function({ config }) {
+    handleResult('configure', window.openfort.embeddedWalletInstance.configure(config));
+};
+
+window.exportPrivateKeySync = function() {
+    handleResult('exportPrivateKey', window.openfort.embeddedWalletInstance.exportPrivateKey());
+};
+
+window.listSync = function() {
+    handleResult('list', window.openfort.embeddedWalletInstance.list());
+};
+
+window.pingSync = function() {
+    handleResult('ping', window.openfort.embeddedWalletInstance.ping());
+};
+
+window.signMessageSync = function({ message }) {
+    handleResult('signMessage', window.openfort.embeddedWalletInstance.signMessage(message));
+};
+
+window.setEmbeddedRecoverySync = function({ recoveryData }) {
+    handleResult('setEmbeddedRecovery', window.openfort.embeddedWalletInstance.setEmbeddedRecovery(recoveryData));
+};
+
+window.getEmbeddedStateSync = function() {
+    handleResult('getEmbeddedState', window.openfort.embeddedWalletInstance.getEmbeddedState());
+};
+
+window.getURLSync = function() {
+    handleResult('getURL', window.openfort.embeddedWalletInstance.getURL());
 };
