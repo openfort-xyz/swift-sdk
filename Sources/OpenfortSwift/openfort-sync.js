@@ -46,22 +46,6 @@ window.unlinkEmailPasswordSync = function({ email, authToken }) {
     );
 };
 
-window.getSessionSync = function() {
-    handleResult('getSession', window.openfort.authInstance.getSession());
-};
-
-window.sendPasswordResetEmailSync = function({ email }) {
-    handleResult('sendPasswordResetEmail', window.openfort.authInstance.sendPasswordResetEmail(email));
-};
-
-window.updatePasswordSync = function({ password }) {
-    handleResult('updatePassword', window.openfort.authInstance.updatePassword(password));
-};
-
-window.getUserSync = function() {
-    handleResult('getUser', window.openfort.authInstance.getUser());
-};
-
 window.sendVerificationEmailSync = function() {
     handleResult('sendVerificationEmail', window.openfort.authInstance.sendVerificationEmail());
 };
@@ -214,11 +198,8 @@ window.sendSignatureSessionRequestSync = function({ params }) {
 
 // UserInstance sync methods
 
-window.getUserInstanceSync = function({ key }) {
-    handleResult(
-        'getUserInstance',
-        window.openfort.userInstance.get(key)
-    );
+window.getUserSync = function() {
+    handleResult('getUser', window.openfort.authInstance.getUser());
 };
 
 // Openfort sync methods

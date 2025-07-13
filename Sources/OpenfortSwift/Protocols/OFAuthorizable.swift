@@ -7,72 +7,22 @@
 
 @preconcurrency import Foundation
 
-public protocol OFAuthorizable: OFWebViewAccessable {
-
-}
+public protocol OFAuthorizable: OFOpenfortRootable {}
 
 // MARK: - Openfort AuthApi Methods
-extension OFAuthorizable {
-    public func logOut(completion: @escaping (Result<OFLogOutResponse, Error>) -> Void) {
-        let method = "logOut"
-        let js = "window.logOutSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.logOut, completion: completion)
-    }
-
-    public func getSession(completion: @escaping (Result<OFSessionResponse, Error>) -> Void) {
-        let method = "getSession"
-        let js = "window.getSessionSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getSession, completion: completion)
-    }
-
-    public func sendPasswordResetEmail(email: String, completion: @escaping (Result<OFSendPasswordResetEmailResponse, Error>) -> Void) {
-        let method = "sendPasswordResetEmail"
-        let js = "window.sendPasswordResetEmailSync({email: '\(email)'});"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.sendPasswordResetEmail, completion: completion)
-    }
-
-    public func updatePassword(newPassword: String, completion: @escaping (Result<OFUpdatePasswordResponse, Error>) -> Void) {
-        let method = "updatePassword"
-        let js = "window.updatePasswordSync({password: '\(newPassword)'});"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.updatePassword, completion: completion)
-    }
-
-    public func getUser(completion: @escaping (Result<OFUserResponse, Error>) -> Void) {
-        let method = "getUser"
-        let js = "window.getUserSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getUser, completion: completion)
-    }
-
-    public func sendVerificationEmail(completion: @escaping (Result<OFSendVerificationEmailResponse, Error>) -> Void) {
-        let method = "sendVerificationEmail"
-        let js = "window.sendVerificationEmailSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.sendVerificationEmail, completion: completion)
-    }
-
-    public func isUserVerified(completion: @escaping (Result<OFIsUserVerifiedResponse, Error>) -> Void) {
-        let method = "isUserVerified"
-        let js = "window.isUserVerifiedSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.isUserVerified, completion: completion)
-    }
-
-    public func reauthenticateWithPassword(password: String, completion: @escaping (Result<OFReauthenticateWithPasswordResponse, Error>) -> Void) {
-        let method = "reauthenticateWithPassword"
-        let js = "window.reauthenticateWithPasswordSync({password: '\(password)'});"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.reauthenticateWithPassword, completion: completion)
-    }
-
-    public func deleteUser(completion: @escaping (Result<OFDeleteUserResponse, Error>) -> Void) {
-        let method = "deleteUser"
-        let js = "window.deleteUserSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.deleteUser, completion: completion)
-    }
-}
 
 extension OFAuthorizable {
+    
     public func loginWith(_ email: String, _ password: String, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
         let method = "logInWithEmailPassword"
         let js = "window.logInWithEmailPasswordSync({email: '\(email)', password: '\(password)'})"
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.loginWithEmailPassword, completion: completion)
+    }
+    
+    public func logOut(completion: @escaping (Result<OFLogOutResponse, Error>) -> Void) {
+        let method = "logout"
+        let js = "window.logoutSync();"
+        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.logOut, completion: completion)
     }
     
     public func signUpGuest(completion: @escaping (Result<OFSignUpResponse?, Error>) -> Void) {
@@ -90,7 +40,7 @@ extension OFAuthorizable {
         js += "});"
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.signUpWithEmailPassword, completion: completion)
     }
-
+    
     public func linkEmailPassword(email: String, password: String, authToken: String, ecosystemGame: String?, completion: @escaping (Result<OFLinkEmailPasswordResponse, Error>) -> Void) {
         let method = "linkEmailPassword"
         var js = "window.linkEmailPasswordSync({email: '\(email)', password: '\(password)', authToken: '\(authToken)'"
@@ -107,37 +57,99 @@ extension OFAuthorizable {
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.unlinkEmailPassword, completion: completion)
     }
     
-    private func evaluateAndDecode<T: Decodable>(
-        js: String,
-        method: String,
-        errorDomain: String,
-        completion: @escaping (Result<T, Error>) -> Void
-    ) {
-        let notificationName = Notification.Name("OFJSResponse_\(method)")
-        var observer: NSObjectProtocol?
-        observer = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
-            if let observer = observer { NotificationCenter.default.removeObserver(observer) }
-            guard let userInfo = notification.userInfo,
-                  let response = userInfo["response"] else {
-                completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No response in notification"])))
-                return
-            }
-            do {
-                let data: Data
-                if let str = response as? String {
-                    data = Data(str.utf8)
-                } else if let dict = response as? [String: Any] {
-                    data = try JSONSerialization.data(withJSONObject: dict, options: [])
-                } else {
-                    completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected result type"])))
-                    return
-                }
-                let decoded = try JSONDecoder().decode(T.self, from: data)
-                completion(.success(decoded))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-        webView?.evaluateJavaScript(js, completionHandler: nil)
+    public func resetPassword(email: String, newPassword: String, completion: @escaping (Result<OFResetPasswordResponse, Error>) -> Void) {
+        let method = "resetPassword"
+        let js = "window.resetPasswordSync({email: '\(email)', newPassword: '\(newPassword)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.resetPassword", completion: completion)
+    }
+    
+    public func requestResetPassword(email: String, completion: @escaping (Result<OFRequestResetPasswordResponse, Error>) -> Void) {
+        let method = "requestResetPassword"
+        let js = "window.requestResetPasswordSync({email: '\(email)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.requestResetPassword", completion: completion)
+    }
+    
+    public func requestEmailVerification(email: String, completion: @escaping (Result<OFRequestEmailVerificationResponse, Error>) -> Void) {
+        let method = "requestEmailVerification"
+        let js = "window.requestEmailVerificationSync({email: '\(email)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.requestEmailVerification", completion: completion)
+    }
+    
+    public func verifyEmail(token: String, completion: @escaping (Result<OFVerifyEmailResponse, Error>) -> Void) {
+        let method = "verifyEmail"
+        let js = "window.verifyEmailSync({token: '\(token)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.verifyEmail", completion: completion)
+    }
+    
+    public func initOAuth(provider: String, completion: @escaping (Result<OFInitOAuthResponse, Error>) -> Void) {
+        let method = "initOAuth"
+        let js = "window.initOAuthSync({provider: '\(provider)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.initOAuth", completion: completion)
+    }
+    
+    public func unlinkOAuth(provider: String, completion: @escaping (Result<OFUnlinkOAuthResponse, Error>) -> Void) {
+        let method = "unlinkOAuth"
+        let js = "window.unlinkOAuthSync({provider: '\(provider)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.unlinkOAuth", completion: completion)
+    }
+    
+    public func loginWithIdToken(idToken: String, completion: @escaping (Result<OFLoginWithIdTokenResponse, Error>) -> Void) {
+        let method = "loginWithIdToken"
+        let js = "window.loginWithIdTokenSync({idToken: '\(idToken)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.loginWithIdToken", completion: completion)
+    }
+    
+    public func linkWallet(walletAddress: String, completion: @escaping (Result<OFLinkWalletResponse, Error>) -> Void) {
+        let method = "linkWallet"
+        let js = "window.linkWalletSync({walletAddress: '\(walletAddress)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.linkWallet", completion: completion)
+    }
+    
+    public func initLinkOAuth(provider: String, completion: @escaping (Result<OFInitLinkOAuthResponse, Error>) -> Void) {
+        let method = "initLinkOAuth"
+        let js = "window.initLinkOAuthSync({provider: '\(provider)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.initLinkOAuth", completion: completion)
+    }
+    
+    public func poolOAuth(poolId: String, completion: @escaping (Result<OFPoolOAuthResponse, Error>) -> Void) {
+        let method = "poolOAuth"
+        let js = "window.poolOAuthSync({poolId: '\(poolId)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.poolOAuth", completion: completion)
+    }
+    
+    public func initSIWE(siweData: String, completion: @escaping (Result<OFInitSIWEResponse, Error>) -> Void) {
+        let method = "initSIWE"
+        let js = "window.initSIWESync({siweData: '\(siweData)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.initSIWE", completion: completion)
+    }
+    
+    public func unlinkWallet(walletAddress: String, completion: @escaping (Result<OFUnlinkWalletResponse, Error>) -> Void) {
+        let method = "unlinkWallet"
+        let js = "window.unlinkWalletSync({walletAddress: '\(walletAddress)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.unlinkWallet", completion: completion)
+    }
+    
+    public func linkThirdPartyProvider(provider: String, credentials: String, completion: @escaping (Result<OFLinkThirdPartyProviderResponse, Error>) -> Void) {
+        let method = "linkThirdPartyProvider"
+        let js = "window.linkThirdPartyProviderSync({provider: '\(provider)', credentials: '\(credentials)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.linkThirdPartyProvider", completion: completion)
+    }
+    
+    public func authenticateWithThirdPartyProvider(provider: String, credentials: String, completion: @escaping (Result<OFAuthenticateWithThirdPartyProviderResponse, Error>) -> Void) {
+        let method = "authenticateWithThirdPartyProvider"
+        let js = "window.authenticateWithThirdPartyProviderSync({provider: '\(provider)', credentials: '\(credentials)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.authenticateWithThirdPartyProvider", completion: completion)
+    }
+    
+    public func authenticateWithSIWE(siweData: String, completion: @escaping (Result<OFAuthenticateWithSIWEResponse, Error>) -> Void) {
+        let method = "authenticateWithSIWE"
+        let js = "window.authenticateWithSIWESync({siweData: '\(siweData)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.authenticateWithSIWE", completion: completion)
+    }
+    
+    public func storeCredentials(credentials: String, completion: @escaping (Result<OFStoreCredentialsResponse, Error>) -> Void) {
+        let method = "storeCredentials"
+        let js = "window.storeCredentialsSync({credentials: '\(credentials)'});"
+        evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.storeCredentials", completion: completion)
     }
 }
