@@ -19,11 +19,13 @@ public extension OFEmbeddedWalletAccessable {
     }
 
     func signTypedData(
-        typedData: String,
+        domain: String,
+        types: String,
+        message: String,
         completion: @escaping (Result<OFSignTypedDataResponse, Error>) -> Void
     ) {
         let method = OFMethods.signTypedData
-        let js = "window.signTypedDataSync({typedData: '\(typedData)'});"
+        let js = "window.signTypedDataSync({domain: \(domain), types: \(types), message: \(message)});"
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.signTypedData, completion: completion)
     }
 
@@ -37,19 +39,25 @@ public extension OFEmbeddedWalletAccessable {
     }
 
     func getEthereumProvider(
+        options: String? = nil,
         completion: @escaping (Result<OFGetEthereumProviderResponse, Error>) -> Void
     ) {
         let method = OFMethods.getEthereumProvider
-        let js = "window.getEthereumProviderSync();"
+        let js: String
+        if let options = options {
+            js = "window.getEthereumProviderSync({options: \(options)});"
+        } else {
+            js = "window.getEthereumProviderSync();"
+        }
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getEthereumProvider, completion: completion)
     }
 
     func configure(
-        config: String,
+        params: String,
         completion: @escaping (Result<OFConfigureResponse, Error>) -> Void
     ) {
         let method = OFMethods.configure
-        let js = "window.configureSync({config: '\(config)'});"
+        let js = "window.configureSync({params: \(params)});"
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.configure, completion: completion)
     }
 
@@ -70,28 +78,37 @@ public extension OFEmbeddedWalletAccessable {
     }
 
     func ping(
+        delay: Int,
         completion: @escaping (Result<OFPingResponse, Error>) -> Void
     ) {
         let method = OFMethods.ping
-        let js = "window.pingSync();"
+        let js = "window.pingSync({delay: \(delay)});"
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.ping, completion: completion)
     }
 
     func signMessage(
         message: String,
+        options: String? = nil,
         completion: @escaping (Result<OFSignMessageResponse, Error>) -> Void
     ) {
         let method = OFMethods.signMessage
-        let js = "window.signMessageSync({message: '\(message)'});"
+        let js: String
+        if let options = options {
+            js = "window.signMessageSync({message: '\(message)', options: \(options)});"
+        } else {
+            js = "window.signMessageSync({message: '\(message)'});"
+        }
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.signMessage, completion: completion)
     }
 
     func setEmbeddedRecovery(
-        recoveryData: String,
+        recoveryMethod: String,
+        recoveryPassword: String,
+        encryptionSession: String,
         completion: @escaping (Result<OFSetEmbeddedRecoveryResponse, Error>) -> Void
     ) {
         let method = OFMethods.setEmbeddedRecovery
-        let js = "window.setEmbeddedRecoverySync({recoveryData: '\(recoveryData)'});"
+        let js = "window.setEmbeddedRecoverySync({recoveryMethod: '\(recoveryMethod)', recoveryPassword: '\(recoveryPassword)', encryptionSession: '\(encryptionSession)'});"
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.setEmbeddedRecovery, completion: completion)
     }
 

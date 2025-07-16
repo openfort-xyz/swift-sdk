@@ -10,13 +10,24 @@ public protocol OFProxible: OFOpenfortRootable {}
 public extension OFProxible {
 
     func sendSignatureTransactionIntentRequest(
-        id: String,
-        signature: String,
-        optimistic: Bool,
+        transactionIntentId: String,
+        signableHash: String? = nil,
+        signature: String? = nil,
+        optimistic: Bool? = nil,
         completion: @escaping (Result<OFSendSignatureTransactionIntentRequestResponse, Error>) -> Void
     ) {
         let method = OFMethods.sendSignatureTransactionIntentRequest
-        let js = "window.sendSignatureTransactionIntentRequestSync({id: '\(id)', signature: '\(signature)', optimistic: \(optimistic)});"
+        var js = "window.sendSignatureTransactionIntentRequestSync({transactionIntentId: '\(transactionIntentId)'"
+        if let signableHash = signableHash {
+            js += ", signableHash: '\(signableHash)'"
+        }
+        if let signature = signature {
+            js += ", signature: '\(signature)'"
+        }
+        if let optimistic = optimistic {
+            js += ", optimistic: \(optimistic)"
+        }
+        js += "});"
         evaluateAndDecode(
             js: js,
             method: method,
@@ -26,13 +37,17 @@ public extension OFProxible {
     }
 
     func sendSignatureSessionRequest(
-        id: String,
+        sessionId: String,
         signature: String,
-        optimistic: Bool,
+        optimistic: Bool? = nil,
         completion: @escaping (Result<OFSendSignatureSessionRequestResponse, Error>) -> Void
     ) {
         let method = OFMethods.sendSignatureSessionRequest
-        let js = "window.sendSignatureSessionRequestSync({id: '\(id)', signature: '\(signature)', optimistic: \(optimistic)});"
+        var js = "window.sendSignatureSessionRequestSync({sessionId: '\(sessionId)', signature: '\(signature)'"
+        if let optimistic = optimistic {
+            js += ", optimistic: \(optimistic)"
+        }
+        js += "});"
         evaluateAndDecode(
             js: js,
             method: method,

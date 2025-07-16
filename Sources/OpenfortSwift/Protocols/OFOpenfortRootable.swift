@@ -19,9 +19,14 @@ extension OFOpenfortRootable {
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getAccessToken, completion: completion)
     }
     
-    public func validateAndRefreshToken(completion: @escaping (Result<OFValidateAndRefreshTokenResponse, Error>) -> Void) {
+    public func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<OFValidateAndRefreshTokenResponse, Error>) -> Void) {
         let method = OFMethods.validateAndRefreshToken
-        let js = "window.validateAndRefreshTokenSync();"
+        let js: String
+        if let forceRefresh = forceRefresh {
+            js = "window.validateAndRefreshTokenSync({forceRefresh: \(forceRefresh)});"
+        } else {
+            js = "window.validateAndRefreshTokenSync();"
+        }
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.validateAndRefreshToken, completion: completion)
     }
 }

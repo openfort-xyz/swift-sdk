@@ -12,6 +12,11 @@ public struct OFErrorDomains {
     public static let validateAndRefreshToken = "OFValidateAndRefreshTokenErrorDomain"
     
     // AuthInstance
+    public static let authenticateWithSIWE = "OFAuthenticateWithSIWEErrorDomain"
+    public static let authenticateWithThirdPartyProvider = "OFAuthenticateWithThirdPartyProviderErrorDomain"
+    public static let initLinkOAuth = "OFInitLinkOAuthErrorDomain"
+    public static let initOAuth = "OFInitOAuthErrorDomain"
+    public static let initSIWE = "OFInitSIWEErrorDomain"
     public static let linkEmailPassword = "OFLinkEmailPasswordErrorDomain"
     public static let linkThirdPartyProvider = "OFLinkThirdPartyProviderErrorDomain"
     public static let linkWallet = "OFLinkWalletErrorDomain"
@@ -28,15 +33,11 @@ public struct OFErrorDomains {
     public static let unlinkEmailPassword = "OFUnlinkEmailPasswordErrorDomain"
     public static let unlinkOAuth = "OFUnlinkOAuthErrorDomain"
     public static let unlinkWallet = "OFUnlinkWalletErrorDomain"
-    public static let authenticateWithSIWE = "OFAuthenticateWithSIWEErrorDomain"
-    public static let authenticateWithThirdPartyProvider = "OFAuthenticateWithThirdPartyProviderErrorDomain"
-    public static let initLinkOAuth = "OFInitLinkOAuthErrorDomain"
-    public static let initOAuth = "OFInitOAuthErrorDomain"
-    public static let initSIWE = "OFInitSIWEErrorDomain"
+    public static let verifyEmail = "OFVerifyEmailErrorDomain"
     
     // Proxy
+    public static let sendSignatureSessionRequest = "OFSendSignatureSessionRequestErrorDomain"
     public static let sendSignatureTransactionIntentRequest = "OFSendSignatureTransactionIntentRequestErrorDomain"
-        public static let sendSignatureSessionRequest = "OFSendSignatureSessionRequestErrorDomain"
     
     // UserInstance
     public static let getUserInstance = "OFGetUserInstanceErrorDomain"

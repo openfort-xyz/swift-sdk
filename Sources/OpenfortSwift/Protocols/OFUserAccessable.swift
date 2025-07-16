@@ -10,12 +10,11 @@ public protocol OFUserAccessable: OFOpenfortRootable {}
 
 public extension OFUserAccessable {
     
-    func getUserInstance(
-        key: String,
+    func getUser(
         completion: @escaping (Result<OFGetUserInstanceResponse, Error>) -> Void
     ) {
         let method = OFMethods.getUserInstance
-        let js = "window.getUser({'\(key)'});"
+        let js = "window.getUserSync();"
         evaluateAndDecode(
             js: js,
             method: method,
