@@ -14,13 +14,13 @@ public protocol OFOpenfortRootable {
 extension OFOpenfortRootable {
     
     public func getAccessToken(completion: @escaping (Result<OFGetAccessTokenResponse, Error>) -> Void) {
-        let method = "getAccessToken"
+        let method = OFMethods.getAccessToken
         let js = "window.getAccessTokenSync();"
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getAccessToken, completion: completion)
     }
     
     public func validateAndRefreshToken(completion: @escaping (Result<OFValidateAndRefreshTokenResponse, Error>) -> Void) {
-        let method = "validateAndRefreshToken"
+        let method = OFMethods.validateAndRefreshToken
         let js = "window.validateAndRefreshTokenSync();"
         evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.validateAndRefreshToken, completion: completion)
     }

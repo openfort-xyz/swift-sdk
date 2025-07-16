@@ -15,7 +15,7 @@ public extension OFProxible {
         optimistic: Bool,
         completion: @escaping (Result<OFSendSignatureTransactionIntentRequestResponse, Error>) -> Void
     ) {
-        let method = "sendSignatureTransactionIntentRequest"
+        let method = OFMethods.sendSignatureTransactionIntentRequest
         let js = "window.sendSignatureTransactionIntentRequestSync({id: '\(id)', signature: '\(signature)', optimistic: \(optimistic)});"
         evaluateAndDecode(
             js: js,
@@ -31,7 +31,7 @@ public extension OFProxible {
         optimistic: Bool,
         completion: @escaping (Result<OFSendSignatureSessionRequestResponse, Error>) -> Void
     ) {
-        let method = "sendSignatureSessionRequest"
+        let method = OFMethods.sendSignatureSessionRequest
         let js = "window.sendSignatureSessionRequestSync({id: '\(id)', signature: '\(signature)', optimistic: \(optimistic)});"
         evaluateAndDecode(
             js: js,

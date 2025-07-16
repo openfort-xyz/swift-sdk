@@ -14,7 +14,7 @@ public extension OFUserAccessable {
         key: String,
         completion: @escaping (Result<OFGetUserInstanceResponse, Error>) -> Void
     ) {
-        let method = "getUserInstance"
+        let method = OFMethods.getUserInstance
         let js = "window.getUser({'\(key)'});"
         evaluateAndDecode(
             js: js,
@@ -24,6 +24,3 @@ public extension OFUserAccessable {
         )
     }
 }
-
-
-
