@@ -48,7 +48,6 @@ public struct OFErrorDomains {
     public static let get = "OFGetErrorDomain"
     public static let getEmbeddedState = "OFGetEmbeddedStateErrorDomain"
     public static let getEthereumProvider = "OFGetEthereumProviderErrorDomain"
-    public static let getIframeManager = "OFGetIframeManagerErrorDomain"
     public static let getURL = "OFGetURLErrorDomain"
     public static let list = "OFListErrorDomain"
     public static let ping = "OFPingErrorDomain"

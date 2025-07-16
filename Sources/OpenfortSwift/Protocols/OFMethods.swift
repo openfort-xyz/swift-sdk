@@ -14,7 +14,6 @@ public enum OFMethods {
     public static let getAccessToken = "getAccessToken"
     public static let getEmbeddedState = "getEmbeddedState"
     public static let getEthereumProvider = "getEthereumProvider"
-    public static let getIframeManager = "getIframeManager"
     public static let getURL = "getURL"
     public static let getUserInstance = "getUserInstance"
     public static let initLinkOAuth = "initLinkOAuth"

@@ -9,14 +9,6 @@
 public protocol OFEmbeddedWalletAccessable: OFOpenfortRootable {}
 
 public extension OFEmbeddedWalletAccessable {
-    
-    func getIframeManager(
-        completion: @escaping (Result<OFGetIframeManagerResponse, Error>) -> Void
-    ) {
-        let method = OFMethods.getIframeManager
-        let js = "window.getIframeManagerSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getIframeManager, completion: completion)
-    }
 
     func signTypedData(
         domain: String,
