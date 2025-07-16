@@ -20,35 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
   const auth = firebaseApp.auth();
 
-  const signInButton = document.getElementById('quickstart-sign-in');
-  const signUpButton = document.getElementById('quickstart-sign-up');
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-
-  signInButton.addEventListener('click', async () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      addMessage('Signed in');
-    } catch (error) {
-      console.error('Error signing in:', error);
-      addMessage(`Error: ${error.message}`);
-    }
-  });
-
-  signUpButton.addEventListener('click', async () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      addMessage('Signed up and signed in');
-    } catch (error) {
-      console.error('Error signing up:', error);
-      addMessage(`Error: ${error.message}`);
-    }
-  });
-
   auth.onIdTokenChanged(async (user) => {
     if (user) {
       addMessage('Signed in');
