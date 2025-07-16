@@ -15,14 +15,32 @@ extension OFAuthorizable {
     
     public func loginWith(_ email: String, _ password: String, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
         let method = OFMethods.loginWith
+        let completionAndStoreCredentials: (Result<OFAuthorizationResponse, Error>) -> Void = { result in
+            switch result {
+            case .success(let response):
+                self.storeCredentialsLocally(authorizationResponse: response, completion: completion)
+            default:
+                completion(result)
+                break
+            }
+        }
         let js = "window.logInWithEmailPasswordSync({email: '\(email)', password: '\(password)'})"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.loginWithEmailPassword, completion: completion)
+        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.loginWithEmailPassword, completion: completionAndStoreCredentials)
     }
     
     public func logOut(completion: @escaping (Result<OFLogOutResponse, Error>) -> Void) {
         let method = OFMethods.logOut
         let js = "window.logoutSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.logOut, completion: completion)
+        let completionAndResetCredentials: (Result<OFLogOutResponse, Error>) -> Void = { result in
+            switch result {
+            case .success:
+                self.resetCredentialsLocally()
+                completion(result)
+            default:
+                completion(result)
+            }
+        }
+        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.logOut, completion: completionAndResetCredentials)
     }
     
     public func signUpGuest(completion: @escaping (Result<OFSignUpResponse?, Error>) -> Void) {
@@ -151,5 +169,23 @@ extension OFAuthorizable {
         let method = OFMethods.storeCredentials
         let js = "window.storeCredentialsSync({credentials: '\(credentials)'});"
         evaluateAndDecode(js: js, method: method, errorDomain: "OFErrorDomains.storeCredentials", completion: completion)
+    }
+    
+}
+
+extension OFAuthorizable {
+    private func storeCredentialsLocally(authorizationResponse: OFAuthorizationResponse, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
+        if let token = authorizationResponse.token {
+            KeychainHelper.save(token, for: KeychainHelper.authTokenKey)
+        }
+
+        if let refreshToken = authorizationResponse.refreshToken {
+            KeychainHelper.save(refreshToken, for: KeychainHelper.refreshTokenKey)
+        }
+    }
+    
+    private func resetCredentialsLocally() {
+        KeychainHelper.delete(for: KeychainHelper.authTokenKey)
+        KeychainHelper.delete(for: KeychainHelper.refreshTokenKey)
     }
 }

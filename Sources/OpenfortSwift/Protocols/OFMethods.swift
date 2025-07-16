@@ -43,5 +43,6 @@ public enum OFMethods {
     public static let unlinkOAuth = "unlinkOAuth"
     public static let unlinkWallet = "unlinkWallet"
     public static let validateAndRefreshToken = "validateAndRefreshToken"
+    public static let verifyEmail = "verifyEmail"
     public static let setEmbeddedRecovery = "setEmbeddedRecovery"
 }
