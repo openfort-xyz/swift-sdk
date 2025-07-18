@@ -8,7 +8,7 @@
 import WebKit
 
 @MainActor
-open class OFSDK: NSObject, OFAuthorizable {
+open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEmbeddedWalletAccessable, OFUserAccessable {
     
     private var coordinator = OFWebViewCoordinator()
     private var messageHandler = OFScriptMessageHandler()
