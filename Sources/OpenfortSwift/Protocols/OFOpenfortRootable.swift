@@ -39,7 +39,7 @@ extension OFOpenfortRootable {
         errorDomain: String,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
-        let notificationName = Notification.Name("OFJSResponse_\(method)")
+        let notificationName = Notification.Name("\(method)")
         var observer: NSObjectProtocol?
         observer = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
             if let observer = observer { NotificationCenter.default.removeObserver(observer) }
