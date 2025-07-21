@@ -20,7 +20,7 @@ public struct OFErrorDomains {
     public static let linkEmailPassword = "OFLinkEmailPasswordErrorDomain"
     public static let linkThirdPartyProvider = "OFLinkThirdPartyProviderErrorDomain"
     public static let linkWallet = "OFLinkWalletErrorDomain"
-    public static let loginWithEmailPassword = "OFLoginWithEmailPasswordErrorDomain"
+    public static let logInWithEmailPassword = "OFLogInWithEmailPasswordErrorDomain"
     public static let loginWithIdToken = "OFLoginWithIdTokenErrorDomain"
     public static let logOut = "OFLogOutErrorDomain"
     public static let poolOAuth = "OFPoolOAuthErrorDomain"

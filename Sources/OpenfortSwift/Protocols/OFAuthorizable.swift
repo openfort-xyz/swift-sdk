@@ -25,7 +25,7 @@ extension OFAuthorizable {
             }
         }
         let js = "window.logInWithEmailPasswordSync({email: '\(email)', password: '\(password)'})"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.loginWithEmailPassword, completion: completionAndStoreCredentials)
+        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.logInWithEmailPassword, completion: completionAndStoreCredentials)
     }
     
     public func logOut(completion: @escaping (Result<OFLogOutResponse, Error>) -> Void) {

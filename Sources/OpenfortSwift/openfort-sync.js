@@ -18,7 +18,7 @@ function handleResult(method, promise) {
 // AuthInstance sync methods
 
 window.logInWithEmailPasswordSync = function({ email, password, ecosystemGame }) {
-    handleResult('loginWithEmailPassword', window.openfort.authInstance.logInWithEmailPassword({ email, password, ecosystemGame }));
+    handleResult('logInWithEmailPassword', window.openfort.authInstance.logInWithEmailPassword({ email, password, ecosystemGame }));
 };
 
 window.signUpGuestSync = function() {
