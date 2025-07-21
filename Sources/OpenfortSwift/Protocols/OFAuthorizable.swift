@@ -197,6 +197,7 @@ extension OFAuthorizable {
         if let refreshToken = authorizationResponse.refreshToken {
             KeychainHelper.save(refreshToken, for: KeychainHelper.refreshTokenKey)
         }
+        completion(.success(authorizationResponse))
     }
     
     private func resetCredentialsLocally() {
