@@ -34,7 +34,7 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
     ) {
         let notificationName = Notification.Name("\(method)")
         
-        NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
+        observer = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
             
             guard let userInfo = notification.userInfo,
                   let response = userInfo["response"] else {
