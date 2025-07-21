@@ -98,9 +98,7 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
                 return
             }
             let decoded = try JSONDecoder().decode(T.self, from: jsonData)
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Notification.Name(method), object: decoded)
-            }
+            NotificationCenter.default.post(name: Notification.Name("test"), object: decoded)
             print("Decoded \(method) data:", decoded)
             // You can now send `decoded` to your delegate, publisher, or state
         } catch {

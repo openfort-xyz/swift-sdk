@@ -32,7 +32,7 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
         errorDomain: String,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
-        let notificationName = Notification.Name("\(method)")
+        let notificationName = Notification.Name("test")
         
         observer = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
             
