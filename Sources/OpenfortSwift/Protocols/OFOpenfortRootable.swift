@@ -42,27 +42,14 @@ extension OFOpenfortRootable {
         let notificationName = Notification.Name(method)
         var observer: NSObjectProtocol?
         observer = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
-            if let observer = observer { NotificationCenter.default.removeObserver(observer) }
-            guard let userInfo = notification.userInfo,
-                  let response = userInfo["response"] else {
+            if let obs = observer { NotificationCenter.default.removeObserver(obs)
+            }
+            guard let object = notification.object as? T else {
                 completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No response in notification"])))
                 return
             }
-            do {
-                let data: Data
-                if let str = response as? String {
-                    data = Data(str.utf8)
-                } else if let dict = response as? [String: Any] {
-                    data = try JSONSerialization.data(withJSONObject: dict, options: [])
-                } else {
-                    completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected result type"])))
-                    return
-                }
-                let decoded = try JSONDecoder().decode(T.self, from: data)
-                completion(.success(decoded))
-            } catch {
-                completion(.failure(error))
-            }
+            completion(.success(object))
+           
         }
         webView?.evaluateJavaScript(js, completionHandler: nil)
     }
