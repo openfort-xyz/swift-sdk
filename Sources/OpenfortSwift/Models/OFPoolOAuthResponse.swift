@@ -8,13 +8,9 @@
 public protocol OFPoolOAuthResponseProtocol {
     var poolId: String? { get }
     var expiresAt: String? { get }
-    var error: String? { get }
-    var success: Bool? { get }
 }
 
 public struct OFPoolOAuthResponse: Decodable, OFPoolOAuthResponseProtocol {
     public let poolId: String?
     public let expiresAt: String?
-    public let error: String?
-    public let success: Bool?
 }

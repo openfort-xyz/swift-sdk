@@ -7,12 +7,8 @@
 
 public protocol OFGetEmbeddedStateResponseProtocol {
     var state: String? { get }
-    var error: String? { get }
-    var success: Bool? { get }
 }
 
 public struct OFGetEmbeddedStateResponse: Decodable, OFGetEmbeddedStateResponseProtocol {
     public let state: String?
-    public let error: String?
-    public let success: Bool?
 }

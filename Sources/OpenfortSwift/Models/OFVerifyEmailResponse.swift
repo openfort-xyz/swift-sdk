@@ -7,12 +7,8 @@
 
 public protocol OFVerifyEmailResponseProtocol {
     var verified: Bool? { get }
-    var error: String? { get }
-    var success: Bool? { get }
 }
 
 public struct OFVerifyEmailResponse: Decodable, OFVerifyEmailResponseProtocol {
     public let verified: Bool?
-    public let error: String?
-    public let success: Bool?
 }

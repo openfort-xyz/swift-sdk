@@ -7,12 +7,8 @@
 
 public protocol OFExportPrivateKeyResponseProtocol {
     var privateKey: String? { get }
-    var error: String? { get }
-    var success: Bool? { get }
 }
 
 public struct OFExportPrivateKeyResponse: Decodable, OFExportPrivateKeyResponseProtocol {
     public let privateKey: String?
-    public let error: String?
-    public let success: Bool?
 }

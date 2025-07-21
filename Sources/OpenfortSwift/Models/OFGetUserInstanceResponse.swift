@@ -10,8 +10,6 @@ public protocol OFGetUserInstanceResponseProtocol {
     var createdAt: String? { get }
     var player: String? { get }
     var metadata: [String: String]? { get }
-    var error: String? { get }
-    var success: Bool? { get }
 }
 
 public struct OFGetUserInstanceResponse: Decodable, OFGetUserInstanceResponseProtocol {
@@ -19,6 +17,4 @@ public struct OFGetUserInstanceResponse: Decodable, OFGetUserInstanceResponsePro
     public let createdAt: String?
     public let player: String?
     public let metadata: [String: String]?
-    public let error: String?
-    public let success: Bool?
 }

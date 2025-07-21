@@ -7,12 +7,8 @@
 
 public protocol OFPingResponseProtocol {
     var pong: Bool? { get }
-    var error: String? { get }
-    var success: Bool? { get }
 }
 
 public struct OFPingResponse: Decodable, OFPingResponseProtocol {
     public let pong: Bool?
-    public let error: String?
-    public let success: Bool?
 }

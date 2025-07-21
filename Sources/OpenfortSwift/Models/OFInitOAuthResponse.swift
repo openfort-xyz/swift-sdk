@@ -8,13 +8,9 @@
 public protocol OFInitOAuthResponseProtocol {
     var url: String? { get }
     var state: String? { get }
-    var error: String? { get }
-    var success: Bool? { get }
 }
 
 public struct OFInitOAuthResponse: Decodable, OFInitOAuthResponseProtocol {
     public let url: String?
     public let state: String?
-    public let error: String?
-    public let success: Bool?
 }

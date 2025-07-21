@@ -8,13 +8,9 @@
 public protocol OFLoginWithIdTokenResponseProtocol {
     var idToken: String? { get }
     var userId: String? { get }
-    var error: String? { get }
-    var success: Bool? { get }
 }
 
 public struct OFLoginWithIdTokenResponse: Decodable, OFLoginWithIdTokenResponseProtocol {
     public let idToken: String?
     public let userId: String?
-    public let error: String?
-    public let success: Bool?
 }

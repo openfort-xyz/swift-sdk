@@ -7,12 +7,8 @@
 
 public protocol OFGetURLResponseProtocol {
     var url: String? { get }
-    var error: String? { get }
-    var success: Bool? { get }
 }
 
 public struct OFGetURLResponse: Decodable, OFGetURLResponseProtocol {
     public let url: String?
-    public let error: String?
-    public let success: Bool?
 }
