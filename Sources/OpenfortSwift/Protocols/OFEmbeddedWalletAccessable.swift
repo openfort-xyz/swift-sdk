@@ -5,6 +5,7 @@
 //  Created by Pavel Gurkovskii on 2025-07-13.
 //
 
+import Foundation
 
 public protocol OFEmbeddedWalletAccessable: OFOpenfortRootable {}
 
@@ -45,11 +46,18 @@ public extension OFEmbeddedWalletAccessable {
     }
 
     func configure(
-        params: String,
+        params: ConfigureEmbeddedWalletDTO,
         completion: @escaping (Result<OFConfigureResponse, Error>) -> Void
     ) {
         let method = OFMethods.configure
-        let js = "window.configureSync({params: \(params)});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            print("Failed to encode ConfigureEmbeddedWalletDTO")
+            completion(.failure(NSError(domain: OFErrorDomains.configure, code: -1, userInfo: [NSLocalizedDescriptionKey: "Encoding failed"])))
+            return
+        }
+        let js = "window.configureSync({params: \(jsonString)});"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.configure, completion: completion)
     }
 
