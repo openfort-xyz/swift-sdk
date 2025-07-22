@@ -18,7 +18,7 @@ public extension OFEmbeddedWalletAccessable {
     ) {
         let method = OFMethods.signTypedData
         let js = "window.signTypedDataSync({domain: \(domain), types: \(types), message: \(message)});"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.signTypedData, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signTypedData, completion: completion)
     }
 
     func get(
@@ -27,7 +27,7 @@ public extension OFEmbeddedWalletAccessable {
     ) {
         let method = OFMethods.get
         let js = "window.getSync({key: '\(key)'});"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.get, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.get, completion: completion)
     }
 
     func getEthereumProvider(
@@ -41,7 +41,7 @@ public extension OFEmbeddedWalletAccessable {
         } else {
             js = "window.getEthereumProviderSync();"
         }
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getEthereumProvider, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.getEthereumProvider, completion: completion)
     }
 
     func configure(
@@ -50,7 +50,7 @@ public extension OFEmbeddedWalletAccessable {
     ) {
         let method = OFMethods.configure
         let js = "window.configureSync({params: \(params)});"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.configure, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.configure, completion: completion)
     }
 
     func exportPrivateKey(
@@ -58,7 +58,7 @@ public extension OFEmbeddedWalletAccessable {
     ) {
         let method = OFMethods.exportPrivateKey
         let js = "window.exportPrivateKeySync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.exportPrivateKey, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.exportPrivateKey, completion: completion)
     }
 
     func list(
@@ -66,7 +66,7 @@ public extension OFEmbeddedWalletAccessable {
     ) {
         let method = OFMethods.list
         let js = "window.listSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.list, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.list, completion: completion)
     }
 
     func ping(
@@ -75,7 +75,7 @@ public extension OFEmbeddedWalletAccessable {
     ) {
         let method = OFMethods.ping
         let js = "window.pingSync({delay: \(delay)});"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.ping, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.ping, completion: completion)
     }
 
     func signMessage(
@@ -90,7 +90,7 @@ public extension OFEmbeddedWalletAccessable {
         } else {
             js = "window.signMessageSync({message: '\(message)'});"
         }
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.signMessage, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signMessage, completion: completion)
     }
 
     func setEmbeddedRecovery(
@@ -101,7 +101,7 @@ public extension OFEmbeddedWalletAccessable {
     ) {
         let method = OFMethods.setEmbeddedRecovery
         let js = "window.setEmbeddedRecoverySync({recoveryMethod: '\(recoveryMethod)', recoveryPassword: '\(recoveryPassword)', encryptionSession: '\(encryptionSession)'});"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.setEmbeddedRecovery, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.setEmbeddedRecovery, completion: completion)
     }
 
     func getEmbeddedState(
@@ -109,7 +109,7 @@ public extension OFEmbeddedWalletAccessable {
     ) {
         let method = OFMethods.getEmbeddedState
         let js = "window.getEmbeddedStateSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getEmbeddedState, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.getEmbeddedState, completion: completion)
     }
 
     func getURL(
@@ -117,6 +117,6 @@ public extension OFEmbeddedWalletAccessable {
     ) {
         let method = OFMethods.getURL
         let js = "window.getURLSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getURL, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.getURL, completion: completion)
     }
 }

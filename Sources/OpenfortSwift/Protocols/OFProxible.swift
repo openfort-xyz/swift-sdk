@@ -28,7 +28,7 @@ public extension OFProxible {
             js += ", optimistic: \(optimistic)"
         }
         js += "});"
-        evaluateAndDecode(
+        evaluateAndObserve(
             js: js,
             method: method,
             errorDomain: OFErrorDomains.sendSignatureTransactionIntentRequest,
@@ -48,7 +48,7 @@ public extension OFProxible {
             js += ", optimistic: \(optimistic)"
         }
         js += "});"
-        evaluateAndDecode(
+        evaluateAndObserve(
             js: js,
             method: method,
             errorDomain: OFErrorDomains.sendSignatureSessionRequest,

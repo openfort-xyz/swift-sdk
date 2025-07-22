@@ -15,7 +15,7 @@ public extension OFUserAccessable {
     ) {
         let method = OFMethods.getUserInstance
         let js = "window.getUserSync();"
-        evaluateAndDecode(
+        evaluateAndObserve(
             js: js,
             method: method,
             errorDomain: OFErrorDomains.getUserInstance,
