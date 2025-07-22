@@ -21,18 +21,18 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
         }
 
         let success = dict["success"] as? Bool ?? false
-        if success, let data = dict["data"] {
+        if success {
             if let handler = responseModelsDictionaryHandler[method] {
-                handler(data, method)
+                handler(dict["data"], method)
             } else {
-                decodeAndHandle(OFAuthorizationResponse.self, from: data, method: method)
+                decodeAndHandle(OFAuthorizationResponse.self, from: dict["data"], method: method)
             }
         } else {
             handleError(dict, method: method)
         }
     }
 
-    private var responseModelsDictionaryHandler: [String: (Any, String) -> Void] {
+    private var responseModelsDictionaryHandler: [String: (Any?, String) -> Void] {
         [
             "logInWithEmailPassword": handlerFor(OFAuthorizationResponse.self),
             "signUpGuest": handlerFor(OFSignUpResponse.self),
@@ -51,7 +51,6 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             "unlinkOAuth": handlerFor(OFUnlinkOAuthResponse.self),
             "loginWithIdToken": handlerFor(OFAuthorizationResponse.self),
             "linkWallet": handlerFor(OFLinkWalletResponse.self),
-            "logout": handlerFor(OFLogOutResponse.self),
             "initLinkOAuth": handlerFor(OFInitLinkOAuthResponse.self),
             "poolOAuth": handlerFor(OFPoolOAuthResponse.self),
             "initSIWE": handlerFor(OFInitSIWEResponse.self),
@@ -86,21 +85,29 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     }
     
     // Helper to decode and handle the model
-    private func decodeAndHandle<T: Decodable>(_ type: T.Type, from data: Any, method: String) {
+    private func decodeAndHandle<T: Decodable>(_ type: T.Type, from data: Any?, method: String) {
         do {
-            let jsonData: Data
+            let jsonData: Data?
+            // Treat empty data (nil, empty dict, empty string) as allowed: post nil object
+            if data == nil ||
+                (data as? [String: Any])?.isEmpty == true ||
+                (data as? String)?.isEmpty == true {
+                NotificationCenter.default.post(name: Notification.Name(method), object: nil)
+                print("No data to decode for \(method) (empty is allowed)")
+                return
+            }
             if let dict = data as? [String: Any] {
                 jsonData = try JSONSerialization.data(withJSONObject: dict, options: [])
             } else if let str = data as? String, let d = str.data(using: .utf8) {
                 jsonData = d
             } else {
                 print("Data is not valid JSON for \(method)")
+                NotificationCenter.default.post(name: Notification.Name(method), object: nil)
                 return
             }
-            let decoded = try JSONDecoder().decode(T.self, from: jsonData)
+            let decoded = try JSONDecoder().decode(T.self, from: jsonData!)
             NotificationCenter.default.post(name: Notification.Name(method), object: decoded)
             print("Decoded \(method) data:", decoded)
-            // You can now send `decoded` to your delegate, publisher, or state
         } catch {
             print("Decoding error for \(method):", error)
         }

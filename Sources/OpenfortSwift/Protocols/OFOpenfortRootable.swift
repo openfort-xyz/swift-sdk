@@ -16,7 +16,7 @@ extension OFOpenfortRootable {
     public func getAccessToken(completion: @escaping (Result<OFGetAccessTokenResponse, Error>) -> Void) {
         let method = OFMethods.getAccessToken
         let js = "window.getAccessTokenSync();"
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.getAccessToken, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.getAccessToken, completion: completion)
     }
     
     public func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<OFValidateAndRefreshTokenResponse, Error>) -> Void) {
@@ -27,13 +27,13 @@ extension OFOpenfortRootable {
         } else {
             js = "window.validateAndRefreshTokenSync();"
         }
-        evaluateAndDecode(js: js, method: method, errorDomain: OFErrorDomains.validateAndRefreshToken, completion: completion)
+        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.validateAndRefreshToken, completion: completion)
     }
 }
 
 extension OFOpenfortRootable {
     
-    internal func evaluateAndDecode<T: Decodable>(
+    internal func evaluateAndObserve<T>(
         js: String,
         method: String,
         errorDomain: String,
