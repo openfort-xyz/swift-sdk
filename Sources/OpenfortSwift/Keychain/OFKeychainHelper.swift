@@ -10,10 +10,10 @@ import Security
 
 public enum OFKeychainHelper {
 
-    static let authTokenKey = "of_auth_token"
-    static let refreshTokenKey = "of_refresh_token"
+    public static let authTokenKey = "of_auth_token"
+    public static let refreshTokenKey = "of_refresh_token"
     
-    static func save(_ value: String, for key: String) {
+    public static func save(_ value: String, for key: String) {
         guard let data = value.data(using: .utf8) else { return }
         
         // Delete any existing item
@@ -28,7 +28,7 @@ public enum OFKeychainHelper {
         SecItemAdd(query as CFDictionary, nil)
     }
     
-    static func retrieve(for key: String) -> String? {
+    public static func retrieve(for key: String) -> String? {
         let query: [String: Any] = [
             kSecClass as String       : kSecClassGenericPassword,
             kSecAttrAccount as String : key,
@@ -46,7 +46,7 @@ public enum OFKeychainHelper {
         return nil
     }
     
-    static func delete(for key: String) {
+    public static func delete(for key: String) {
         let query: [String: Any] = [
             kSecClass as String       : kSecClassGenericPassword,
             kSecAttrAccount as String : key
