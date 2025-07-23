@@ -21,9 +21,9 @@ public struct OFShieldAuthenticationDTO: Codable {
 
 public struct OFRecoveryParamsDTO: Codable {
     let recoveryMethod: String
-    let password: String
+    let password: String?
 
-    public init(recoveryMethod: String, password: String) {
+    public init(recoveryMethod: String, password: String?) {
         self.recoveryMethod = recoveryMethod
         self.password = password
     }
