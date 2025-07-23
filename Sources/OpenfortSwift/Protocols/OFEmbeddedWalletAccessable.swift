@@ -46,7 +46,7 @@ public extension OFEmbeddedWalletAccessable {
     }
 
     func configure(
-        params: ConfigureEmbeddedWalletDTO,
+        params: OFConfigureEmbeddedWalletDTO,
         completion: @escaping (Result<OFConfigureResponse, Error>) -> Void
     ) {
         let method = OFMethods.configure
