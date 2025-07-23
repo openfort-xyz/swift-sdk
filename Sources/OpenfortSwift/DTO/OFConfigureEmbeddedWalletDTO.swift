@@ -10,11 +10,23 @@ public struct OFShieldAuthenticationDTO: Codable {
     let token: String
     let authProvider: String
     let tokenType: String
+
+    public init(auth: String, token: String, authProvider: String, tokenType: String) {
+        self.auth = auth
+        self.token = token
+        self.authProvider = authProvider
+        self.tokenType = tokenType
+    }
 }
 
 public struct OFRecoveryParamsDTO: Codable {
     let recoveryMethod: String
     let password: String
+
+    public init(recoveryMethod: String, password: String) {
+        self.recoveryMethod = recoveryMethod
+        self.password = password
+    }
 }
 
 public struct OFConfigureEmbeddedWalletDTO: Codable {
