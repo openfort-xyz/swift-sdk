@@ -191,17 +191,17 @@ extension OFAuthorizable {
 extension OFAuthorizable {
     private func storeCredentialsLocally(authorizationResponse: OFAuthorizationResponse, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
         if let token = authorizationResponse.token {
-            KeychainHelper.save(token, for: KeychainHelper.authTokenKey)
+            OFKeychainHelper.save(token, for: OFKeychainHelper.authTokenKey)
         }
 
         if let refreshToken = authorizationResponse.refreshToken {
-            KeychainHelper.save(refreshToken, for: KeychainHelper.refreshTokenKey)
+            OFKeychainHelper.save(refreshToken, for: OFKeychainHelper.refreshTokenKey)
         }
         completion(.success(authorizationResponse))
     }
     
     private func resetCredentialsLocally() {
-        KeychainHelper.delete(for: KeychainHelper.authTokenKey)
-        KeychainHelper.delete(for: KeychainHelper.refreshTokenKey)
+        OFKeychainHelper.delete(for: OFKeychainHelper.authTokenKey)
+        OFKeychainHelper.delete(for: OFKeychainHelper.refreshTokenKey)
     }
 }

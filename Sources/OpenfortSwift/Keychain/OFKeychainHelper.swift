@@ -8,7 +8,7 @@
 import Foundation
 import Security
 
-internal enum KeychainHelper {
+public enum OFKeychainHelper {
 
     static let authTokenKey = "of_auth_token"
     static let refreshTokenKey = "of_refresh_token"
