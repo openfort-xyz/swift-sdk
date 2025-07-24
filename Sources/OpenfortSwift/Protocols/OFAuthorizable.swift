@@ -168,9 +168,19 @@ extension OFAuthorizable {
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.linkThirdPartyProvider, completion: completion)
     }
     
-    public func authenticateWithThirdPartyProvider(provider: String, credentials: String, completion: @escaping (Result<OFAuthenticateWithThirdPartyProviderResponse, Error>) -> Void) {
+    public func authenticateWithThirdPartyProvider(
+        provider: String,
+        token: String,
+        tokenType: String,
+        ecosystemGame: String?,
+        completion: @escaping (Result<OFAuthenticateWithThirdPartyProviderResponse, Error>) -> Void
+    ) {
         let method = OFMethods.authenticateWithThirdPartyProvider
-        let js = "window.authenticateWithThirdPartyProviderSync({provider: '\(provider)', credentials: '\(credentials)'});"
+        var js = "window.authenticateWithThirdPartyProviderSync({provider: '\(provider)', token: '\(token)', tokenType: '\(tokenType)'"
+        if let game = ecosystemGame {
+            js += ", ecosystemGame: '\(game)'"
+        }
+        js += "});"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.authenticateWithThirdPartyProvider, completion: completion)
     }
     
