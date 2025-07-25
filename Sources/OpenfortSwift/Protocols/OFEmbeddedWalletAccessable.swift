@@ -12,13 +12,18 @@ public protocol OFEmbeddedWalletAccessable: OFOpenfortRootable {}
 public extension OFEmbeddedWalletAccessable {
 
     func signTypedData(
-        domain: String,
-        types: String,
-        message: String,
+        params: OFSignTypedDataParams,
         completion: @escaping (Result<OFSignTypedDataResponse, Error>) -> Void
     ) {
         let method = OFMethods.signTypedData
-        let js = "window.signTypedDataSync({domain: \(domain), types: \(types), message: \(message)});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            print("Failed to encode OFSignTypedDataParams")
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.signTypedDataSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signTypedData, completion: completion)
     }
 
@@ -27,21 +32,23 @@ public extension OFEmbeddedWalletAccessable {
         completion: @escaping (Result<OFGetResponse, Error>) -> Void
     ) {
         let method = OFMethods.get
-        let js = "window.getSync({key: '\(key)'});"
+        let js = "window.getSync('\(key)');"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.get, completion: completion)
     }
 
     func getEthereumProvider(
-        options: String? = nil,
+        params: OFGetEthereumProviderParams,
         completion: @escaping (Result<OFGetEthereumProviderResponse, Error>) -> Void
     ) {
         let method = OFMethods.getEthereumProvider
-        let js: String
-        if let options = options {
-            js = "window.getEthereumProviderSync({options: \(options)});"
-        } else {
-            js = "window.getEthereumProviderSync();"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            print("Failed to encode OFGetEthereumProviderParams")
+            completion(.failure(OFError.encodingFailed))
+            return
         }
+        let js = "window.getEthereumProviderSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.getEthereumProvider, completion: completion)
     }
 
@@ -54,7 +61,7 @@ public extension OFEmbeddedWalletAccessable {
         guard let jsonData = try? encoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             print("Failed to encode ConfigureEmbeddedWalletDTO")
-            completion(.failure(NSError(domain: OFErrorDomains.configure, code: -1, userInfo: [NSLocalizedDescriptionKey: "Encoding failed"])))
+            completion(.failure(OFError.encodingFailed))
             return
         }
         let js = "window.configureSync({params: \(jsonString)});"
@@ -82,33 +89,39 @@ public extension OFEmbeddedWalletAccessable {
         completion: @escaping (Result<OFPingResponse, Error>) -> Void
     ) {
         let method = OFMethods.ping
-        let js = "window.pingSync({delay: \(delay)});"
+        let js = "window.pingSync(\(delay));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.ping, completion: completion)
     }
 
     func signMessage(
-        message: String,
-        options: String? = nil,
+        params: OFSignMessageParams,
         completion: @escaping (Result<OFSignMessageResponse, Error>) -> Void
     ) {
         let method = OFMethods.signMessage
-        let js: String
-        if let options = options {
-            js = "window.signMessageSync({message: '\(message)', options: \(options)});"
-        } else {
-            js = "window.signMessageSync({message: '\(message)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            print("Failed to encode OFSignMessageParams")
+            completion(.failure(OFError.encodingFailed))
+            return
         }
+        let js = "window.signMessageSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signMessage, completion: completion)
     }
 
     func setEmbeddedRecovery(
-        recoveryMethod: String,
-        recoveryPassword: String,
-        encryptionSession: String,
+        params: OFSetEmbeddedRecoveryParams,
         completion: @escaping (Result<OFSetEmbeddedRecoveryResponse, Error>) -> Void
     ) {
         let method = OFMethods.setEmbeddedRecovery
-        let js = "window.setEmbeddedRecoverySync({recoveryMethod: '\(recoveryMethod)', recoveryPassword: '\(recoveryPassword)', encryptionSession: '\(encryptionSession)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            print("Failed to encode OFSetEmbeddedRecoveryParams")
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.setEmbeddedRecoverySync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.setEmbeddedRecovery, completion: completion)
     }
 

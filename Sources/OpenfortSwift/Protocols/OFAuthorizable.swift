@@ -13,7 +13,7 @@ public protocol OFAuthorizable: OFOpenfortRootable {}
 
 extension OFAuthorizable {
     
-    public func loginWith(_ email: String, _ password: String, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
+    public func loginWith(params: OFAuthEmailPasswordParams, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
         let method = OFMethods.loginWith
         let completionAndStoreCredentials: (Result<OFAuthorizationResponse, Error>) -> Void = { result in
             switch result {
@@ -24,7 +24,13 @@ extension OFAuthorizable {
                 break
             }
         }
-        let js = "window.logInWithEmailPasswordSync({email: '\(email)', password: '\(password)'})"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.logInWithEmailPasswordSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.logInWithEmailPassword, completion: completionAndStoreCredentials)
     }
     
@@ -49,150 +55,225 @@ extension OFAuthorizable {
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signUpGuest, completion: completion)
     }
     
-    public func signUpWith(email: String, password: String, ecosystemGame: String?, completion: @escaping (Result<OFSignUpResponse, Error>) -> Void) {
+    public func signUpWith(params: OFSignUpWithEmailPasswordParams, completion: @escaping (Result<OFSignUpResponse, Error>) -> Void) {
         let method = OFMethods.signUpWith
-        var js = "window.signUpWithEmailPasswordSync({email: '\(email)', password: '\(password)'"
-        if let game = ecosystemGame {
-            js += ", ecosystemGame: '\(game)'"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
         }
-        js += "});"
+        let js = "window.signUpWithEmailPasswordSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signUpWithEmailPassword, completion: completion)
     }
     
-    public func linkEmailPassword(email: String, password: String, authToken: String, ecosystemGame: String?, completion: @escaping (Result<OFLinkEmailPasswordResponse, Error>) -> Void) {
+    public func linkEmailPassword(params: OFLinkEmailPasswordParams, completion: @escaping (Result<OFLinkEmailPasswordResponse, Error>) -> Void) {
         let method = OFMethods.linkEmailPassword
-        var js = "window.linkEmailPasswordSync({email: '\(email)', password: '\(password)', authToken: '\(authToken)'"
-        if let game = ecosystemGame {
-            js += ", ecosystemGame: '\(game)'"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
         }
-        js += "});"
+        let js = "window.linkEmailPasswordSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.linkEmailPassword, completion: completion)
     }
     
-    public func unlinkEmailPassword(email: String, authToken: String, completion: @escaping (Result<OFUnlinkEmailPasswordResponse, Error>) -> Void) {
+    public func unlinkEmailPassword(params: OFUnlinkEmailPasswordParams, completion: @escaping (Result<OFUnlinkEmailPasswordResponse, Error>) -> Void) {
         let method = OFMethods.unlinkEmailPassword
-        let js = "window.unlinkEmailPasswordSync({email: '\(email)', authToken: '\(authToken)'})"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.unlinkEmailPasswordSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.unlinkEmailPassword, completion: completion)
     }
     
-    public func resetPassword(email: String, newPassword: String, completion: @escaping (Result<OFResetPasswordResponse, Error>) -> Void) {
+    public func resetPassword(params: OFResetPasswordParams, completion: @escaping (Result<OFResetPasswordResponse, Error>) -> Void) {
         let method = OFMethods.resetPassword
-        let js = "window.resetPasswordSync({email: '\(email)', newPassword: '\(newPassword)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.resetPasswordSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.resetPassword, completion: completion)
     }
     
-    public func requestResetPassword(email: String, completion: @escaping (Result<OFRequestResetPasswordResponse, Error>) -> Void) {
+    public func requestResetPassword(params: OFRequestResetPasswordParams, completion: @escaping (Result<OFRequestResetPasswordResponse, Error>) -> Void) {
         let method = OFMethods.requestResetPassword
-        let js = "window.requestResetPasswordSync({email: '\(email)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.requestResetPasswordSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.requestResetPassword, completion: completion)
     }
     
-    public func requestEmailVerification(email: String, completion: @escaping (Result<OFRequestEmailVerificationResponse, Error>) -> Void) {
+    public func requestEmailVerification(params: OFRequestEmailVerificationParams, completion: @escaping (Result<OFRequestEmailVerificationResponse, Error>) -> Void) {
         let method = OFMethods.requestEmailVerification
-        let js = "window.requestEmailVerificationSync({email: '\(email)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.requestEmailVerificationSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.requestEmailVerification, completion: completion)
     }
     
-    public func verifyEmail(token: String, completion: @escaping (Result<OFVerifyEmailResponse, Error>) -> Void) {
+    public func verifyEmail(params: OFVerifyEmailParams, completion: @escaping (Result<OFVerifyEmailResponse, Error>) -> Void) {
         let method = OFMethods.verifyEmail
-        let js = "window.verifyEmailSync({token: '\(token)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.verifyEmailSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.verifyEmail, completion: completion)
     }
     
-    public func initOAuth(provider: String, options: String? = nil, ecosystemGame: String? = nil, completion: @escaping (Result<OFInitOAuthResponse, Error>) -> Void) {
+    public func initOAuth(params: OFInitOAuthParams, completion: @escaping (Result<OFInitOAuthResponse, Error>) -> Void) {
         let method = OFMethods.initOAuth
-        var js = "window.initOAuthSync({provider: '\(provider)'"
-        if let options = options {
-            js += ", options: \(options)"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
         }
-        if let game = ecosystemGame {
-            js += ", ecosystemGame: '\(game)'"
-        }
-        js += "});"
+        let js = "window.initOAuthSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.initOAuth, completion: completion)
     }
     
-    public func unlinkOAuth(provider: String, authToken: String, completion: @escaping (Result<OFUnlinkOAuthResponse, Error>) -> Void) {
+    public func unlinkOAuth(params: OFUnlinkOAuthParams, completion: @escaping (Result<OFUnlinkOAuthResponse, Error>) -> Void) {
         let method = OFMethods.unlinkOAuth
-        let js = "window.unlinkOAuthSync({provider: '\(provider)', authToken: '\(authToken)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.unlinkOAuthSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.unlinkOAuth, completion: completion)
     }
     
-    public func loginWithIdToken(provider: String, token: String, ecosystemGame: String? = nil, completion: @escaping (Result<OFLoginWithIdTokenResponse, Error>) -> Void) {
+    public func loginWithIdToken(params: OFLoginWithIdTokenParams, completion: @escaping (Result<OFLoginWithIdTokenResponse, Error>) -> Void) {
         let method = OFMethods.loginWithIdToken
-        var js = "window.loginWithIdTokenSync({provider: '\(provider)', token: '\(token)'"
-        if let game = ecosystemGame {
-            js += ", ecosystemGame: '\(game)'"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
         }
-        js += "});"
+        let js = "window.loginWithIdTokenSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.loginWithIdToken, completion: completion)
     }
     
-    public func linkWallet(walletAddress: String, completion: @escaping (Result<OFLinkWalletResponse, Error>) -> Void) {
+    public func linkWallet(params: OFLinkWalletParams, completion: @escaping (Result<OFLinkWalletResponse, Error>) -> Void) {
         let method = OFMethods.linkWallet
-        let js = "window.linkWalletSync({walletAddress: '\(walletAddress)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.linkWalletSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.linkWallet, completion: completion)
     }
     
-    public func initLinkOAuth(provider: String, completion: @escaping (Result<OFInitLinkOAuthResponse, Error>) -> Void) {
+    public func initLinkOAuth(params: OFInitLinkOAuthParams, completion: @escaping (Result<OFInitLinkOAuthResponse, Error>) -> Void) {
         let method = OFMethods.initLinkOAuth
-        let js = "window.initLinkOAuthSync({provider: '\(provider)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.initLinkOAuthSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.initLinkOAuth, completion: completion)
     }
     
     public func poolOAuth(key: String, completion: @escaping (Result<OFPoolOAuthResponse, Error>) -> Void) {
         let method = OFMethods.poolOAuth
-        let js = "window.poolOAuthSync({key: '\(key)'});"
+        let js = "window.poolOAuthSync(\(key));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.poolOAuth, completion: completion)
     }
     
-    public func initSIWE(address: String, ecosystemGame: String?, completion: @escaping (Result<OFInitSIWEResponse, Error>) -> Void) {
+    public func initSIWE(params: OFInitSIWEParams, completion: @escaping (Result<OFInitSIWEResponse, Error>) -> Void) {
         let method = OFMethods.initSIWE
-        var js = "window.initSIWESync({address: '\(address)'"
-        if let game = ecosystemGame {
-            js += ", ecosystemGame: '\(game)'"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
         }
-        js += "});"
+        let js = "window.initSIWESync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.initSIWE, completion: completion)
     }
     
-    public func unlinkWallet(walletAddress: String, completion: @escaping (Result<OFUnlinkWalletResponse, Error>) -> Void) {
+    public func unlinkWallet(params: OFUnlinkWalletParams, completion: @escaping (Result<OFUnlinkWalletResponse, Error>) -> Void) {
         let method = OFMethods.unlinkWallet
-        let js = "window.unlinkWalletSync({walletAddress: '\(walletAddress)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.unlinkWalletSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.unlinkWallet, completion: completion)
     }
     
-    public func linkThirdPartyProvider(provider: String, credentials: String, completion: @escaping (Result<OFLinkThirdPartyProviderResponse, Error>) -> Void) {
+    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams, completion: @escaping (Result<OFLinkThirdPartyProviderResponse, Error>) -> Void) {
         let method = OFMethods.linkThirdPartyProvider
-        let js = "window.linkThirdPartyProviderSync({provider: '\(provider)', credentials: '\(credentials)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.linkThirdPartyProviderSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.linkThirdPartyProvider, completion: completion)
     }
     
-    public func authenticateWithThirdPartyProvider(
-        provider: String,
-        token: String,
-        tokenType: String,
-        ecosystemGame: String?,
-        completion: @escaping (Result<OFAuthenticateWithThirdPartyProviderResponse, Error>) -> Void
-    ) {
+    public func authenticateWithThirdPartyProvider(params: OFAuthenticateWithThirdPartyProviderParams, completion: @escaping (Result<OFAuthenticateWithThirdPartyProviderResponse, Error>) -> Void) {
         let method = OFMethods.authenticateWithThirdPartyProvider
-        var js = "window.authenticateWithThirdPartyProviderSync({provider: '\(provider)', token: '\(token)', tokenType: '\(tokenType)'"
-        if let game = ecosystemGame {
-            js += ", ecosystemGame: '\(game)'"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
         }
-        js += "});"
+        let js = "window.authenticateWithThirdPartyProviderSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.authenticateWithThirdPartyProvider, completion: completion)
     }
     
-    public func authenticateWithSIWE(siweData: String, completion: @escaping (Result<OFAuthenticateWithSIWEResponse, Error>) -> Void) {
+    public func authenticateWithSIWE(params: OFAuthenticateWithSIWEParams, completion: @escaping (Result<OFAuthenticateWithSIWEResponse, Error>) -> Void) {
         let method = OFMethods.authenticateWithSIWE
-        let js = "window.authenticateWithSIWESync({siweData: '\(siweData)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.authenticateWithSIWESync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.authenticateWithSIWE, completion: completion)
     }
     
-    public func storeCredentials(credentials: String, completion: @escaping (Result<OFStoreCredentialsResponse, Error>) -> Void) {
+    public func storeCredentials(params: OFStoreCredentialsParams, completion: @escaping (Result<OFStoreCredentialsResponse, Error>) -> Void) {
         let method = OFMethods.storeCredentials
-        let js = "window.storeCredentialsSync({credentials: '\(credentials)'});"
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(params),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            completion(.failure(OFError.encodingFailed))
+            return
+        }
+        let js = "window.storeCredentialsSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.storeCredentials, completion: completion)
     }
     
