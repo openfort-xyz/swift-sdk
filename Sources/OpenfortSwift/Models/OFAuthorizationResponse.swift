@@ -29,11 +29,11 @@ public struct OFAuthorizationResponse: OFAuthorizationResponseProtocol, Decodabl
     public struct ActionDetails: Decodable {
         // Expand with specific fields if your backend provides them
         // For now, use a generic dictionary to capture anything
-        public let raw: [String: String?]?
+        public let raw: [String: AnyCodable?]?
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.singleValueContainer()
-            raw = try? container.decode([String: String?].self)
+            raw = try? container.decode([String: AnyCodable?].self)
         }
     }
 }

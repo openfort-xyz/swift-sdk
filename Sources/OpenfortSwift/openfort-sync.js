@@ -22,12 +22,11 @@ window.logInWithEmailPasswordSync = function({ email, password, ecosystemGame })
 };
 
 window.signUpGuestSync = function() {
-    handleResult('signUpGuest', window.openfort.signUpGuest());
+    handleResult('signUpGuest', window.openfort.authInstance.signUpGuest());
 };
 
 window.signUpWithEmailPasswordSync = function({ email, password, name, ecosystemGame }) {
     const options = name ? { data: { name } } : undefined;
-
     handleResult(
         'signUpWithEmailPassword',
         window.openfort.authInstance.signUpWithEmailPassword({
@@ -62,7 +61,7 @@ window.isUserVerifiedSync = function() {
 };
 
 window.reauthenticateWithPasswordSync = function({ password }) {
-    handleResult('reauthenticateWithPassword', window.openfort.authInstance.reauthenticateWithPassword(password));
+    handleResult('reauthenticateWithPassword', window.openfort.authInstance.reauthenticateWithPassword({ password }));
 };
 
 window.deleteUserSync = function() {
@@ -145,7 +144,7 @@ window.initLinkOAuthSync = function({ provider, authToken, options, ecosystemGam
 };
 
 window.poolOAuthSync = function({ key }) {
-    handleResult('poolOAuth', window.openfort.authInstance.poolOAuth(key));
+    handleResult('poolOAuth', window.openfort.authInstance.poolOAuth({ key }));
 };
 
 window.initSIWESync = function({ address, ecosystemGame }) {
@@ -188,8 +187,16 @@ window.authenticateWithSIWESync = function({ signature, message, walletClientTyp
     }));
 };
 
-window.storeCredentialsSync = function({ auth }) {
-    handleResult('storeCredentials', window.openfort.authInstance.storeCredentials(auth));
+window.storeCredentialsSync = function({ provider, token, tokenType, ecosystemGame }) {
+    handleResult(
+        'storeCredentials',
+        window.openfort.authInstance.storeCredentials({
+            provider,
+            token,
+            tokenType,
+            ecosystemGame
+        })
+    );
 };
 
 // EmbeddedWalletInstance sync methods
@@ -247,14 +254,14 @@ window.getURLSync = function() {
 window.sendSignatureTransactionIntentRequestSync = function({ transactionIntentId, signableHash = null, signature = null, optimistic = false }) {
     handleResult(
         'sendSignatureTransactionIntentRequest',
-        window.openfort.proxyInstance.sendSignatureTransactionIntentRequest(transactionIntentId, signableHash, signature, optimistic)
+        window.openfort.proxyInstance.sendSignatureTransactionIntentRequest({ transactionIntentId, signableHash, signature, optimistic })
     );
 };
 
 window.sendSignatureSessionRequestSync = function({ sessionId, signature, optimistic }) {
     handleResult(
         'sendSignatureSessionRequest',
-        window.openfort.proxyInstance.sendSignatureSessionRequest(sessionId, signature, optimistic)
+        window.openfort.proxyInstance.sendSignatureSessionRequest({ sessionId, signature, optimistic })
     );
 };
 

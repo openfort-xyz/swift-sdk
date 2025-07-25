@@ -10,7 +10,7 @@ public protocol OFSignUpResponseProtocol {
     var refreshToken: String? { get }
     var player: OFPlayerInfo? { get }
     var action: String? { get }
-    var details: [String: String]? { get }
+    var details: [String: AnyCodable]? { get }
     
 }
 
@@ -19,5 +19,5 @@ public struct OFSignUpResponse: OFSignUpResponseProtocol, Decodable {
     public let refreshToken: String?
     public let player: OFPlayerInfo?
     public let action: String?
-    public let details: [String: String]? // You can replace String with more detailed types if needed
+    public let details: [String: AnyCodable]?
 }
