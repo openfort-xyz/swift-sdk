@@ -9,6 +9,11 @@
 @MainActor
 public protocol OFOpenfortRootable {
     var webView: WKWebView? { get }
+    var isInitialized: Bool { get set }
+    /// Completion called when the SDK successfully loads
+    var didLoad: (() -> Void)? { get set }
+    /// Completion called when the SDK fails to load with an error
+    var didFailedToLoad: ((Error) -> Void)? { get set }
 }
 
 extension OFOpenfortRootable {
