@@ -126,7 +126,7 @@ public extension OFEmbeddedWalletAccessable {
     }
 
     func getEmbeddedState(
-        completion: @escaping (Result<Int, Error>) -> Void
+        completion: @escaping (Result<OFGetEmbeddedStateResponse, Error>) -> Void
     ) {
         let method = OFMethods.getEmbeddedState
         let js = "window.getEmbeddedStateSync();"
