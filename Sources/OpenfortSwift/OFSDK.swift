@@ -12,6 +12,11 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
     
     /// Shared singleton instance of OFSDK
     public static let shared = OFSDK()
+    public var isInitialized: Bool = false
+    /// Completion called when the SDK successfully loads
+    public var didLoad: (() -> Void)?
+    /// Completion called when the SDK fails to load with an error
+    public var didFailedToLoad: ((Error) -> Void)?
     
     private var coordinator = OFWebViewCoordinator()
     private var messageHandler = OFScriptMessageHandler()
@@ -21,6 +26,16 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
     @MainActor
     private override init () {
         super.init()
+        coordinator.didLoad = { [weak self] in
+            self?.isInitialized = true
+            self?.didLoad?()
+        }
+        
+        coordinator.didFailedToLoad = { [weak self] error in
+            self?.isInitialized = false
+            self?.didFailedToLoad?(error)
+        }
+        
         self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
     }
     
