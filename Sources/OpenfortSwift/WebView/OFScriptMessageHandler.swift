@@ -98,8 +98,6 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             }
             if let dict = data as? [String: Any] {
                 jsonData = try JSONSerialization.data(withJSONObject: dict, options: [])
-            } else if let str = data as? String, let d = str.data(using: .utf8) {
-                jsonData = d
             } else if let d = data as? T {
                 NotificationCenter.default.post(name: Notification.Name(method), object: d)
                 return
