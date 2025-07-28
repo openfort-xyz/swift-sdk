@@ -68,7 +68,7 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             "ping": handlerFor(OFPingResponse.self),
             "signMessage": handlerFor(OFSignMessageResponse.self),
             "setEmbeddedRecovery": handlerFor(OFSetEmbeddedRecoveryResponse.self),
-            "getEmbeddedState": handlerFor(OFGetEmbeddedStateResponse.self),
+            "getEmbeddedState": handlerFor(Int.self),
             "getURL": handlerFor(OFGetURLResponse.self),
             "sendSignatureTransactionIntentRequest": handlerFor(OFSendSignatureTransactionIntentRequestResponse.self),
             "sendSignatureSessionRequest": handlerFor(OFSendSignatureSessionRequestResponse.self),
@@ -100,9 +100,11 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
                 jsonData = try JSONSerialization.data(withJSONObject: dict, options: [])
             } else if let str = data as? String, let d = str.data(using: .utf8) {
                 jsonData = d
+            } else if let d = data as? T {
+                NotificationCenter.default.post(name: Notification.Name(method), object: d)
+                return
             } else {
                 print("Data is not valid JSON for \(method)")
-                NotificationCenter.default.post(name: Notification.Name(method), object: nil)
                 return
             }
             let decoded = try JSONDecoder().decode(T.self, from: jsonData!)

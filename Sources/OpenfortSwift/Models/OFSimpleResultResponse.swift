@@ -21,3 +21,4 @@ public typealias OFUpdatePasswordResponse = OFSimpleResultResponse
 public typealias OFReauthenticateWithPasswordResponse = OFSimpleResultResponse
 public typealias OFDeleteUserResponse = OFSimpleResultResponse
 public typealias OFUnlinkEmailPasswordResponse = OFSimpleResultResponse
+public typealias OFGetEmbeddedStateResponse = Int
