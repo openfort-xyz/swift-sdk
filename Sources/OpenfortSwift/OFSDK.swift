@@ -24,8 +24,8 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
     public var webView: WKWebView?
     
     @MainActor
-    private override init () {
-        super.init()
+    
+    public func initialize() {
         coordinator.didLoad = { [weak self] in
             self?.isInitialized = true
             self?.didLoad?()
