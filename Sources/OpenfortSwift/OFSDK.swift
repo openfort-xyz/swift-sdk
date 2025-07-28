@@ -10,13 +10,16 @@ import WebKit
 @MainActor
 open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEmbeddedWalletAccessable, OFUserAccessable {
     
+    /// Shared singleton instance of OFSDK
+    public static let shared = OFSDK()
+    
     private var coordinator = OFWebViewCoordinator()
     private var messageHandler = OFScriptMessageHandler()
     
     public var webView: WKWebView?
     
     @MainActor
-    public override init () {
+    private override init () {
         super.init()
         self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
     }
