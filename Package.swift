@@ -24,10 +24,6 @@ let package = Package(
                     .process("index.js"),
                     .process("openfort.js"),
                     .process("openfort-sync.js"),
-                    .process("recover.html"),
-                    .process("recover.js"),
-                    .process("signature.html"),
-                    .process("signature.js"),
                     .process("utils.js")
                 ]
         ),
