@@ -9,7 +9,11 @@ import WebKit
 import Foundation
 
 internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
+    
+    weak var webView: WKWebView?
+    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        
         guard let dict = message.body as? [String: Any] else {
             print("Received message is not a dictionary: \(message.body)")
             return
@@ -19,7 +23,10 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             print("No 'method' key in message: \(dict)")
             return
         }
-
+        if processMessageForKeychain(dict) {
+            return
+        }
+        
         let success = dict["success"] as? Bool ?? false
         if success {
             if let handler = responseModelsDictionaryHandler[method] {
@@ -31,7 +38,32 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             handleError(dict, method: method)
         }
     }
-
+    
+    private func processMessageForKeychain(_ data: [String: Any]) -> Bool {
+        
+        let method = data["method"] as? String ?? ""
+        
+        switch method {
+        case "KeycahinSave":
+            OFKeychainHelper.save(data["value"] as! String, for: data["key"] as! String)
+            return true
+        case "KeychainRemove":
+            OFKeychainHelper.delete(for: data["key"] as! String)
+            return true
+        case "KeychainGet":
+            let value = OFKeychainHelper.retrieve(for: data["key"] as! String) ?? ""
+            let requestId = data["requestId"] as! Int
+            let js = "window.__keychainOnGet({requestId: \(requestId), value: \(value)})"
+            webView?.evaluateJavaScript(js)
+            return true
+        case "KeychainFlush":
+            OFKeychainHelper.clearAll()
+            return true
+        default:
+            return false
+        }
+    }
+    
     private var responseModelsDictionaryHandler: [String: (Any?, String) -> Void] {
         [
             "logInWithEmailPassword": handlerFor(OFAuthorizationResponse.self),

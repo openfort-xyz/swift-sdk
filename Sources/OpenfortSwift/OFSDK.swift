@@ -37,6 +37,7 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
         }
         
         self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
+        messageHandler.webView = self.webView
     }
     
     private var contentUrl: URL {

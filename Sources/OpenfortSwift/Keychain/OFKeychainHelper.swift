@@ -54,4 +54,11 @@ public enum OFKeychainHelper {
         
         SecItemDelete(query as CFDictionary)
     }
+    
+    public static func clearAll() {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword
+        ]
+        SecItemDelete(query as CFDictionary)
+    }
 }
