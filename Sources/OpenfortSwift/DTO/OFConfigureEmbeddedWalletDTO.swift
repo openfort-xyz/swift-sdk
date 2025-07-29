@@ -30,11 +30,11 @@ public struct OFRecoveryParamsDTO: Codable {
 }
 
 public struct OFConfigureEmbeddedWalletDTO: Codable {
-    let chainId: String
+    let chainId: Int
     let shieldAuthentication: OFShieldAuthenticationDTO
     let recoveryParams: OFRecoveryParamsDTO
 
-    public init(chainId: String, shieldAuthentication: OFShieldAuthenticationDTO, recoveryParams: OFRecoveryParamsDTO) {
+    public init(chainId: Int, shieldAuthentication: OFShieldAuthenticationDTO, recoveryParams: OFRecoveryParamsDTO) {
         self.chainId = chainId
         self.shieldAuthentication = shieldAuthentication
         self.recoveryParams = recoveryParams
