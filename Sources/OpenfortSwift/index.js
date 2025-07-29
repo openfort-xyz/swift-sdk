@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     shieldConfiguration: {
       shieldPublishableKey: '3a3ef549-5d4c-4f6d-b5cf-42881c23c2de',
       shieldEncryptionKey: 'b9ee1765-d986-4423-b29b-d9172994ea38',
+      debug:true
     },
   });
     
