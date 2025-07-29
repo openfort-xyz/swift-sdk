@@ -24,14 +24,6 @@ class KeychainStorage {
     }
 }
 
-// This function will be called by Swift when value is ready
-window.__keychainOnGet = function({ requestId, value }) {
-    const resolve = KeychainStorage._pendingGets[requestId];
-    if (resolve) {
-        resolve(value);
-        delete KeychainStorage._pendingGets[requestId];
-    }
-};
 
 document.addEventListener('DOMContentLoaded', async () => {
     const storage = new KeychainStorage();
@@ -43,11 +35,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         shieldConfiguration: {
             shieldPublishableKey: '3a3ef549-5d4c-4f6d-b5cf-42881c23c2de',
             shieldEncryptionKey: 'b9ee1765-d986-4423-b29b-d9172994ea38',
-        },
-        overrides: {
-            storage: storage
         }
     });
     
     window.openfort = openfort;
+    
+    // This function will be called by Swift when value is ready
+    window.__keychainOnGet = function({ requestId, value }) {
+        const resolve = KeychainStorage._pendingGets[requestId];
+        if (resolve) {
+            resolve(value);
+            delete KeychainStorage._pendingGets[requestId];
+        }
+    };
+
 });
