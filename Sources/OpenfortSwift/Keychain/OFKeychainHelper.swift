@@ -9,9 +9,6 @@ import Foundation
 import Security
 
 public enum OFKeychainHelper {
-
-    public static let authTokenKey = "of_auth_token"
-    public static let refreshTokenKey = "of_refresh_token"
     
     public static func save(_ value: String, for key: String) {
         guard let data = value.data(using: .utf8) else { return }
