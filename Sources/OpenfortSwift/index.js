@@ -11,16 +11,28 @@ class KeychainStorage {
         });
     }
     
-    save(key, value) {
-        window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainSave", key: key, value: value });
+    async save(key, value) {
+        const requestId = KeychainStorage._nextRequestId++;
+        return new Promise((resolve) => {
+            KeychainStorage._pendingOps[requestId] = resolve;
+            window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainSave", key: key, value: value, requestId: requestId });
+        });
     }
     
-    remove(key) {
-        window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainRemove", key: key });
+    async remove(key) {
+        const requestId = KeychainStorage._nextRequestId++;
+        return new Promise((resolve) => {
+            KeychainStorage._pendingOps[requestId] = resolve;
+            window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainRemove", key: key, requestId: requestId });
+        });
     }
     
-    flush() {
-        window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainFlush" });
+    async flush() {
+        const requestId = KeychainStorage._nextRequestId++;
+        return new Promise((resolve) => {
+            KeychainStorage._pendingOps[requestId] = resolve;
+            window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainFlush", requestId: requestId });
+        });
     }
 }
 
@@ -30,6 +42,15 @@ window.__keychainOnGet = function({ requestId, value }) {
     if (resolve) {
         resolve(value);
         delete KeychainStorage._pendingGets[requestId];
+    }
+};
+
+// Callback for save, remove, flush
+window.__keychainOnOp = function({ requestId }) {
+    const resolve = KeychainStorage._pendingOps[requestId];
+    if (resolve) {
+        resolve();
+        delete KeychainStorage._pendingOps[requestId];
     }
 };
 
@@ -50,5 +71,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     
     window.openfort = openfort;
-
+    
 });
