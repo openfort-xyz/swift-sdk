@@ -57,7 +57,17 @@ extension OFOpenfortRootable {
             completion(.success(object))
            
         }
-        webView?.evaluateJavaScript(js) { result, error in
+        
+        let coveredJS = """
+        (async function() {
+          try {
+            \(js)
+          } catch (err) {
+            throw err;
+          }
+        })()
+        """
+        webView?.evaluateJavaScript(coveredJS) { result, error in
             if let error = error {
                 if let obs = observer { NotificationCenter.default.removeObserver(obs) }
                 completion(.failure(error))
