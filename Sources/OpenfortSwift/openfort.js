@@ -7084,6 +7084,7 @@
             }
             static async fromStorage(e) {
                 let t = await e.get(a.StorageKeys.AUTHENTICATION);
+                window.webkit.messageHandlers.userHandler.postMessage({ method: "fromStorage", data: t });
                 if (!t) return null;
                 try {
                     let e = JSON.parse(t);
