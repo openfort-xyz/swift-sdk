@@ -57,6 +57,17 @@ extension OFOpenfortRootable {
             completion(.success(object))
            
         }
-        webView?.evaluateJavaScript(js, completionHandler: nil)
+        webView?.evaluateJavaScript(js) { result, error in
+            if let error = error {
+                if let obs = observer { NotificationCenter.default.removeObserver(obs) }
+                completion(.failure(error))
+                return
+            }
+            if result == nil {
+                if let obs = observer { NotificationCenter.default.removeObserver(obs) }
+                completion(.failure(NSError(domain: errorDomain, code: -2, userInfo: [NSLocalizedDescriptionKey: "JavaScript evaluation returned nil"])))
+                return
+            }
+        }
     }
 }
