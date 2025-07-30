@@ -8,11 +8,9 @@
 function handleResult(method, promise) {
     promise
         .then(result => {
-            console.log(`[Openfort] Success for ${method}:`, result);
             window.webkit.messageHandlers.userHandler.postMessage({ method: method, success: true, data: result });
         })
         .catch(error => {
-            console.log(`[Openfort] Error for ${method}:`, error);
             window.webkit.messageHandlers.userHandler.postMessage({ method: method, success: false, error: error && error.message ? error.message : String(error) });
         });
 }
@@ -20,6 +18,7 @@ function handleResult(method, promise) {
 // AuthInstance sync methods
 
 window.logInWithEmailPasswordSync = function({ email, password, ecosystemGame }) {
+    window.webkit.messageHandlers.userHandler.postMessage("logInWithEmailPassword executed");
     handleResult('logInWithEmailPassword', window.openfort.authInstance.logInWithEmailPassword({ email, password, ecosystemGame }));
 };
 
