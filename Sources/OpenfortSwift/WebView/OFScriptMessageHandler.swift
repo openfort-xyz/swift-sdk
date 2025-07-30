@@ -60,7 +60,9 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             let value = OFKeychainHelper.retrieve(for: data["key"] as! String) ?? ""
             let requestId = data["requestId"] as! Int
             let js = "window.__keychainOnGet({requestId: \(requestId), value: \(value)})"
-            webView?.evaluateJavaScript(js)
+            webView?.evaluateJavaScript(js, completionHandler: { result, error in
+                
+            })
             return true
         case "KeychainFlush":
             OFKeychainHelper.clearAll()
