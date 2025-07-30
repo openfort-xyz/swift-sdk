@@ -44,7 +44,7 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
         let method = data["method"] as? String ?? ""
         
         switch method {
-        case "KeycahinSave":
+        case "KeychainSave":
             OFKeychainHelper.save(data["value"] as! String, for: data["key"] as! String)
             return true
         case "KeychainRemove":
