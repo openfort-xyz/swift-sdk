@@ -1,5 +1,6 @@
 class KeychainStorage {
     static _pendingGets = {};
+    static _pendingOps = {};
     static _nextRequestId = 1;
     
     async get(key) {
@@ -71,5 +72,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     
     window.openfort = openfort;
-    
+
 });

@@ -7469,7 +7469,6 @@
             async getEmbeddedState() {
                 try {
                     if (!await l.Authentication.fromStorage(this.storage)) return y.EmbeddedState.UNAUTHENTICATED;
-                    window.webkit.messageHandlers.userHandler.postMessage("getEmbeddedState");
                     if (!await o.SignerManager.fromStorage(this.storage)) return y.EmbeddedState.EMBEDDED_SIGNER_NOT_CONFIGURED;
                     return await i.Account.fromStorage(this.storage) ? y.EmbeddedState.READY : y.EmbeddedState.CREATING_ACCOUNT
                 } catch (e) {
