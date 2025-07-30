@@ -61,7 +61,7 @@ extension OFOpenfortRootable {
         let coveredJS = """
         (async function() {
           try {
-            \(js)
+            return await \(js)
           } catch (err) {
             throw err;
           }
