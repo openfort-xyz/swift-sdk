@@ -7,20 +7,20 @@ class KeychainStorage {
         const requestId = KeychainStorage._nextRequestId++;
         return new Promise((resolve) => {
             KeychainStorage._pendingGets[requestId] = resolve;
-            window.webkit?.messageHandlers?.keychain?.postMessage({ method: "KeychainGet", key: key, requestId: requestId });
+            window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainGet", key: key, requestId: requestId });
         });
     }
     
     save(key, value) {
-        window.webkit?.messageHandlers?.keychain?.postMessage({ method: "KeychainSave", key: key, value: value });
+        window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainSave", key: key, value: value });
     }
     
     remove(key) {
-        window.webkit?.messageHandlers?.keychain?.postMessage({ method: "KeychainRemove", key: key });
+        window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainRemove", key: key });
     }
     
     flush() {
-        window.webkit?.messageHandlers?.keychain?.postMessage({ method: "KeychainFlush" });
+        window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainFlush" });
     }
 }
 
