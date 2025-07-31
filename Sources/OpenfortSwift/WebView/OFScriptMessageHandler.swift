@@ -61,10 +61,27 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
         case "KeychainGet":
             let value = OFKeychainHelper.retrieve(for: data["key"] as! String) ?? ""
             let requestId = data["requestId"] as! Int
-            let js = "window.__keychainOnGet({ requestId: \(requestId), value: \(value) })"
-            webView?.evaluateJavaScript(js, completionHandler: { result, error in
-                
-            })
+            if !value.isEmpty {
+                // Try to parse value as JSON
+                if let data = value.data(using: .utf8),
+                   let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
+                   JSONSerialization.isValidJSONObject(jsonObject) {
+                    // It's a JSON object/array, pass as-is
+                    let js = "window.__keychainOnGet({ requestId: \(requestId), value: \(value) })"
+                    webView?.evaluateJavaScript(js)
+                } else {
+                    // It's a plain string, escape and quote
+                    let escapedValue = value
+                        .replacingOccurrences(of: "\\", with: "\\\\")
+                        .replacingOccurrences(of: "\"", with: "\\\"")
+                    let js = "window.__keychainOnGet({ requestId: \(requestId), value: \"\(escapedValue)\" })"
+                    webView?.evaluateJavaScript(js)
+                }
+            } else {
+                // If nil or empty, send null
+                let js = "window.__keychainOnGet({ requestId: \(requestId), value: null })"
+                webView?.evaluateJavaScript(js)
+            }
             return true
         case "KeychainFlush":
             OFKeychainHelper.clearAll()
