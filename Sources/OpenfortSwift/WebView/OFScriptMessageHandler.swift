@@ -118,7 +118,7 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             "initSIWE": handlerFor(OFInitSIWEResponse.self),
             "unlinkWallet": handlerFor(OFUnlinkWalletResponse.self),
             "linkThirdPartyProvider": handlerFor(OFLinkThirdPartyProviderResponse.self),
-            "authenticateWithThirdPartyProvider": handlerFor(OFAuthorizationResponse.self),
+            "authenticateWithThirdPartyProvider": handlerFor(OFAuthenticateWithThirdPartyProviderResponse.self),
             "authenticateWithSIWE": handlerFor(OFAuthorizationResponse.self),
             "storeCredentials": handlerFor(OFStoreCredentialsResponse.self),
             "signTypedData": handlerFor(OFSignTypedDataResponse.self),

@@ -6,11 +6,30 @@
 //
 
 public protocol OFAuthenticateWithThirdPartyProviderResponseProtocol {
-    var provider: String? { get }
-    var authenticated: Bool? { get }
+    var id: String { get }
+    var object: String { get }
+    var linkedAccounts: [LinkedAccount] { get }
+    var createdAt: Int { get }
+}
+
+public protocol OFLinkedAccountProtocol {
+    var email: String { get }
+    var externalUserId: String { get }
+    var provider: String { get }
+    var disabled: Int { get }
 }
 
 public struct OFAuthenticateWithThirdPartyProviderResponse: Decodable, OFAuthenticateWithThirdPartyProviderResponseProtocol {
-    public let provider: String?
-    public let authenticated: Bool?
+    
+    public let id: String
+    public let object: String
+    public let linkedAccounts: [LinkedAccount]
+    public let createdAt: Int
+}
+
+public struct LinkedAccount: Decodable, OFLinkedAccountProtocol {
+    public let email: String
+    public let externalUserId: String
+    public let provider: String
+    public let disabled: Int
 }
