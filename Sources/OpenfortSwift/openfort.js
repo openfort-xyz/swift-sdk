@@ -7459,6 +7459,7 @@
                 authToken: n
             }) {
                 return await this.validateAndRefreshToken(), await this.authManager.linkWallet(e, t, r, s, n)
+                return await this.validateAndRefreshToken(), await this.authManager.linkWallet(e, t, r, s, n)
             }
             async unlinkWallet({
                 address: e,

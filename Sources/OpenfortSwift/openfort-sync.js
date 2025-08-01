@@ -134,10 +134,9 @@ window.logoutSync = function() {
     handleResult('logout', window.openfort.authInstance.logout());
 };
 
-window.initLinkOAuthSync = function({ provider, authToken, options, ecosystemGame }) {
+window.initLinkOAuthSync = function({ provider, options, ecosystemGame }) {
     handleResult('initLinkOAuth', window.openfort.authInstance.initLinkOAuth({
         provider,
-        authToken,
         options,
         ecosystemGame
     }));

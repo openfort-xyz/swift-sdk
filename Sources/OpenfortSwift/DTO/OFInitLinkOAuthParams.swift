@@ -7,13 +7,11 @@
 
 public struct OFInitLinkOAuthParams: Codable {
     public let provider: String
-    public let authToken: String
     public let options: [String: AnyCodable]?
     public let ecosystemGame: String?
 
-    public init(provider: String, authToken: String, options: [String: AnyCodable]? = nil, ecosystemGame: String? = nil) {
+    public init(provider: String, options: [String: AnyCodable]? = nil, ecosystemGame: String? = nil) {
         self.provider = provider
-        self.authToken = authToken
         self.options = options
         self.ecosystemGame = ecosystemGame
     }
