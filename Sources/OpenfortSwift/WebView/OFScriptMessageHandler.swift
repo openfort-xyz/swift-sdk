@@ -11,6 +11,7 @@ import Foundation
 internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
     weak var webView: WKWebView?
+    let jsonDecoder = JSONDecoder()
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
@@ -167,7 +168,7 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
                 print("Data is not valid JSON for \(method)")
                 return
             }
-            let decoded = try JSONDecoder().decode(T.self, from: jsonData!)
+            let decoded = try jsonDecoder.decode(T.self, from: jsonData!)
             NotificationCenter.default.post(name: Notification.Name(method), object: decoded)
             print("Decoded \(method) data:", decoded)
         } catch {
