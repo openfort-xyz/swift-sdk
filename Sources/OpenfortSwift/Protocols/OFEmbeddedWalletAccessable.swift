@@ -102,7 +102,7 @@ public extension OFEmbeddedWalletAccessable {
             completion(.failure(OFError.encodingFailed))
             return
         }
-        let js = "window.signMessageSync({ message: \"\(params.message)\", options: \"\(params.options ?? [:])\" });"
+        let js = "window.signMessageSync(\(jsonString));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signMessage, completion: completion)
     }
 
