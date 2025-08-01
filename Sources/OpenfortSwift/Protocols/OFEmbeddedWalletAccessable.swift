@@ -57,8 +57,7 @@ public extension OFEmbeddedWalletAccessable {
         let method = OFMethods.configure
 
         guard let jsonData = try? jsonEncoder.encode(params),
-              let jsonString = String(data: jsonData, encoding: .utf8)?.replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "\"", with: "\\\"") else {
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
             print("Failed to encode ConfigureEmbeddedWalletDTO")
             completion(.failure(OFError.encodingFailed))
             return
