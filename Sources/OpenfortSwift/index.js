@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         shieldConfiguration: {
             shieldPublishableKey: '3a3ef549-5d4c-4f6d-b5cf-42881c23c2de',
-            shieldEncryptionKey: 'b9ee1765-d986-4423-b29b-d9172994ea38',
+            shieldEncryptionKey: 'AnOZE0fPHC4+n+8jpg9mCNXmPMVY0eRVewi7dQ/7G2yv',
         },
         overrides: {
             iframeUrl: 'http://localhost:5173',
