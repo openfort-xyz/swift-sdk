@@ -11,7 +11,7 @@ public protocol OFConfigureOwnerResponseProtocol {
 
 public protocol OFConfigureResponseProtocol {
     var ownerAddress: String? { get }
-    var chainId: Int? { get }
+    var chainId: String? { get }
     var owner: OFOwner? { get }
     var implementationType: String? { get }
     var chainType: String? { get }
@@ -20,7 +20,7 @@ public protocol OFConfigureResponseProtocol {
 
 public struct OFConfigureResponse: Decodable, OFConfigureResponseProtocol {
     public let ownerAddress: String?
-    public let chainId: Int?
+    public let chainId: String?
     public let owner: OFOwner?
     public let implementationType: String?
     public let chainType: String?
