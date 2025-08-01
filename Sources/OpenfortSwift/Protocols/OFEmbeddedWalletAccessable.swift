@@ -102,7 +102,10 @@ public extension OFEmbeddedWalletAccessable {
             completion(.failure(OFError.encodingFailed))
             return
         }
-        let js = "window.signMessageSync(\(jsonString));"
+        let escaped = jsonString
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+        let js = "window.signMessageSync(\"\(escaped)\");"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signMessage, completion: completion)
     }
 
