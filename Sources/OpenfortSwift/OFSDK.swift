@@ -10,11 +10,9 @@ import WebKit
 @MainActor
 open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEmbeddedWalletAccessable, OFUserAccessable {
     
-    
-    
     /// Shared singleton instance of OFSDK
     public static let shared = OFSDK()
-    public var isInitialized: Bool = false
+    private static var initialized: Bool = false
     /// Completion called when the SDK successfully loads
     public var didLoad: (() -> Void)?
     /// Completion called when the SDK fails to load with an error
@@ -26,9 +24,18 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
     public var webView: WKWebView?
     public var jsonEncoder: JSONEncoder = JSONEncoder()
     
+    /// Initializes the SDK. Call this once before using `OFSDK.shared`.
     @MainActor
+    public static func setupSDK() {
+        if initialized {
+            return
+        }
+        shared.setupInstance()
+        initialized = true
+    }
     
-    public func initialize() {
+    @MainActor
+    private func setupInstance() {
         coordinator.didLoad = { [weak self] in
             self?.isInitialized = true
             self?.didLoad?()
@@ -42,6 +49,8 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
         self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
         messageHandler.webView = self.webView
     }
+    
+    public var isInitialized: Bool = false
     
     private var contentUrl: URL {
         Bundle.module.url(forResource: "index", withExtension: "html")!

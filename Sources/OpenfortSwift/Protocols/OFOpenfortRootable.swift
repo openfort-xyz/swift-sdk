@@ -8,7 +8,6 @@
 
 @MainActor
 public protocol OFOpenfortRootable {
-    func initialize()
     var webView: WKWebView? { get }
     var jsonEncoder: JSONEncoder { get }
     var isInitialized: Bool { get set }
