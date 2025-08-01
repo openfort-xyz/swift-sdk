@@ -10,6 +10,7 @@
 public protocol OFOpenfortRootable {
     func initialize()
     var webView: WKWebView? { get }
+    var jsonEncoder: JSONEncoder { get }
     var isInitialized: Bool { get set }
     /// Completion called when the SDK successfully loads
     var didLoad: (() -> Void)? { get set }

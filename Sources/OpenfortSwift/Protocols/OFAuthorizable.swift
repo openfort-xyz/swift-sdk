@@ -14,9 +14,9 @@ public protocol OFAuthorizable: OFOpenfortRootable {}
 extension OFAuthorizable {
     
     public func loginWith(params: OFAuthEmailPasswordParams, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
+        
         let method = OFMethods.loginWith
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -38,9 +38,9 @@ extension OFAuthorizable {
     }
     
     public func signUpWith(params: OFSignUpWithEmailPasswordParams, completion: @escaping (Result<OFSignUpResponse, Error>) -> Void) {
+        
         let method = OFMethods.signUpWith
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -50,9 +50,9 @@ extension OFAuthorizable {
     }
     
     public func linkEmailPassword(params: OFLinkEmailPasswordParams, completion: @escaping (Result<OFLinkEmailPasswordResponse, Error>) -> Void) {
+        
         let method = OFMethods.linkEmailPassword
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -62,9 +62,9 @@ extension OFAuthorizable {
     }
     
     public func unlinkEmailPassword(params: OFUnlinkEmailPasswordParams, completion: @escaping (Result<OFUnlinkEmailPasswordResponse, Error>) -> Void) {
+        
         let method = OFMethods.unlinkEmailPassword
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -74,9 +74,9 @@ extension OFAuthorizable {
     }
     
     public func resetPassword(params: OFResetPasswordParams, completion: @escaping (Result<OFResetPasswordResponse, Error>) -> Void) {
+        
         let method = OFMethods.resetPassword
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -86,9 +86,9 @@ extension OFAuthorizable {
     }
     
     public func requestResetPassword(params: OFRequestResetPasswordParams, completion: @escaping (Result<OFRequestResetPasswordResponse, Error>) -> Void) {
+        
         let method = OFMethods.requestResetPassword
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -98,9 +98,9 @@ extension OFAuthorizable {
     }
     
     public func requestEmailVerification(params: OFRequestEmailVerificationParams, completion: @escaping (Result<OFRequestEmailVerificationResponse, Error>) -> Void) {
+        
         let method = OFMethods.requestEmailVerification
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -110,9 +110,9 @@ extension OFAuthorizable {
     }
     
     public func verifyEmail(params: OFVerifyEmailParams, completion: @escaping (Result<OFVerifyEmailResponse, Error>) -> Void) {
+        
         let method = OFMethods.verifyEmail
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -122,9 +122,9 @@ extension OFAuthorizable {
     }
     
     public func initOAuth(params: OFInitOAuthParams, completion: @escaping (Result<OFInitOAuthResponse, Error>) -> Void) {
+        
         let method = OFMethods.initOAuth
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -134,9 +134,9 @@ extension OFAuthorizable {
     }
     
     public func unlinkOAuth(params: OFUnlinkOAuthParams, completion: @escaping (Result<OFUnlinkOAuthResponse, Error>) -> Void) {
+        
         let method = OFMethods.unlinkOAuth
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -146,9 +146,9 @@ extension OFAuthorizable {
     }
     
     public func loginWithIdToken(params: OFLoginWithIdTokenParams, completion: @escaping (Result<OFLoginWithIdTokenResponse, Error>) -> Void) {
+        
         let method = OFMethods.loginWithIdToken
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -158,9 +158,9 @@ extension OFAuthorizable {
     }
     
     public func linkWallet(params: OFLinkWalletParams, completion: @escaping (Result<OFLinkWalletResponse, Error>) -> Void) {
+        
         let method = OFMethods.linkWallet
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -170,9 +170,9 @@ extension OFAuthorizable {
     }
     
     public func initLinkOAuth(params: OFInitLinkOAuthParams, completion: @escaping (Result<OFInitLinkOAuthResponse, Error>) -> Void) {
+        
         let method = OFMethods.initLinkOAuth
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -182,15 +182,16 @@ extension OFAuthorizable {
     }
     
     public func poolOAuth(key: String, completion: @escaping (Result<OFPoolOAuthResponse, Error>) -> Void) {
+        
         let method = OFMethods.poolOAuth
         let js = "window.poolOAuthSync(\(key));"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.poolOAuth, completion: completion)
     }
     
     public func initSIWE(params: OFInitSIWEParams, completion: @escaping (Result<OFInitSIWEResponse, Error>) -> Void) {
+        
         let method = OFMethods.initSIWE
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -200,9 +201,9 @@ extension OFAuthorizable {
     }
     
     public func unlinkWallet(params: OFUnlinkWalletParams, completion: @escaping (Result<OFUnlinkWalletResponse, Error>) -> Void) {
+        
         let method = OFMethods.unlinkWallet
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -212,9 +213,9 @@ extension OFAuthorizable {
     }
     
     public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams, completion: @escaping (Result<OFLinkThirdPartyProviderResponse, Error>) -> Void) {
+        
         let method = OFMethods.linkThirdPartyProvider
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -224,9 +225,9 @@ extension OFAuthorizable {
     }
     
     public func authenticateWithThirdPartyProvider(params: OFAuthenticateWithThirdPartyProviderParams, completion: @escaping (Result<OFAuthenticateWithThirdPartyProviderResponse, Error>) -> Void) {
+        
         let method = OFMethods.authenticateWithThirdPartyProvider
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -236,9 +237,9 @@ extension OFAuthorizable {
     }
     
     public func authenticateWithSIWE(params: OFAuthenticateWithSIWEParams, completion: @escaping (Result<OFAuthenticateWithSIWEResponse, Error>) -> Void) {
+        
         let method = OFMethods.authenticateWithSIWE
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return
@@ -248,9 +249,9 @@ extension OFAuthorizable {
     }
     
     public func storeCredentials(params: OFStoreCredentialsParams, completion: @escaping (Result<OFStoreCredentialsResponse, Error>) -> Void) {
+        
         let method = OFMethods.storeCredentials
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             completion(.failure(OFError.encodingFailed))
             return

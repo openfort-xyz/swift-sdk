@@ -10,6 +10,8 @@ import WebKit
 @MainActor
 open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEmbeddedWalletAccessable, OFUserAccessable {
     
+    
+    
     /// Shared singleton instance of OFSDK
     public static let shared = OFSDK()
     public var isInitialized: Bool = false
@@ -22,6 +24,7 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
     private var messageHandler = OFScriptMessageHandler()
     
     public var webView: WKWebView?
+    public var jsonEncoder: JSONEncoder = JSONEncoder()
     
     @MainActor
     

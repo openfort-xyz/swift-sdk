@@ -17,7 +17,7 @@ public extension OFProxible {
     ) {
         let method = OFMethods.sendSignatureTransactionIntentRequest
         do {
-            let jsonData = try JSONEncoder().encode(params)
+            let jsonData = try jsonEncoder.encode(params)
             guard let jsonString = String(data: jsonData, encoding: .utf8) else {
                 completion(.failure(OFError.encodingFailed))
                 return
@@ -40,7 +40,7 @@ public extension OFProxible {
     ) {
         let method = OFMethods.sendSignatureSessionRequest
         do {
-            let jsonData = try JSONEncoder().encode(params)
+            let jsonData = try jsonEncoder.encode(params)
             guard let jsonString = String(data: jsonData, encoding: .utf8) else {
                 completion(.failure(OFError.encodingFailed))
                 return

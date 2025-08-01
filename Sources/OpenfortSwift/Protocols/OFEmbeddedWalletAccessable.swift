@@ -16,8 +16,7 @@ public extension OFEmbeddedWalletAccessable {
         completion: @escaping (Result<OFSignTypedDataResponse, Error>) -> Void
     ) {
         let method = OFMethods.signTypedData
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             print("Failed to encode OFSignTypedDataParams")
             completion(.failure(OFError.encodingFailed))
@@ -41,8 +40,7 @@ public extension OFEmbeddedWalletAccessable {
         completion: @escaping (Result<OFGetEthereumProviderResponse, Error>) -> Void
     ) {
         let method = OFMethods.getEthereumProvider
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             print("Failed to encode OFGetEthereumProviderParams")
             completion(.failure(OFError.encodingFailed))
@@ -57,8 +55,8 @@ public extension OFEmbeddedWalletAccessable {
         completion: @escaping (Result<OFConfigureResponse, Error>) -> Void
     ) {
         let method = OFMethods.configure
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             print("Failed to encode ConfigureEmbeddedWalletDTO")
             completion(.failure(OFError.encodingFailed))
@@ -98,8 +96,7 @@ public extension OFEmbeddedWalletAccessable {
         completion: @escaping (Result<OFSignMessageResponse, Error>) -> Void
     ) {
         let method = OFMethods.signMessage
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             print("Failed to encode OFSignMessageParams")
             completion(.failure(OFError.encodingFailed))
@@ -114,8 +111,7 @@ public extension OFEmbeddedWalletAccessable {
         completion: @escaping (Result<OFSetEmbeddedRecoveryResponse, Error>) -> Void
     ) {
         let method = OFMethods.setEmbeddedRecovery
-        let encoder = JSONEncoder()
-        guard let jsonData = try? encoder.encode(params),
+        guard let jsonData = try? jsonEncoder.encode(params),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             print("Failed to encode OFSetEmbeddedRecoveryParams")
             completion(.failure(OFError.encodingFailed))
