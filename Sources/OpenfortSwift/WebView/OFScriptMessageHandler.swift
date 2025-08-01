@@ -70,10 +70,7 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
                     webView?.evaluateJavaScript(js)
                 } else {
                     // It's a plain string, escape and quote
-                    let escapedValue = value
-                        .replacingOccurrences(of: "\\", with: "\\\\")
-                        .replacingOccurrences(of: "\"", with: "\\\"")
-                    let js = "window.__keychainOnGet({ requestId: \(requestId), value: \"\(escapedValue)\" })"
+                    let js = "window.__keychainOnGet({ requestId: \(requestId), value: \"\(value)\" })"
                     webView?.evaluateJavaScript(js)
                 }
             } else {
