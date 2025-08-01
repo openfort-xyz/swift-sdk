@@ -10,12 +10,14 @@ public struct OFShieldAuthenticationDTO: Codable {
     let token: String
     let authProvider: String
     let tokenType: String
-
-    public init(auth: String, token: String, authProvider: String, tokenType: String) {
+    let encryptionSession: String?
+    
+    public init(auth: String, token: String, authProvider: String, tokenType: String, encryptionSession: String? = nil) {
         self.auth = auth
         self.token = token
         self.authProvider = authProvider
         self.tokenType = tokenType
+        self.encryptionSession = encryptionSession
     }
 }
 
