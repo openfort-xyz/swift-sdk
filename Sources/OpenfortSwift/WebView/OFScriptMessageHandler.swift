@@ -49,9 +49,7 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             OFKeychainHelper.save(data["value"] as! String, for: data["key"] as! String)
             let requestId = data["requestId"] as! Int
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
-            webView?.evaluateJavaScript(js, completionHandler: { result, error in
-                
-            })
+            webView?.evaluateJavaScript(js)
             return true
         case "KeychainRemove":
             OFKeychainHelper.delete(for: data["key"] as! String)
