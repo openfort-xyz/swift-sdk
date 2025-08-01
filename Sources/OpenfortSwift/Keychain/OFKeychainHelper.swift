@@ -37,7 +37,7 @@ public enum OFKeychainHelper {
         let status = SecItemCopyMatching(query as CFDictionary, &result)
         
         if status == errSecSuccess, let data = result as? Data {
-            return String(data: data, encoding: .utf8)?.replacingOccurrences(of: "\"", with: "")
+            return String(data: data, encoding: .utf8)
         }
         
         return nil
