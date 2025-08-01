@@ -228,8 +228,8 @@ window.pingSync = function({ delay }) {
     handleResult('ping', window.openfort.embeddedWalletInstance.ping(delay));
 };
 
-window.signMessageSync = function({ message, options }) {
-    handleResult('signMessage', window.openfort.embeddedWalletInstance.signMessage(message, options));
+window.signMessageSync = function(params) {
+    handleResult('signMessage', window.openfort.embeddedWalletInstance.signMessage(params.message, params.options));
 };
 
 window.setEmbeddedRecoverySync = function({ recoveryMethod, recoveryPassword, encryptionSession }) {
