@@ -62,7 +62,7 @@ public extension OFEmbeddedWalletAccessable {
             completion(.failure(OFError.encodingFailed))
             return
         }
-        let js = "window.configureSync(\(jsonString));"
+        let js = "window.configureSync({ \"params\" : \(jsonString)});"
         evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.configure, completion: completion)
     }
 
