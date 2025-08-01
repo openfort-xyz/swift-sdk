@@ -23,6 +23,7 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
     
     public var webView: WKWebView?
     public var jsonEncoder: JSONEncoder = JSONEncoder()
+    public var isInitialized: Bool = false
     
     /// Initializes the SDK. Call this once before using `OFSDK.shared`.
     @MainActor
@@ -49,8 +50,6 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
         self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
         messageHandler.webView = self.webView
     }
-    
-    public var isInitialized: Bool = false
     
     private var contentUrl: URL {
         Bundle.module.url(forResource: "index", withExtension: "html")!
