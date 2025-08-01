@@ -213,7 +213,7 @@ window.getEthereumProviderSync = function({ options } = {}) {
     handleResult('getEthereumProvider', window.openfort.embeddedWalletInstance.getEthereumProvider(options));
 };
 
-window.configureSync = function( params ) {
+window.configureSync = function({ params }) {
     handleResult('configure', window.openfort.embeddedWalletInstance.configure(params));
 };
 
