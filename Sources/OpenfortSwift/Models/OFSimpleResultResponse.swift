@@ -23,3 +23,4 @@ public typealias OFDeleteUserResponse = OFSimpleResultResponse
 public typealias OFUnlinkEmailPasswordResponse = OFSimpleResultResponse
 public typealias OFGetEmbeddedStateResponse = Int
 public typealias OFGetAccessTokenResponse = String
+public typealias OFSignMessageResponse = String
