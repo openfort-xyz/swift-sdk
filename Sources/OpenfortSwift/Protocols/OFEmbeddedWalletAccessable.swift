@@ -6,10 +6,18 @@
 //
 
 import Foundation
+import Combine
 
-public protocol OFEmbeddedWalletAccessable: OFOpenfortRootable {}
+public protocol OFEmbeddedWalletAccessable: OFOpenfortRootable {
+    var embeddedStatePublisher: Published<OFEmbeddedState?>.Publisher { get }
+}
 
 public extension OFEmbeddedWalletAccessable {
+
+    var embeddedStatePublisher: Published<OFEmbeddedState?>.Publisher {
+        // Placeholder; should be overridden by conforming type
+        fatalError("embeddedStatePublisher must be implemented by conforming type")
+    }
 
     func signTypedData(
         params: OFSignTypedDataParams,
