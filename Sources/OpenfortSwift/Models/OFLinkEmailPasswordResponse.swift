@@ -6,17 +6,29 @@
 //
 
 public protocol OFLinkEmailPasswordResponseProtocol {
-    var token: String? { get }
-    var refreshToken: String? { get }
-    var player: OFPlayerInfo? { get }
-    var action: String? { get }
-    var details: [String: AnyCodable]? { get }
+    var id: String? { get }
+    var object: String? { get }
+    var linkedAccounts: [OFLinkedEmailAccount]? { get }
+    var createdAt: Int? { get }
+}
+
+public protocol OFLinkedEmailAccountProtocol {
+    var email: String? { get }
+    var provider: String? { get }
+    var verified: Bool? { get }
+    var disabled: Bool? { get }
 }
 
 public struct OFLinkEmailPasswordResponse: OFLinkEmailPasswordResponseProtocol, Decodable {
-    public let token: String?
-    public let refreshToken: String?
-    public let player: OFPlayerInfo?
-    public let action: String?
-    public let details: [String: AnyCodable]?
+    public let id: String?
+    public let object: String?
+    public let linkedAccounts: [OFLinkedEmailAccount]?
+    public let createdAt: Int?
+}
+
+public struct OFLinkedEmailAccount: OFLinkedEmailAccountProtocol, Decodable {
+    public let email: String?
+    public let provider: String?
+    public let verified: Bool?
+    public let disabled: Bool?
 }
