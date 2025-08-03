@@ -65,4 +65,9 @@ extension OFOpenfortRootable {
             }
         }
     }
+    
+    internal func encodeToJSONString<T: Encodable>(_ value: T) -> String? {
+        guard let jsonData = try? jsonEncoder.encode(value) else { return nil }
+        return String(data: jsonData, encoding: .utf8)
+    }
 }

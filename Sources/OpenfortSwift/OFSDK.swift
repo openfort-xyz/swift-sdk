@@ -59,7 +59,6 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
         messageHandler.webView = self.webView
     }
     
-    /// Call this after didLoad to start polling getEmbeddedState every 0.5s
     private func startPollingEmbeddedState() {
         embeddedStateTimer?.invalidate()
         embeddedStateTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
@@ -78,7 +77,6 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
         }
     }
     
-    /// Call this to stop polling if needed
     private func stopPollingEmbeddedState() {
         embeddedStateTimer?.invalidate()
         embeddedStateTimer = nil
