@@ -32,3 +32,5 @@ public struct OFLinkedEmailAccount: OFLinkedEmailAccountProtocol, Decodable {
     public let verified: Bool?
     public let disabled: Bool?
 }
+
+public typealias OFUnlinkEmailPasswordResponse = OFLinkEmailPasswordResponse
