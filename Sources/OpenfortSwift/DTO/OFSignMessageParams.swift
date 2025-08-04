@@ -6,10 +6,20 @@
 //
 
 public struct OFSignMessageParams: Codable {
-    public let message: String
-    public let options: [String: AnyCodable]?
+    public struct Options: Codable {
+        public let hashMessage: Bool?
+        public let arrayifyMessage: Bool?
 
-    public init(message: String, options: [String: AnyCodable]? = nil) {
+        public init(hashMessage: Bool? = nil, arrayifyMessage: Bool? = nil) {
+            self.hashMessage = hashMessage
+            self.arrayifyMessage = arrayifyMessage
+        }
+    }
+
+    public let message: String
+    public let options: Options?
+
+    public init(message: String, options: Options? = nil) {
         self.message = message
         self.options = options
     }
