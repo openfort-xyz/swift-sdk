@@ -12,39 +12,58 @@ public protocol OFProxible: OFOpenfortRootable {}
 public extension OFProxible {
     
     func sendSignatureTransactionIntentRequest(
+        params: OFSendSignatureTransactionIntentRequestParams
+    ) async throws -> OFSendSignatureTransactionIntentRequestResponse {
+        let method = OFMethods.sendSignatureTransactionIntentRequest
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.sendSignatureTransactionIntentRequestSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.sendSignatureTransactionIntentRequest
+        )
+    }
+    
+    func sendSignatureTransactionIntentRequest(
         params: OFSendSignatureTransactionIntentRequestParams,
         completion: @escaping (Result<OFSendSignatureTransactionIntentRequestResponse, Error>) -> Void
     ) {
-        let method = OFMethods.sendSignatureTransactionIntentRequest
-        guard let jsonString = encodeToJSONString(params) else {
-            completion(.failure(OFError.encodingFailed))
-            return
+        Task {
+            do {
+                let result = try await sendSignatureTransactionIntentRequest(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
         }
-        let js = "window.sendSignatureTransactionIntentRequestSync(\(jsonString));"
-        evaluateAndObserve(
-            js: js,
+    }
+    
+    func sendSignatureSessionRequest(
+        params: OFSendSignatureSessionRequestParams
+    ) async throws -> OFSendSignatureSessionRequestResponse {
+        let method = OFMethods.sendSignatureSessionRequest
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.sendSignatureSessionRequestSync(\(jsonString));",
             method: method,
-            errorDomain: OFErrorDomains.sendSignatureTransactionIntentRequest,
-            completion: completion
+            errorDomain: OFErrorDomains.sendSignatureSessionRequest
         )
-        
     }
     
     func sendSignatureSessionRequest(
         params: OFSendSignatureSessionRequestParams,
         completion: @escaping (Result<OFSendSignatureSessionRequestResponse, Error>) -> Void
     ) {
-        let method = OFMethods.sendSignatureSessionRequest
-        guard let jsonString = encodeToJSONString(params) else {
-            completion(.failure(OFError.encodingFailed))
-            return
+        Task {
+            do {
+                let result = try await sendSignatureSessionRequest(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
         }
-        let js = "window.sendSignatureSessionRequestSync(\(jsonString));"
-        evaluateAndObserve(
-            js: js,
-            method: method,
-            errorDomain: OFErrorDomains.sendSignatureSessionRequest,
-            completion: completion
-        )
     }
 }

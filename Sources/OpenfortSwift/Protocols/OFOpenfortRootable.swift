@@ -17,15 +17,30 @@ public protocol OFOpenfortRootable {
     var didFailedToLoad: ((Error) -> Void)? { get set }
 }
 
-extension OFOpenfortRootable {
+public extension OFOpenfortRootable {
     
-    public func getAccessToken(completion: @escaping (Result<OFGetAccessTokenResponse, Error>) -> Void) {
+    func getAccessToken() async throws -> OFGetAccessTokenResponse {
         let method = OFMethods.getAccessToken
         let js = "window.getAccessTokenSync();"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.getAccessToken, completion: completion)
+        return try await evaluateAndObserveAsync(
+            js: js,
+            method: method,
+            errorDomain: OFErrorDomains.getAccessToken
+        )
     }
     
-    public func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<OFValidateAndRefreshTokenResponse, Error>) -> Void) {
+    func getAccessToken(completion: @escaping (Result<OFGetAccessTokenResponse, Error>) -> Void) {
+        Task {
+            do {
+                let result = try await getAccessToken()
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func validateAndRefreshToken(forceRefresh: Bool? = nil) async throws -> OFValidateAndRefreshTokenResponse {
         let method = OFMethods.validateAndRefreshToken
         let js: String
         if let forceRefresh = forceRefresh {
@@ -33,7 +48,22 @@ extension OFOpenfortRootable {
         } else {
             js = "window.validateAndRefreshTokenSync();"
         }
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.validateAndRefreshToken, completion: completion)
+        return try await evaluateAndObserveAsync(
+            js: js,
+            method: method,
+            errorDomain: OFErrorDomains.validateAndRefreshToken
+        )
+    }
+    
+    func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<OFValidateAndRefreshTokenResponse, Error>) -> Void) {
+        Task {
+            do {
+                let result = try await validateAndRefreshToken(forceRefresh: forceRefresh)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 }
 
@@ -55,13 +85,27 @@ extension OFOpenfortRootable {
                 return
             }
             completion(.success(object))
-           
+            
         }
         webView?.evaluateJavaScript(js) { result, error in
             if let error = error {
                 if let obs = observer { NotificationCenter.default.removeObserver(obs) }
                 completion(.failure(error))
                 return
+            }
+        }
+    }
+    
+    internal func evaluateAndObserveAsync<T: Decodable>(
+        js: String,
+        method: String,
+        errorDomain: String
+    ) async throws -> T {
+        try await withCheckedThrowingContinuation { continuation in
+            evaluateAndObserve(js: js, method: method, errorDomain: errorDomain) { (result: Result<T, Error>) in
+                Task {
+                    continuation.resume(with: result)
+                }
             }
         }
     }

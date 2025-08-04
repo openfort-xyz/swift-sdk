@@ -10,16 +10,26 @@ public protocol OFUserAccessable: OFOpenfortRootable {}
 
 public extension OFUserAccessable {
     
+    func getUser() async throws -> OFGetUserInstanceResponse {
+        let method = OFMethods.getUserInstance
+        let js = "window.getUserSync();"
+        return try await evaluateAndObserveAsync(
+            js: js,
+            method: method,
+            errorDomain: OFErrorDomains.getUserInstance
+        )
+    }
+
     func getUser(
         completion: @escaping (Result<OFGetUserInstanceResponse, Error>) -> Void
     ) {
-        let method = OFMethods.getUserInstance
-        let js = "window.getUserSync();"
-        evaluateAndObserve(
-            js: js,
-            method: method,
-            errorDomain: OFErrorDomains.getUserInstance,
-            completion: completion
-        )
+        Task {
+            do {
+                let result = try await getUser()
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 }

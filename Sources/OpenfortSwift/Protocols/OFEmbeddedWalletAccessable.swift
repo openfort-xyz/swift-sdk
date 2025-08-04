@@ -19,119 +19,267 @@ public extension OFEmbeddedWalletAccessable {
         fatalError("embeddedStatePublisher must be implemented by conforming type")
     }
 
+    func signTypedData(params: OFSignTypedDataParams) async throws -> OFSignTypedDataResponse {
+        let method = OFMethods.signTypedData
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.signTypedDataSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.signTypedData
+        )
+    }
+    
     func signTypedData(
         params: OFSignTypedDataParams,
         completion: @escaping (Result<OFSignTypedDataResponse, Error>) -> Void
     ) {
-        let method = OFMethods.signTypedData
-        guard let jsonString = encodeToJSONString(params) else {
-            completion(.failure(OFError.encodingFailed))
-            return
+        Task {
+            do {
+                let result = try await signTypedData(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
         }
-        let js = "window.signTypedDataSync(\(jsonString));"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signTypedData, completion: completion)
     }
 
+    func get(key: String) async throws -> OFGetResponse {
+        let method = OFMethods.get
+        return try await evaluateAndObserveAsync(
+            js: "window.getSync('\(key)');",
+            method: method,
+            errorDomain: OFErrorDomains.get
+        )
+    }
+    
     func get(
         key: String,
         completion: @escaping (Result<OFGetResponse, Error>) -> Void
     ) {
-        let method = OFMethods.get
-        let js = "window.getSync('\(key)');"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.get, completion: completion)
+        Task {
+            do {
+                let result = try await get(key: key)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 
+    func getEthereumProvider(params: OFGetEthereumProviderParams) async throws -> OFGetEthereumProviderResponse {
+        let method = OFMethods.getEthereumProvider
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.getEthereumProviderSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.getEthereumProvider
+        )
+    }
+    
     func getEthereumProvider(
         params: OFGetEthereumProviderParams,
         completion: @escaping (Result<OFGetEthereumProviderResponse, Error>) -> Void
     ) {
-        let method = OFMethods.getEthereumProvider
-        guard let jsonString = encodeToJSONString(params) else {
-            completion(.failure(OFError.encodingFailed))
-            return
+        Task {
+            do {
+                let result = try await getEthereumProvider(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
         }
-        let js = "window.getEthereumProviderSync(\(jsonString));"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.getEthereumProvider, completion: completion)
     }
 
+    func configure(params: OFConfigureEmbeddedWalletDTO) async throws -> OFConfigureResponse {
+        let method = OFMethods.configure
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.configureSync({ params: \(jsonString) });",
+            method: method,
+            errorDomain: OFErrorDomains.configure
+        )
+    }
+    
     func configure(
         params: OFConfigureEmbeddedWalletDTO,
         completion: @escaping (Result<OFConfigureResponse, Error>) -> Void
     ) {
-        let method = OFMethods.configure
-
-        guard let jsonString = encodeToJSONString(params) else {
-            completion(.failure(OFError.encodingFailed))
-            return
+        Task {
+            do {
+                let result = try await configure(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
         }
-        let js = "window.configureSync({ params: \(jsonString) });"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.configure, completion: completion)
+    }
+    
+    func exportPrivateKey() async throws -> OFExportPrivateKeyResponse {
+        let method = OFMethods.exportPrivateKey
+        return try await evaluateAndObserveAsync(
+            js: "window.exportPrivateKeySync();",
+            method: method,
+            errorDomain: OFErrorDomains.exportPrivateKey
+        )
     }
     
     func exportPrivateKey(
         completion: @escaping (Result<OFExportPrivateKeyResponse, Error>) -> Void
     ) {
-        let method = OFMethods.exportPrivateKey
-        let js = "window.exportPrivateKeySync();"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.exportPrivateKey, completion: completion)
+        Task {
+            do {
+                let result = try await exportPrivateKey()
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 
+    func list() async throws -> OFListResponse {
+        let method = OFMethods.list
+        return try await evaluateAndObserveAsync(
+            js: "window.listSync();",
+            method: method,
+            errorDomain: OFErrorDomains.list
+        )
+    }
+    
     func list(
         completion: @escaping (Result<OFListResponse, Error>) -> Void
     ) {
-        let method = OFMethods.list
-        let js = "window.listSync();"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.list, completion: completion)
+        Task {
+            do {
+                let result = try await list()
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 
+    func ping(delay: Int) async throws -> OFPingResponse {
+        let method = OFMethods.ping
+        return try await evaluateAndObserveAsync(
+            js: "window.pingSync(\(delay));",
+            method: method,
+            errorDomain: OFErrorDomains.ping
+        )
+    }
+    
     func ping(
         delay: Int,
         completion: @escaping (Result<OFPingResponse, Error>) -> Void
     ) {
-        let method = OFMethods.ping
-        let js = "window.pingSync(\(delay));"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.ping, completion: completion)
+        Task {
+            do {
+                let result = try await ping(delay: delay)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 
+    func signMessage(params: OFSignMessageParams) async throws -> OFSignMessageResponse {
+        let method = OFMethods.signMessage
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.signMessageSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.signMessage
+        )
+    }
+    
     func signMessage(
         params: OFSignMessageParams,
         completion: @escaping (Result<OFSignMessageResponse, Error>) -> Void
     ) {
-        let method = OFMethods.signMessage
-        guard let jsonString = encodeToJSONString(params) else {
-            completion(.failure(OFError.encodingFailed))
-            return
+        Task {
+            do {
+                let result = try await signMessage(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
         }
-        let js = "window.signMessageSync(\(jsonString));"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.signMessage, completion: completion)
     }
 
+    func setEmbeddedRecovery(params: OFSetEmbeddedRecoveryParams) async throws -> OFSetEmbeddedRecoveryResponse {
+        let method = OFMethods.setEmbeddedRecovery
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.setEmbeddedRecoverySync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.setEmbeddedRecovery
+        )
+    }
+    
     func setEmbeddedRecovery(
         params: OFSetEmbeddedRecoveryParams,
         completion: @escaping (Result<OFSetEmbeddedRecoveryResponse, Error>) -> Void
     ) {
-        let method = OFMethods.setEmbeddedRecovery
-        guard let jsonString = encodeToJSONString(params) else {
-            completion(.failure(OFError.encodingFailed))
-            return
+        Task {
+            do {
+                let result = try await setEmbeddedRecovery(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
         }
-        let js = "window.setEmbeddedRecoverySync(\(jsonString));"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.setEmbeddedRecovery, completion: completion)
     }
 
+    func getEmbeddedState() async throws -> OFGetEmbeddedStateResponse {
+        let method = OFMethods.getEmbeddedState
+        return try await evaluateAndObserveAsync(
+            js: "window.getEmbeddedStateSync();",
+            method: method,
+            errorDomain: OFErrorDomains.getEmbeddedState
+        )
+    }
+    
     func getEmbeddedState(
         completion: @escaping (Result<OFGetEmbeddedStateResponse, Error>) -> Void
     ) {
-        let method = OFMethods.getEmbeddedState
-        let js = "window.getEmbeddedStateSync();"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.getEmbeddedState, completion: completion)
+        Task {
+            do {
+                let result = try await getEmbeddedState()
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 
+    func getURL() async throws -> OFGetURLResponse {
+        let method = OFMethods.getURL
+        return try await evaluateAndObserveAsync(
+            js: "window.getURLSync();",
+            method: method,
+            errorDomain: OFErrorDomains.getURL
+        )
+    }
+    
     func getURL(
         completion: @escaping (Result<OFGetURLResponse, Error>) -> Void
     ) {
-        let method = OFMethods.getURL
-        let js = "window.getURLSync();"
-        evaluateAndObserve(js: js, method: method, errorDomain: OFErrorDomains.getURL, completion: completion)
+        Task {
+            do {
+                let result = try await getURL()
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 }
