@@ -150,24 +150,46 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             if data == nil ||
                 (data as? [String: Any])?.isEmpty == true ||
                 (data as? String)?.isEmpty == true {
-                NotificationCenter.default.post(name: Notification.Name(method), object: nil)
+                NotificationCenter.default.post(
+                    name: Notification.Name(method),
+                    object: nil,
+                    userInfo: ["success": true]
+                )
                 print("No data to decode for \(method) (empty is allowed)")
                 return
             }
             if let dict = data as? [String: Any] {
                 jsonData = try JSONSerialization.data(withJSONObject: dict, options: [])
             } else if let d = data as? T {
-                NotificationCenter.default.post(name: Notification.Name(method), object: d)
+                NotificationCenter.default.post(
+                    name: Notification.Name(method),
+                    object: d,
+                    userInfo: ["success": true]
+                )
                 return
             } else {
                 print("Data is not valid JSON for \(method)")
+                NotificationCenter.default.post(
+                    name: Notification.Name(method),
+                    object: nil,
+                    userInfo: ["success": false]
+                )
                 return
             }
             let decoded = try jsonDecoder.decode(T.self, from: jsonData!)
-            NotificationCenter.default.post(name: Notification.Name(method), object: decoded)
+            NotificationCenter.default.post(
+                name: Notification.Name(method),
+                object: decoded,
+                userInfo: ["success": true]
+            )
             print("Decoded \(method) data:", decoded)
         } catch {
             print("Decoding error for \(method):", error)
+            NotificationCenter.default.post(
+                name: Notification.Name(method),
+                object: nil,
+                userInfo: ["success": false]
+            )
         }
     }
 

@@ -78,14 +78,34 @@ extension OFOpenfortRootable {
         let notificationName = Notification.Name(method)
         var observer: NSObjectProtocol?
         observer = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
-            if let obs = observer { NotificationCenter.default.removeObserver(obs)
+            if let obs = observer { NotificationCenter.default.removeObserver(obs) }
+
+            if let userInfo = notification.userInfo,
+               let isSuccess = userInfo["success"] as? Bool {
+                if isSuccess {
+                    // If object is present, return it. If nil, still call success (nil for Optional<T> or () for Void).
+                    if let object = notification.object as? T {
+                        completion(.success(object))
+                    } else if T.self == Void.self || T.self == Optional<Void>.self {
+                        completion(.success(() as! T))
+                    } else {
+                        // For optional types, allow success(nil)
+                        completion(.success([] as! T))
+                    }
+                } else {
+                    // Failure with details from userInfo
+                    let error = NSError(domain: errorDomain, code: -1, userInfo: nil)
+                    completion(.failure(error))
+                }
+                return
             }
+
+            // Fallback: no "success" in userInfo, legacy behavior
             guard let object = notification.object as? T else {
                 completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No response in notification"])))
                 return
             }
             completion(.success(object))
-            
         }
         webView?.evaluateJavaScript(js) { result, error in
             if let error = error {
