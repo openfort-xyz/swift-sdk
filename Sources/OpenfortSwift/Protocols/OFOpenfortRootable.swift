@@ -19,7 +19,7 @@ public protocol OFOpenfortRootable {
 
 public extension OFOpenfortRootable {
     
-    func getAccessToken() async throws -> OFGetAccessTokenResponse {
+    func getAccessToken() async throws -> OFGetAccessTokenResponse? {
         let method = OFMethods.getAccessToken
         let js = "window.getAccessTokenSync();"
         return try await evaluateAndObserveAsync(
@@ -29,7 +29,7 @@ public extension OFOpenfortRootable {
         )
     }
     
-    func getAccessToken(completion: @escaping (Result<OFGetAccessTokenResponse, Error>) -> Void) {
+    func getAccessToken(completion: @escaping (Result<OFGetAccessTokenResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await getAccessToken()
@@ -40,7 +40,7 @@ public extension OFOpenfortRootable {
         }
     }
     
-    func validateAndRefreshToken(forceRefresh: Bool? = nil) async throws -> OFValidateAndRefreshTokenResponse {
+    func validateAndRefreshToken(forceRefresh: Bool? = nil) async throws -> OFValidateAndRefreshTokenResponse? {
         let method = OFMethods.validateAndRefreshToken
         let js: String
         if let forceRefresh = forceRefresh {
@@ -55,7 +55,7 @@ public extension OFOpenfortRootable {
         )
     }
     
-    func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<OFValidateAndRefreshTokenResponse, Error>) -> Void) {
+    func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<OFValidateAndRefreshTokenResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await validateAndRefreshToken(forceRefresh: forceRefresh)
@@ -73,7 +73,7 @@ extension OFOpenfortRootable {
         js: String,
         method: String,
         errorDomain: String,
-        completion: @escaping (Result<T, Error>) -> Void
+        completion: @escaping (Result<T?, Error>) -> Void
     ) {
         let notificationName = Notification.Name(method)
         var observer: NSObjectProtocol?
@@ -86,11 +86,8 @@ extension OFOpenfortRootable {
                     // If object is present, return it. If nil, still call success (nil for Optional<T> or () for Void).
                     if let object = notification.object as? T {
                         completion(.success(object))
-                    } else if T.self == Void.self || T.self == Optional<Void>.self {
-                        completion(.success(() as! T))
                     } else {
-                        // For optional types, allow success(nil)
-                        completion(.success([] as! T))
+                        completion(.success(nil))
                     }
                 } else {
                     // Failure with details from userInfo
@@ -120,9 +117,9 @@ extension OFOpenfortRootable {
         js: String,
         method: String,
         errorDomain: String
-    ) async throws -> T {
+    ) async throws -> T? {
         try await withCheckedThrowingContinuation { continuation in
-            evaluateAndObserve(js: js, method: method, errorDomain: errorDomain) { (result: Result<T, Error>) in
+            evaluateAndObserve(js: js, method: method, errorDomain: errorDomain) { (result: Result<T?, Error>) in
                 Task {
                     continuation.resume(with: result)
                 }

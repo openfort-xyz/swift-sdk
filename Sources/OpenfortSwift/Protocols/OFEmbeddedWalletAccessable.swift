@@ -33,7 +33,7 @@ public extension OFEmbeddedWalletAccessable {
     
     func signTypedData(
         params: OFSignTypedDataParams,
-        completion: @escaping (Result<OFSignTypedDataResponse, Error>) -> Void
+        completion: @escaping (Result<OFSignTypedDataResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -45,7 +45,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func get(key: String) async throws -> OFGetResponse {
+    func get(key: String) async throws -> OFGetResponse? {
         let method = OFMethods.get
         return try await evaluateAndObserveAsync(
             js: "window.getSync('\(key)');",
@@ -56,7 +56,7 @@ public extension OFEmbeddedWalletAccessable {
     
     func get(
         key: String,
-        completion: @escaping (Result<OFGetResponse, Error>) -> Void
+        completion: @escaping (Result<OFGetResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -68,7 +68,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func getEthereumProvider(params: OFGetEthereumProviderParams) async throws -> OFGetEthereumProviderResponse {
+    func getEthereumProvider(params: OFGetEthereumProviderParams) async throws -> OFGetEthereumProviderResponse? {
         let method = OFMethods.getEthereumProvider
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -82,7 +82,7 @@ public extension OFEmbeddedWalletAccessable {
     
     func getEthereumProvider(
         params: OFGetEthereumProviderParams,
-        completion: @escaping (Result<OFGetEthereumProviderResponse, Error>) -> Void
+        completion: @escaping (Result<OFGetEthereumProviderResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -94,7 +94,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func configure(params: OFConfigureEmbeddedWalletDTO) async throws -> OFConfigureResponse {
+    func configure(params: OFConfigureEmbeddedWalletDTO) async throws -> OFConfigureResponse? {
         let method = OFMethods.configure
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -108,7 +108,7 @@ public extension OFEmbeddedWalletAccessable {
     
     func configure(
         params: OFConfigureEmbeddedWalletDTO,
-        completion: @escaping (Result<OFConfigureResponse, Error>) -> Void
+        completion: @escaping (Result<OFConfigureResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -120,7 +120,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
     
-    func exportPrivateKey() async throws -> OFExportPrivateKeyResponse {
+    func exportPrivateKey() async throws -> OFExportPrivateKeyResponse? {
         let method = OFMethods.exportPrivateKey
         return try await evaluateAndObserveAsync(
             js: "window.exportPrivateKeySync();",
@@ -130,7 +130,7 @@ public extension OFEmbeddedWalletAccessable {
     }
     
     func exportPrivateKey(
-        completion: @escaping (Result<OFExportPrivateKeyResponse, Error>) -> Void
+        completion: @escaping (Result<OFExportPrivateKeyResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -142,7 +142,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func list() async throws -> OFListResponse {
+    func list() async throws -> OFListResponse? {
         let method = OFMethods.list
         return try await evaluateAndObserveAsync(
             js: "window.listSync();",
@@ -152,7 +152,7 @@ public extension OFEmbeddedWalletAccessable {
     }
     
     func list(
-        completion: @escaping (Result<OFListResponse, Error>) -> Void
+        completion: @escaping (Result<OFListResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -164,7 +164,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func ping(delay: Int) async throws -> OFPingResponse {
+    func ping(delay: Int) async throws -> OFPingResponse? {
         let method = OFMethods.ping
         return try await evaluateAndObserveAsync(
             js: "window.pingSync(\(delay));",
@@ -175,7 +175,7 @@ public extension OFEmbeddedWalletAccessable {
     
     func ping(
         delay: Int,
-        completion: @escaping (Result<OFPingResponse, Error>) -> Void
+        completion: @escaping (Result<OFPingResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -187,7 +187,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func signMessage(params: OFSignMessageParams) async throws -> OFSignMessageResponse {
+    func signMessage(params: OFSignMessageParams) async throws -> OFSignMessageResponse? {
         let method = OFMethods.signMessage
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -201,7 +201,7 @@ public extension OFEmbeddedWalletAccessable {
     
     func signMessage(
         params: OFSignMessageParams,
-        completion: @escaping (Result<OFSignMessageResponse, Error>) -> Void
+        completion: @escaping (Result<OFSignMessageResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -213,7 +213,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func setEmbeddedRecovery(params: OFSetEmbeddedRecoveryParams) async throws -> OFSetEmbeddedRecoveryResponse {
+    func setEmbeddedRecovery(params: OFSetEmbeddedRecoveryParams) async throws -> OFSetEmbeddedRecoveryResponse? {
         let method = OFMethods.setEmbeddedRecovery
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -227,7 +227,7 @@ public extension OFEmbeddedWalletAccessable {
     
     func setEmbeddedRecovery(
         params: OFSetEmbeddedRecoveryParams,
-        completion: @escaping (Result<OFSetEmbeddedRecoveryResponse, Error>) -> Void
+        completion: @escaping (Result<OFSetEmbeddedRecoveryResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -239,7 +239,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func getEmbeddedState() async throws -> OFGetEmbeddedStateResponse {
+    func getEmbeddedState() async throws -> OFGetEmbeddedStateResponse? {
         let method = OFMethods.getEmbeddedState
         return try await evaluateAndObserveAsync(
             js: "window.getEmbeddedStateSync();",
@@ -249,7 +249,7 @@ public extension OFEmbeddedWalletAccessable {
     }
     
     func getEmbeddedState(
-        completion: @escaping (Result<OFGetEmbeddedStateResponse, Error>) -> Void
+        completion: @escaping (Result<OFGetEmbeddedStateResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -261,7 +261,7 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func getURL() async throws -> OFGetURLResponse {
+    func getURL() async throws -> OFGetURLResponse? {
         let method = OFMethods.getURL
         return try await evaluateAndObserveAsync(
             js: "window.getURLSync();",
@@ -271,7 +271,7 @@ public extension OFEmbeddedWalletAccessable {
     }
     
     func getURL(
-        completion: @escaping (Result<OFGetURLResponse, Error>) -> Void
+        completion: @escaping (Result<OFGetURLResponse?, Error>) -> Void
     ) {
         Task {
             do {

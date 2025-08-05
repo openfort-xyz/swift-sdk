@@ -13,7 +13,7 @@ public protocol OFAuthorizable: OFOpenfortRootable {}
 
 extension OFAuthorizable {
 
-    public func loginWith(params: OFAuthEmailPasswordParams) async throws -> OFAuthorizationResponse {
+    public func loginWith(params: OFAuthEmailPasswordParams) async throws -> OFAuthorizationResponse? {
         let method = OFMethods.loginWith
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -25,7 +25,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func loginWith(params: OFAuthEmailPasswordParams, completion: @escaping (Result<OFAuthorizationResponse, Error>) -> Void) {
+    public func loginWith(params: OFAuthEmailPasswordParams, completion: @escaping (Result<OFAuthorizationResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await loginWith(params: params)
@@ -42,7 +42,7 @@ extension OFAuthorizable {
             js: "window.logoutSync();",
             method: method,
             errorDomain: OFErrorDomains.logOut
-        ) as EmptyDecodable
+        ) as EmptyDecodable?
     }
 
     public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
@@ -76,7 +76,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func signUpWith(params: OFSignUpWithEmailPasswordParams) async throws -> OFSignUpResponse {
+    public func signUpWith(params: OFSignUpWithEmailPasswordParams) async throws -> OFSignUpResponse? {
         let method = OFMethods.signUpWith
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -88,7 +88,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func signUpWith(params: OFSignUpWithEmailPasswordParams, completion: @escaping (Result<OFSignUpResponse, Error>) -> Void) {
+    public func signUpWith(params: OFSignUpWithEmailPasswordParams, completion: @escaping (Result<OFSignUpResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await signUpWith(params: params)
@@ -99,7 +99,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func linkEmailPassword(params: OFLinkEmailPasswordParams) async throws -> OFLinkEmailPasswordResponse {
+    public func linkEmailPassword(params: OFLinkEmailPasswordParams) async throws -> OFLinkEmailPasswordResponse? {
         let method = OFMethods.linkEmailPassword
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -111,7 +111,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func linkEmailPassword(params: OFLinkEmailPasswordParams, completion: @escaping (Result<OFLinkEmailPasswordResponse, Error>) -> Void) {
+    public func linkEmailPassword(params: OFLinkEmailPasswordParams, completion: @escaping (Result<OFLinkEmailPasswordResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await linkEmailPassword(params: params)
@@ -122,7 +122,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func unlinkEmailPassword(params: OFUnlinkEmailPasswordParams) async throws -> OFUnlinkEmailPasswordResponse {
+    public func unlinkEmailPassword(params: OFUnlinkEmailPasswordParams) async throws -> OFUnlinkEmailPasswordResponse? {
         let method = OFMethods.unlinkEmailPassword
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -134,7 +134,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func unlinkEmailPassword(params: OFUnlinkEmailPasswordParams, completion: @escaping (Result<OFUnlinkEmailPasswordResponse, Error>) -> Void) {
+    public func unlinkEmailPassword(params: OFUnlinkEmailPasswordParams, completion: @escaping (Result<OFUnlinkEmailPasswordResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await unlinkEmailPassword(params: params)
@@ -145,7 +145,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func resetPassword(params: OFResetPasswordParams) async throws -> OFResetPasswordResponse {
+    public func resetPassword(params: OFResetPasswordParams) async throws -> OFResetPasswordResponse? {
         let method = OFMethods.resetPassword
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -157,7 +157,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func resetPassword(params: OFResetPasswordParams, completion: @escaping (Result<OFResetPasswordResponse, Error>) -> Void) {
+    public func resetPassword(params: OFResetPasswordParams, completion: @escaping (Result<OFResetPasswordResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await resetPassword(params: params)
@@ -168,7 +168,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func requestResetPassword(params: OFRequestResetPasswordParams) async throws -> OFRequestResetPasswordResponse {
+    public func requestResetPassword(params: OFRequestResetPasswordParams) async throws -> OFRequestResetPasswordResponse? {
         let method = OFMethods.requestResetPassword
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -180,7 +180,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func requestResetPassword(params: OFRequestResetPasswordParams, completion: @escaping (Result<OFRequestResetPasswordResponse, Error>) -> Void) {
+    public func requestResetPassword(params: OFRequestResetPasswordParams, completion: @escaping (Result<OFRequestResetPasswordResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await requestResetPassword(params: params)
@@ -191,7 +191,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func requestEmailVerification(params: OFRequestEmailVerificationParams) async throws -> OFRequestEmailVerificationResponse {
+    public func requestEmailVerification(params: OFRequestEmailVerificationParams) async throws -> OFRequestEmailVerificationResponse? {
         let method = OFMethods.requestEmailVerification
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -203,7 +203,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func requestEmailVerification(params: OFRequestEmailVerificationParams, completion: @escaping (Result<OFRequestEmailVerificationResponse, Error>) -> Void) {
+    public func requestEmailVerification(params: OFRequestEmailVerificationParams, completion: @escaping (Result<OFRequestEmailVerificationResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await requestEmailVerification(params: params)
@@ -214,7 +214,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func verifyEmail(params: OFVerifyEmailParams) async throws -> OFVerifyEmailResponse {
+    public func verifyEmail(params: OFVerifyEmailParams) async throws -> OFVerifyEmailResponse? {
         let method = OFMethods.verifyEmail
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -226,7 +226,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func verifyEmail(params: OFVerifyEmailParams, completion: @escaping (Result<OFVerifyEmailResponse, Error>) -> Void) {
+    public func verifyEmail(params: OFVerifyEmailParams, completion: @escaping (Result<OFVerifyEmailResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await verifyEmail(params: params)
@@ -237,7 +237,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func initOAuth(params: OFInitOAuthParams) async throws -> OFInitOAuthResponse {
+    public func initOAuth(params: OFInitOAuthParams) async throws -> OFInitOAuthResponse? {
         let method = OFMethods.initOAuth
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -249,7 +249,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func initOAuth(params: OFInitOAuthParams, completion: @escaping (Result<OFInitOAuthResponse, Error>) -> Void) {
+    public func initOAuth(params: OFInitOAuthParams, completion: @escaping (Result<OFInitOAuthResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await initOAuth(params: params)
@@ -260,7 +260,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func unlinkOAuth(params: OFUnlinkOAuthParams) async throws -> OFUnlinkOAuthResponse {
+    public func unlinkOAuth(params: OFUnlinkOAuthParams) async throws -> OFUnlinkOAuthResponse? {
         let method = OFMethods.unlinkOAuth
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -272,7 +272,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func unlinkOAuth(params: OFUnlinkOAuthParams, completion: @escaping (Result<OFUnlinkOAuthResponse, Error>) -> Void) {
+    public func unlinkOAuth(params: OFUnlinkOAuthParams, completion: @escaping (Result<OFUnlinkOAuthResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await unlinkOAuth(params: params)
@@ -283,7 +283,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func loginWithIdToken(params: OFLoginWithIdTokenParams) async throws -> OFLoginWithIdTokenResponse {
+    public func loginWithIdToken(params: OFLoginWithIdTokenParams) async throws -> OFLoginWithIdTokenResponse? {
         let method = OFMethods.loginWithIdToken
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -295,7 +295,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func loginWithIdToken(params: OFLoginWithIdTokenParams, completion: @escaping (Result<OFLoginWithIdTokenResponse, Error>) -> Void) {
+    public func loginWithIdToken(params: OFLoginWithIdTokenParams, completion: @escaping (Result<OFLoginWithIdTokenResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await loginWithIdToken(params: params)
@@ -306,7 +306,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func linkWallet(params: OFLinkWalletParams) async throws -> OFLinkWalletResponse {
+    public func linkWallet(params: OFLinkWalletParams) async throws -> OFLinkWalletResponse? {
         let method = OFMethods.linkWallet
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -318,7 +318,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func linkWallet(params: OFLinkWalletParams, completion: @escaping (Result<OFLinkWalletResponse, Error>) -> Void) {
+    public func linkWallet(params: OFLinkWalletParams, completion: @escaping (Result<OFLinkWalletResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await linkWallet(params: params)
@@ -329,7 +329,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func initLinkOAuth(params: OFInitLinkOAuthParams) async throws -> OFInitLinkOAuthResponse {
+    public func initLinkOAuth(params: OFInitLinkOAuthParams) async throws -> OFInitLinkOAuthResponse? {
         let method = OFMethods.initLinkOAuth
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -341,7 +341,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func initLinkOAuth(params: OFInitLinkOAuthParams, completion: @escaping (Result<OFInitLinkOAuthResponse, Error>) -> Void) {
+    public func initLinkOAuth(params: OFInitLinkOAuthParams, completion: @escaping (Result<OFInitLinkOAuthResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await initLinkOAuth(params: params)
@@ -352,7 +352,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func poolOAuth(key: String) async throws -> OFPoolOAuthResponse {
+    public func poolOAuth(key: String) async throws -> OFPoolOAuthResponse? {
         let method = OFMethods.poolOAuth
         return try await evaluateAndObserveAsync(
             js: "window.poolOAuthSync(\(key));",
@@ -361,7 +361,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func poolOAuth(key: String, completion: @escaping (Result<OFPoolOAuthResponse, Error>) -> Void) {
+    public func poolOAuth(key: String, completion: @escaping (Result<OFPoolOAuthResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await poolOAuth(key: key)
@@ -372,7 +372,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func initSIWE(params: OFInitSIWEParams) async throws -> OFInitSIWEResponse {
+    public func initSIWE(params: OFInitSIWEParams) async throws -> OFInitSIWEResponse? {
         let method = OFMethods.initSIWE
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -384,7 +384,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func initSIWE(params: OFInitSIWEParams, completion: @escaping (Result<OFInitSIWEResponse, Error>) -> Void) {
+    public func initSIWE(params: OFInitSIWEParams, completion: @escaping (Result<OFInitSIWEResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await initSIWE(params: params)
@@ -395,7 +395,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func unlinkWallet(params: OFUnlinkWalletParams) async throws -> OFUnlinkWalletResponse {
+    public func unlinkWallet(params: OFUnlinkWalletParams) async throws -> OFUnlinkWalletResponse? {
         let method = OFMethods.unlinkWallet
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -407,7 +407,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func unlinkWallet(params: OFUnlinkWalletParams, completion: @escaping (Result<OFUnlinkWalletResponse, Error>) -> Void) {
+    public func unlinkWallet(params: OFUnlinkWalletParams, completion: @escaping (Result<OFUnlinkWalletResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await unlinkWallet(params: params)
@@ -418,7 +418,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams) async throws -> OFLinkThirdPartyProviderResponse {
+    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams) async throws -> OFLinkThirdPartyProviderResponse? {
         let method = OFMethods.linkThirdPartyProvider
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -430,7 +430,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams, completion: @escaping (Result<OFLinkThirdPartyProviderResponse, Error>) -> Void) {
+    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams, completion: @escaping (Result<OFLinkThirdPartyProviderResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await linkThirdPartyProvider(params: params)
@@ -441,7 +441,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func authenticateWithThirdPartyProvider(params: OFAuthenticateWithThirdPartyProviderParams) async throws -> OFAuthenticateWithThirdPartyProviderResponse {
+    public func authenticateWithThirdPartyProvider(params: OFAuthenticateWithThirdPartyProviderParams) async throws -> OFAuthenticateWithThirdPartyProviderResponse? {
         let method = OFMethods.authenticateWithThirdPartyProvider
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -453,7 +453,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func authenticateWithThirdPartyProvider(params: OFAuthenticateWithThirdPartyProviderParams, completion: @escaping (Result<OFAuthenticateWithThirdPartyProviderResponse, Error>) -> Void) {
+    public func authenticateWithThirdPartyProvider(params: OFAuthenticateWithThirdPartyProviderParams, completion: @escaping (Result<OFAuthenticateWithThirdPartyProviderResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await authenticateWithThirdPartyProvider(params: params)
@@ -464,7 +464,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func authenticateWithSIWE(params: OFAuthenticateWithSIWEParams) async throws -> OFAuthenticateWithSIWEResponse {
+    public func authenticateWithSIWE(params: OFAuthenticateWithSIWEParams) async throws -> OFAuthenticateWithSIWEResponse? {
         let method = OFMethods.authenticateWithSIWE
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -476,7 +476,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func authenticateWithSIWE(params: OFAuthenticateWithSIWEParams, completion: @escaping (Result<OFAuthenticateWithSIWEResponse, Error>) -> Void) {
+    public func authenticateWithSIWE(params: OFAuthenticateWithSIWEParams, completion: @escaping (Result<OFAuthenticateWithSIWEResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await authenticateWithSIWE(params: params)
@@ -487,7 +487,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func storeCredentials(params: OFStoreCredentialsParams) async throws -> OFStoreCredentialsResponse {
+    public func storeCredentials(params: OFStoreCredentialsParams) async throws -> OFStoreCredentialsResponse? {
         let method = OFMethods.storeCredentials
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -499,7 +499,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func storeCredentials(params: OFStoreCredentialsParams, completion: @escaping (Result<OFStoreCredentialsResponse, Error>) -> Void) {
+    public func storeCredentials(params: OFStoreCredentialsParams, completion: @escaping (Result<OFStoreCredentialsResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await storeCredentials(params: params)

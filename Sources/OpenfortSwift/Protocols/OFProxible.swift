@@ -13,7 +13,7 @@ public extension OFProxible {
     
     func sendSignatureTransactionIntentRequest(
         params: OFSendSignatureTransactionIntentRequestParams
-    ) async throws -> OFSendSignatureTransactionIntentRequestResponse {
+    ) async throws -> OFSendSignatureTransactionIntentRequestResponse? {
         let method = OFMethods.sendSignatureTransactionIntentRequest
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -27,7 +27,7 @@ public extension OFProxible {
     
     func sendSignatureTransactionIntentRequest(
         params: OFSendSignatureTransactionIntentRequestParams,
-        completion: @escaping (Result<OFSendSignatureTransactionIntentRequestResponse, Error>) -> Void
+        completion: @escaping (Result<OFSendSignatureTransactionIntentRequestResponse?, Error>) -> Void
     ) {
         Task {
             do {
@@ -41,7 +41,7 @@ public extension OFProxible {
     
     func sendSignatureSessionRequest(
         params: OFSendSignatureSessionRequestParams
-    ) async throws -> OFSendSignatureSessionRequestResponse {
+    ) async throws -> OFSendSignatureSessionRequestResponse? {
         let method = OFMethods.sendSignatureSessionRequest
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -55,7 +55,7 @@ public extension OFProxible {
     
     func sendSignatureSessionRequest(
         params: OFSendSignatureSessionRequestParams,
-        completion: @escaping (Result<OFSendSignatureSessionRequestResponse, Error>) -> Void
+        completion: @escaping (Result<OFSendSignatureSessionRequestResponse?, Error>) -> Void
     ) {
         Task {
             do {
