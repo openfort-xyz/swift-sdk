@@ -19,7 +19,7 @@ public extension OFEmbeddedWalletAccessable {
         fatalError("embeddedStatePublisher must be implemented by conforming type")
     }
 
-    func signTypedData(params: OFSignTypedDataParams) async throws -> OFSignTypedDataResponse {
+    func signTypedData(params: OFSignTypedDataParams) async throws -> OFSignTypedDataResponse? {
         let method = OFMethods.signTypedData
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed

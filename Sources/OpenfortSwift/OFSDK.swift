@@ -67,7 +67,7 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
                 self.getEmbeddedState(completion: { result in
                     switch result {
                     case .success(let newValue):
-                        self.embeddedState = OFEmbeddedState(rawValue: newValue)
+                        self.embeddedState = OFEmbeddedState(rawValue: newValue ?? 0)
                     case .failure(_):
                         // Optionally handle error, currently ignoring
                         break
