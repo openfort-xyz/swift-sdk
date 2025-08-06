@@ -22,7 +22,7 @@ public protocol LinkedAccountResponseProtocol {
 }
 
 // Your model conforms to Codable and the protocol
-public struct OFLinkedAccountResponse: Decodable, LinkedAccountResponseProtocol {
+public struct OFLinkedAccountResponse: Codable, LinkedAccountResponseProtocol {
     public let provider: String
     public let email: String?
     public let externalUserId: String?

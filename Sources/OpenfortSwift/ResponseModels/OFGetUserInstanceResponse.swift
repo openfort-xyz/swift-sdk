@@ -12,7 +12,7 @@ public protocol OFGetUserInstanceResponseProtocol {
     var linkedAccounts: [OFLinkedAccountResponse]? { get }
 }
 
-public struct OFGetUserInstanceResponse: Decodable, OFGetUserInstanceResponseProtocol {
+public struct OFGetUserInstanceResponse: Codable, OFGetUserInstanceResponseProtocol {
     public let id: String?
     public let createdAt: String?
     public let player: String?
