@@ -3,9 +3,17 @@ class KeychainStorage {
     static _pendingOps = {};
     static _nextRequestId = 1;
     
+    static _getNextRequestId() {
+        const id = KeychainStorage._nextRequestId++;
+        if (KeychainStorage._nextRequestId > Number.MAX_SAFE_INTEGER - 1000) {
+            KeychainStorage._nextRequestId = 1;
+        }
+        return id;
+    }
+    
     async get(key) {
         // Returns a Promise resolving to the string value or null
-        const requestId = KeychainStorage._nextRequestId++;
+        const requestId = KeychainStorage._getNextRequestId();
         return new Promise((resolve) => {
             KeychainStorage._pendingGets[requestId] = resolve;
             window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainGet", key: key, requestId: requestId });
@@ -13,7 +21,7 @@ class KeychainStorage {
     }
     
     async save(key, value) {
-        const requestId = KeychainStorage._nextRequestId++;
+        const requestId = KeychainStorage._getNextRequestId();
         return new Promise((resolve) => {
             KeychainStorage._pendingOps[requestId] = resolve;
             window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainSave", key: key, value: value, requestId: requestId });
@@ -21,7 +29,7 @@ class KeychainStorage {
     }
     
     async remove(key) {
-        const requestId = KeychainStorage._nextRequestId++;
+        const requestId = KeychainStorage._getNextRequestId();
         return new Promise((resolve) => {
             KeychainStorage._pendingOps[requestId] = resolve;
             window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainRemove", key: key, requestId: requestId });
@@ -29,7 +37,7 @@ class KeychainStorage {
     }
     
     async flush() {
-        const requestId = KeychainStorage._nextRequestId++;
+        const requestId = KeychainStorage._getNextRequestId();
         return new Promise((resolve) => {
             KeychainStorage._pendingOps[requestId] = resolve;
             window.webkit?.messageHandlers?.userHandler?.postMessage({ method: "KeychainFlush", requestId: requestId });
