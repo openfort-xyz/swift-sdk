@@ -7,14 +7,14 @@
 
 public protocol OFGetUserInstanceResponseProtocol {
     var id: String? { get }
-    var createdAt: String? { get }
+    var createdAt: Int? { get }
     var player: String? { get }
     var linkedAccounts: [OFLinkedAccountResponse]? { get }
 }
 
 public struct OFGetUserInstanceResponse: Codable, OFGetUserInstanceResponseProtocol {
     public let id: String?
-    public let createdAt: String?
+    public let createdAt: Int?
     public let player: String?
     public let linkedAccounts: [OFLinkedAccountResponse]?
 }
