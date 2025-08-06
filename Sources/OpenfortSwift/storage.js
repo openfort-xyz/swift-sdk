@@ -62,8 +62,3 @@ window.__keychainOnOp = function({ requestId }) {
         delete KeychainStorage._pendingOps[requestId];
     }
 };
-
-window.ReactNativeWebView = window.ReactNativeWebView || {};
-window.ReactNativeWebView.injectedObjectJson = function() {
-    return JSON.stringify({ shouldUseAppBackedStorage: true });
-};

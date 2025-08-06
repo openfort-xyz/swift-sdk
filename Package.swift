@@ -23,6 +23,7 @@ let package = Package(
                     .process("index.html"),
                     .process("index.js"),
                     .process("storage.js"),
+                    .process("securestorage.js"),
                     .process("openfort.js"),
                     .process("openfort-sync.js"),
                     .process("utils.js")
