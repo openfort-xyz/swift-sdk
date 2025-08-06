@@ -19,7 +19,6 @@ public typealias OFSendPasswordResetEmailResponse = OFSimpleResultResponse
 public typealias OFSendVerificationEmailResponse = OFSimpleResultResponse
 public typealias OFUpdatePasswordResponse = OFSimpleResultResponse
 public typealias OFReauthenticateWithPasswordResponse = OFSimpleResultResponse
-public typealias OFDeleteUserResponse = OFSimpleResultResponse
 public typealias OFGetEmbeddedStateResponse = Int
 public typealias OFGetAccessTokenResponse = String
 public typealias OFSignMessageResponse = String
