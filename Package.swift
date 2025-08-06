@@ -22,6 +22,7 @@ let package = Package(
             resources: [
                     .process("index.html"),
                     .process("index.js"),
+                    .process("storage.js"),
                     .process("openfort.js"),
                     .process("openfort-sync.js"),
                     .process("utils.js")
