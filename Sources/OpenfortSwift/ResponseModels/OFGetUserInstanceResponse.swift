@@ -9,12 +9,12 @@ public protocol OFGetUserInstanceResponseProtocol {
     var id: String? { get }
     var createdAt: String? { get }
     var player: String? { get }
-    var metadata: [String: AnyCodable]? { get }
+    var linkedAccounts: [OFLinkedAccountResponse]? { get }
 }
 
 public struct OFGetUserInstanceResponse: Decodable, OFGetUserInstanceResponseProtocol {
     public let id: String?
     public let createdAt: String?
     public let player: String?
-    public let metadata: [String: AnyCodable]?
+    public let linkedAccounts: [OFLinkedAccountResponse]?
 }
