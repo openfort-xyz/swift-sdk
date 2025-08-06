@@ -267,7 +267,7 @@ window.sendSignatureSessionRequestSync = function({ sessionId, signature, optimi
 // UserInstance sync methods
 
 window.getUserSync = function() {
-    handleResult('get', window.openfort.authInstance.get());
+    handleResult('get', window.openfort.userInstance.get());
 };
 
 // Openfort sync methods
