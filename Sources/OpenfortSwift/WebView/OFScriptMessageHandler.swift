@@ -175,7 +175,6 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             OFMethods.sendSignatureSessionRequest: handlerFor(OFSendSignatureSessionRequestResponse.self),
             OFMethods.getUserInstance: handlerFor(OFGetUserInstanceResponse.self),
             OFMethods.getAccessToken: handlerFor(OFGetAccessTokenResponse.self),
-            OFMethods.validateAndRefreshToken: handlerFor(OFValidateAndRefreshTokenResponse.self)
         ]
     }
     
