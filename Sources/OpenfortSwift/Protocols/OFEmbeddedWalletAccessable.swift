@@ -95,6 +95,15 @@ public extension OFEmbeddedWalletAccessable {
     }
 
     func configure(params: OFConfigureEmbeddedWalletDTO) async throws -> OFConfigureResponse? {
+        
+        self.webView?.evaluateJavaScript("window.ReactNativeWebView.injectedObjectJson()") { (result, error) in
+            if let error = error {
+                print("Error evaluating JS: \(error)")
+            } else if let jsonString = result as? String {
+                print("Injected object JSON: \(jsonString)")
+                // You can parse the jsonString to a Swift Dictionary if needed
+            }
+        }
         let method = OFMethods.configure
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
