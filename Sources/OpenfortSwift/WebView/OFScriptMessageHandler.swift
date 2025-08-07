@@ -24,7 +24,12 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             print("No 'method' key in message: \(dict)")
             return
         }
+        
         if processMessageForKeychain(dict) {
+            return
+        }
+        
+        if processMessageForSecureStorage(dict) {
             return
         }
         
@@ -84,6 +89,44 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             let requestId = data["requestId"] as! Int
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
             webView?.evaluateJavaScript(js)
+            return true
+        default:
+            return false
+        }
+    }
+    
+    private func processMessageForSecureStorage(_ data: [String: Any]) -> Bool {
+        guard let event = data["event"] as? String else { return false }
+
+        switch event {
+        case "app:secure-storage:get":
+            // Call Swift storage logic, then send value back
+            // Example:
+            if let key = (data["data"] as? [String: Any])?["key"] as? String,
+               let requestId = data["id"] {
+                let value = OFKeychainHelper.retrieve(for: key) // Use your actual storage logic
+                let js = """
+                    window.__secureStorageOnResponse({ id: \(requestId), data: \(value != nil ? "\"\(value!)\"" : "null") });
+                """
+                webView?.evaluateJavaScript(js)
+            }
+            return true
+        case "app:secure-storage:set":
+            if let dict = data["data"] as? [String: Any],
+               let key = dict["key"] as? String,
+               let value = dict["value"] as? String,
+               let requestId = data["id"] {
+                OFKeychainHelper.save(value, for: key)
+            }
+            return true
+        case "app:secure-storage:remove":
+            if let key = (data["data"] as? [String: Any])?["key"] as? String,
+               let requestId = data["id"] {
+                OFKeychainHelper.delete(for: key)
+            }
+            return true
+        case "app:secure-storage:flush":
+            OFKeychainHelper.clearAll()
             return true
         default:
             return false
