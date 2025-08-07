@@ -29,6 +29,15 @@ internal class OFWebView: WKWebView {
             userContentController.add(messageHandler, name: "ReactNativeWebView")
         }
 
+        let script = """
+        window.ReactNativeWebView = window.ReactNativeWebView || {};
+        window.ReactNativeWebView.injectedObjectJson = function() {
+            return JSON.stringify({ shouldUseAppBackedStorage: true });
+        };
+        """
+        let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+        userContentController.addUserScript(userScript)
+        
         // Configure the web view
         let config = WKWebViewConfiguration()
         config.defaultWebpagePreferences = webPagePreferences
