@@ -35,8 +35,8 @@ internal class OFWebView: WKWebView {
 //            return JSON.stringify({ shouldUseAppBackedStorage: true });
 //        };
 //        """
-//        let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
-//        userContentController.addUserScript(userScript)
+        let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+        userContentController.addUserScript(userScript)
         
         // Configure the web view
         let config = WKWebViewConfiguration()

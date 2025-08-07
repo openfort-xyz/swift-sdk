@@ -40,7 +40,7 @@ public extension OFOpenfortRootable {
         }
     }
     
-    func validateAndRefreshToken(forceRefresh: Bool? = nil) async throws -> OFValidateAndRefreshTokenResponse? {
+    func validateAndRefreshToken(forceRefresh: Bool? = nil) async throws {
         let method = OFMethods.validateAndRefreshToken
         let js: String
         if let forceRefresh = forceRefresh {
@@ -48,18 +48,18 @@ public extension OFOpenfortRootable {
         } else {
             js = "window.validateAndRefreshTokenSync();"
         }
-        return try await evaluateAndObserveAsync(
+        try await evaluateAndObserveAsync(
             js: js,
             method: method,
             errorDomain: OFErrorDomains.validateAndRefreshToken
-        )
+        ) as EmptyDecodable?
     }
     
-    func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<OFValidateAndRefreshTokenResponse?, Error>) -> Void) {
+    func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let result = try await validateAndRefreshToken(forceRefresh: forceRefresh)
-                completion(.success(result))
+                try await validateAndRefreshToken(forceRefresh: forceRefresh)
+                completion(.success(()))
             } catch {
                 completion(.failure(error))
             }
