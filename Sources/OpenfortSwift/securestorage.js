@@ -72,9 +72,9 @@ class SecureStorage {
 }
 window.secureStorage = window.secureStorage || new SecureStorage();
 
-window.ReactNativeWebView = window.ReactNativeWebView || {};
-window.ReactNativeWebView.postMessage = function(data) {
-    window.webkit.messageHandlers.userHandler.postMessage(message);
+//window.ReactNativeWebView = window.ReactNativeWebView || {};
+//window.ReactNativeWebView.postMessage = function(data) {
+//    window.webkit.messageHandlers.userHandler.postMessage(message);
 //    let message;
 //    try {
 //        message = typeof data === 'string' ? JSON.parse(data) : data;
@@ -105,7 +105,7 @@ window.ReactNativeWebView.postMessage = function(data) {
 //    } catch (err) {
 //        // Handle errors if needed
 //    }
-};
+//};
 
 window.__secureStorageOnResponse = function(response) {
     SecureStorage.handleResponse(response);
