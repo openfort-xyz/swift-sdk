@@ -70,37 +70,38 @@ class SecureStorage {
 window.secureStorage = window.secureStorage || new SecureStorage();
 
 window.ReactNativeWebView = window.ReactNativeWebView || {};
-window.ReactNativeWebView.postMessage = async function(data) {
-    let message;
-    try {
-        message = typeof data === 'string' ? JSON.parse(data) : data;
-    } catch (e) {
-        // Invalid message
-        return;
-    }
-    const { event, id, data: payload } = message;
-
-    try {
-        let result;
-        switch (event) {
-            case 'app:secure-storage:get':
-                result = await window.secureStorage.get(payload.key);
-                break;
-            case 'app:secure-storage:set':
-                result = await window.secureStorage.set(payload.key, payload.value);
-                break;
-            case 'app:secure-storage:remove':
-                result = await window.secureStorage.remove(payload.key);
-                break;
-            case 'app:secure-storage:flush':
-                result = await window.secureStorage.flush(payload.origin);
-                break;
-            default:
-                result = { error: "Unknown event" };
-        }
-    } catch (err) {
-        // Handle errors if needed
-    }
+window.ReactNativeWebView.postMessage = function(data) {
+    window.webkit.messageHandlers.userHandler.postMessage(message);
+//    let message;
+//    try {
+//        message = typeof data === 'string' ? JSON.parse(data) : data;
+//    } catch (e) {
+//        // Invalid message
+//        return;
+//    }
+//    const { event, id, data: payload } = message;
+//
+//    try {
+//        let result;
+//        switch (event) {
+//            case 'app:secure-storage:get':
+//                result = await window.secureStorage.get(payload.key);
+//                break;
+//            case 'app:secure-storage:set':
+//                result = await window.secureStorage.set(payload.key, payload.value);
+//                break;
+//            case 'app:secure-storage:remove':
+//                result = await window.secureStorage.remove(payload.key);
+//                break;
+//            case 'app:secure-storage:flush':
+//                result = await window.secureStorage.flush(payload.origin);
+//                break;
+//            default:
+//                result = { error: "Unknown event" };
+//        }
+//    } catch (err) {
+//        // Handle errors if needed
+//    }
 };
 
 window.__secureStorageOnResponse = function(response) {
