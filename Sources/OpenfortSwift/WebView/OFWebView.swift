@@ -26,17 +26,17 @@ internal class OFWebView: WKWebView {
         let userContentController = WKUserContentController()
         if let messageHandler = scriptMessageHandler {
             userContentController.add(messageHandler, name: "userHandler")
-            userContentController.add(messageHandler, name: "ReactNativeWebView")
+//            userContentController.add(messageHandler, name: "ReactNativeWebView")
         }
 
-        let script = """
-        window.ReactNativeWebView = window.ReactNativeWebView || {};
-        window.ReactNativeWebView.injectedObjectJson = function() {
-            return JSON.stringify({ shouldUseAppBackedStorage: true });
-        };
-        """
-        let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
-        userContentController.addUserScript(userScript)
+//        let script = """
+//        window.ReactNativeWebView = window.ReactNativeWebView || {};
+//        window.ReactNativeWebView.injectedObjectJson = function() {
+//            return JSON.stringify({ shouldUseAppBackedStorage: true });
+//        };
+//        """
+//        let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+//        userContentController.addUserScript(userScript)
         
         // Configure the web view
         let config = WKWebViewConfiguration()
