@@ -1,3 +1,5 @@
+window.webkit?.messageHandlers?.userHandler?.postMessage({ debug: "injectedJS ran!" });
+
 window.ReactNativeWebView = window.ReactNativeWebView || {};
 window.ReactNativeWebView.injectedObjectJson = function() {
     window.webkit.messageHandlers.userHandler.postMessage({ shouldUseAppBackedStorage : true });
