@@ -9,6 +9,6 @@ public protocol OFPingResponseProtocol {
     var pong: Bool? { get }
 }
 
-public struct OFPingResponse: Decodable, OFPingResponseProtocol {
+public struct OFPingResponse: OFPingResponseProtocol, OFCodableSendable {
     public let pong: Bool?
 }

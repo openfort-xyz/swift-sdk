@@ -12,8 +12,8 @@ public protocol OFGetUserInstanceResponseProtocol {
     var linkedAccounts: [OFLinkedAccountResponse]? { get }
 }
 
-public struct OFGetUserInstanceResponse: Codable, OFGetUserInstanceResponseProtocol {
-    public let id: String?
+public struct OFGetUserInstanceResponse: OFGetUserInstanceResponseProtocol, OFCodableSendable {
+    public var id: String?
     public let createdAt: Int?
     public let player: String?
     public let linkedAccounts: [OFLinkedAccountResponse]?

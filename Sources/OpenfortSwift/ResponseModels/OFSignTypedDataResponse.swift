@@ -10,7 +10,7 @@ public protocol OFSignTypedDataResponseProtocol {
     var signedData: String? { get }
 }
 
-public struct OFSignTypedDataResponse: Decodable, OFSignTypedDataResponseProtocol {
+public struct OFSignTypedDataResponse: OFSignTypedDataResponseProtocol, OFCodableSendable {
     public let signature: String?
     public let signedData: String?
 }

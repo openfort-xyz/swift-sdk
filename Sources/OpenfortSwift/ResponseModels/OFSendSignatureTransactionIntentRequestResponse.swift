@@ -11,7 +11,7 @@ public protocol OFSendSignatureTransactionIntentRequestResponseProtocol {
     var transactionHash: String? { get }
 }
 
-public struct OFSendSignatureTransactionIntentRequestResponse: Decodable, OFSendSignatureTransactionIntentRequestResponseProtocol {
+public struct OFSendSignatureTransactionIntentRequestResponse:  OFSendSignatureTransactionIntentRequestResponseProtocol, OFCodableSendable {
     public let id: String?
     public let status: String?
     public let transactionHash: String?

@@ -9,11 +9,11 @@ public protocol OFSessionResponseProtocol {
     var session: OFSession? { get }
 }
 
-public struct OFSessionResponse: Decodable, OFSessionResponseProtocol {
+public struct OFSessionResponse: OFSessionResponseProtocol, OFCodableSendable {
     public let session: OFSession?
 }
 
-public struct OFSession: Decodable {
+public struct OFSession: OFCodableSendable {
     public let id: String?
     public let userId: String?
     public let createdAt: String?

@@ -10,7 +10,7 @@ public protocol OFPoolOAuthResponseProtocol {
     var expiresAt: String? { get }
 }
 
-public struct OFPoolOAuthResponse: Decodable, OFPoolOAuthResponseProtocol {
+public struct OFPoolOAuthResponse: OFPoolOAuthResponseProtocol, OFCodableSendable {
     public let poolId: String?
     public let expiresAt: String?
 }

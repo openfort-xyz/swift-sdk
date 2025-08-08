@@ -11,7 +11,7 @@ public protocol OFSendSignatureSessionRequestResponseProtocol {
     var permissions: [String]? { get }
 }
 
-public struct OFSendSignatureSessionRequestResponse: Decodable, OFSendSignatureSessionRequestResponseProtocol {
+public struct OFSendSignatureSessionRequestResponse:  OFSendSignatureSessionRequestResponseProtocol, OFCodableSendable {
     public let id: String?
     public let status: String?
     public let permissions: [String]?

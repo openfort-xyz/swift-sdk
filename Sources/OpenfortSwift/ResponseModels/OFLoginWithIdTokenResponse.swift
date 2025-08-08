@@ -10,7 +10,7 @@ public protocol OFLoginWithIdTokenResponseProtocol {
     var userId: String? { get }
 }
 
-public struct OFLoginWithIdTokenResponse: Decodable, OFLoginWithIdTokenResponseProtocol {
+public struct OFLoginWithIdTokenResponse: OFLoginWithIdTokenResponseProtocol, OFCodableSendable {
     public let idToken: String?
     public let userId: String?
 }

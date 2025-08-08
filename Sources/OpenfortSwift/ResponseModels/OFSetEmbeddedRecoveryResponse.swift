@@ -9,6 +9,6 @@ public protocol OFSetEmbeddedRecoveryResponseProtocol {
     var recovered: Bool? { get }
 }
 
-public struct OFSetEmbeddedRecoveryResponse: Decodable, OFSetEmbeddedRecoveryResponseProtocol {
+public struct OFSetEmbeddedRecoveryResponse: OFSetEmbeddedRecoveryResponseProtocol, OFCodableSendable {
     public let recovered: Bool?
 }

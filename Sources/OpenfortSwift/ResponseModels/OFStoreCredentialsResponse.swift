@@ -9,6 +9,6 @@ public protocol OFStoreCredentialsResponseProtocol {
     var stored: Bool? { get }
 }
 
-public struct OFStoreCredentialsResponse: Decodable, OFStoreCredentialsResponseProtocol {
+public struct OFStoreCredentialsResponse: OFStoreCredentialsResponseProtocol, OFCodableSendable {
     public let stored: Bool?
 }

@@ -9,6 +9,6 @@ public protocol OFGetIframeManagerResponseProtocol {
     var iframeId: String? { get }
 }
 
-public struct OFGetIframeManagerResponse: Decodable, OFGetIframeManagerResponseProtocol {
+public struct OFGetIframeManagerResponse: OFGetIframeManagerResponseProtocol, OFCodableSendable {
     public let iframeId: String?
 }

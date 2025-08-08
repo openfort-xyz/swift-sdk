@@ -10,7 +10,7 @@ public protocol OFLinkWalletResponseProtocol {
     var linked: Bool? { get }
 }
 
-public struct OFLinkWalletResponse: Decodable, OFLinkWalletResponseProtocol {
+public struct OFLinkWalletResponse: OFLinkWalletResponseProtocol, OFCodableSendable {
     public let walletAddress: String?
     public let linked: Bool?
 }

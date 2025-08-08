@@ -19,7 +19,7 @@ public protocol OFLinkedAccountProtocol {
     var disabled: Bool { get }
 }
 
-public struct OFAuthenticateWithThirdPartyProviderResponse: Decodable, OFAuthenticateWithThirdPartyProviderResponseProtocol {
+public struct OFAuthenticateWithThirdPartyProviderResponse: OFAuthenticateWithThirdPartyProviderResponseProtocol, OFCodableSendable {
     
     public let id: String
     public let object: String
@@ -27,7 +27,7 @@ public struct OFAuthenticateWithThirdPartyProviderResponse: Decodable, OFAuthent
     public let createdAt: Int
 }
 
-public struct LinkedAccount: Decodable, OFLinkedAccountProtocol {
+public struct LinkedAccount: OFLinkedAccountProtocol, OFCodableSendable {
     public let email: String
     public let externalUserId: String
     public let provider: String

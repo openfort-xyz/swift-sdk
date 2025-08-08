@@ -10,7 +10,7 @@ public protocol OFInitOAuthResponseProtocol {
     var state: String? { get }
 }
 
-public struct OFInitOAuthResponse: Decodable, OFInitOAuthResponseProtocol {
+public struct OFInitOAuthResponse: OFInitOAuthResponseProtocol, OFCodableSendable {
     public let url: String?
     public let state: String?
 }

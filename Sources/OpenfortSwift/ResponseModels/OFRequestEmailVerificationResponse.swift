@@ -9,6 +9,6 @@ public protocol OFRequestEmailVerificationResponseProtocol {
     var message: String? { get }
 }
 
-public struct OFRequestEmailVerificationResponse: Decodable, OFRequestEmailVerificationResponseProtocol {
+public struct OFRequestEmailVerificationResponse: OFRequestEmailVerificationResponseProtocol, OFCodableSendable {
     public let message: String?
 }

@@ -11,7 +11,7 @@ public protocol OFInitSIWEResponseProtocol {
     var expiresAt: Int { get }
 }
 
-public struct OFInitSIWEResponse: Decodable, OFInitSIWEResponseProtocol {
+public struct OFInitSIWEResponse: OFInitSIWEResponseProtocol, OFCodableSendable {
     public let address: String
     public let nonce: String
     public let expiresAt: Int

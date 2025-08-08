@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-08-02.
 //
 
-public enum OFEmbeddedState: Int, Decodable {
+public enum OFEmbeddedState: Int, OFCodableSendable {
     case none = 0
     case unauthenticated = 1
     case embeddedSignerNotConfigured = 2

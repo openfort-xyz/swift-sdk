@@ -19,14 +19,14 @@ public protocol OFLinkedEmailAccountProtocol {
     var disabled: Bool? { get }
 }
 
-public struct OFLinkEmailPasswordResponse: OFLinkEmailPasswordResponseProtocol, Decodable {
+public struct OFLinkEmailPasswordResponse: OFLinkEmailPasswordResponseProtocol, OFCodableSendable {
     public let id: String?
     public let object: String?
     public let linkedAccounts: [OFLinkedEmailAccount]?
     public let createdAt: Int?
 }
 
-public struct OFLinkedEmailAccount: OFLinkedEmailAccountProtocol, Decodable {
+public struct OFLinkedEmailAccount: OFLinkedEmailAccountProtocol, OFCodableSendable {
     public let email: String?
     public let provider: String?
     public let verified: Bool?

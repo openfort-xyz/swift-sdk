@@ -6,7 +6,7 @@
 //
 
 public protocol EmbeddedAccountProtocol {
-    var owner: EmbeddedAccount.Owner { get }
+    var owner: OFOwner { get }
     var chainType: String { get }
     var address: String { get }
     var ownerAddress: String? { get }
@@ -16,11 +16,8 @@ public protocol EmbeddedAccountProtocol {
 }
 
 
-public struct EmbeddedAccount: Decodable, EmbeddedAccountProtocol {
-    public struct Owner: Decodable {
-        public let id: String
-    }
-    public let owner: Owner
+public struct EmbeddedAccount: EmbeddedAccountProtocol, OFCodableSendable {
+    public let owner: OFOwner
     public let chainType: String
     public let address: String
     public let ownerAddress: String?

@@ -18,7 +18,7 @@ public protocol OFConfigureResponseProtocol {
     var address: String? { get }
 }
 
-public struct OFConfigureResponse: Decodable, OFConfigureResponseProtocol {
+public struct OFConfigureResponse: OFConfigureResponseProtocol, OFCodableSendable {
     public let ownerAddress: String?
     public let chainId: String?
     public let owner: OFOwner?
@@ -27,6 +27,6 @@ public struct OFConfigureResponse: Decodable, OFConfigureResponseProtocol {
     public let address: String?
 }
 
-public struct OFOwner: Decodable, OFConfigureOwnerResponseProtocol {
+public struct OFOwner: OFConfigureOwnerResponseProtocol, OFCodableSendable {
     public let id: String?
 }

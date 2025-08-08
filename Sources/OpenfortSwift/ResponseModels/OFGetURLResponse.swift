@@ -9,6 +9,6 @@ public protocol OFGetURLResponseProtocol {
     var url: String? { get }
 }
 
-public struct OFGetURLResponse: Decodable, OFGetURLResponseProtocol {
+public struct OFGetURLResponse: OFGetURLResponseProtocol, OFCodableSendable {
     public let url: String?
 }

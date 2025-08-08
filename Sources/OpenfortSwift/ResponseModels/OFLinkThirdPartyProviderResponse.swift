@@ -10,7 +10,7 @@ public protocol OFLinkThirdPartyProviderResponseProtocol {
     var linked: Bool? { get }
 }
 
-public struct OFLinkThirdPartyProviderResponse: Decodable, OFLinkThirdPartyProviderResponseProtocol {
+public struct OFLinkThirdPartyProviderResponse:  OFLinkThirdPartyProviderResponseProtocol, OFCodableSendable {
     public let provider: String?
     public let linked: Bool?
 }

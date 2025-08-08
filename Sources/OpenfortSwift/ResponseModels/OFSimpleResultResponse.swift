@@ -5,12 +5,12 @@
 //  Created by Pavel Gurkovskii on 2025-07-09.
 //
 
-public protocol OFSimpleResultResponseProtocol: Decodable {
+public protocol OFSimpleResultResponseProtocol {
     var success: Bool? { get }
     var message: String? { get }
 }
 
-public struct OFSimpleResultResponse: OFSimpleResultResponseProtocol {
+public struct OFSimpleResultResponse: OFSimpleResultResponseProtocol, OFCodableSendable {
     public let success: Bool?
     public let message: String?
 }

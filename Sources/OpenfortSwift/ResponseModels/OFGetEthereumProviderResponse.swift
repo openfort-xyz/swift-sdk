@@ -9,6 +9,6 @@ public protocol OFGetEthereumProviderResponseProtocol {
     var provider: String? { get }
 }
 
-public struct OFGetEthereumProviderResponse: Decodable, OFGetEthereumProviderResponseProtocol {
+public struct OFGetEthereumProviderResponse: OFGetEthereumProviderResponseProtocol, OFCodableSendable {
     public let provider: String?
 }

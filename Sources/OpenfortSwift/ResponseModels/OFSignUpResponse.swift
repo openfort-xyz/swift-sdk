@@ -14,7 +14,7 @@ public protocol OFSignUpResponseProtocol {
     
 }
 
-public struct OFSignUpResponse: OFSignUpResponseProtocol, Decodable {
+public struct OFSignUpResponse: OFSignUpResponseProtocol, OFCodableSendable {
     public let token: String?
     public let refreshToken: String?
     public let player: OFPlayerInfo?

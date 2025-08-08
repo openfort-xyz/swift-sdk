@@ -10,7 +10,7 @@ public protocol OFAuthenticateWithSIWEResponseProtocol {
     var authenticated: Bool? { get }
 }
 
-public struct OFAuthenticateWithSIWEResponse: Decodable, OFAuthenticateWithSIWEResponseProtocol {
+public struct OFAuthenticateWithSIWEResponse: OFAuthenticateWithSIWEResponseProtocol, OFCodableSendable {
     public let address: String?
     public let authenticated: Bool?
 }

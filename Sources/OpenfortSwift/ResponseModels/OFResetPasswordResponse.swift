@@ -9,6 +9,6 @@ public protocol OFResetPasswordResponseProtocol {
     var result: String? { get }
 }
 
-public struct OFResetPasswordResponse: Decodable, OFResetPasswordResponseProtocol {
+public struct OFResetPasswordResponse: OFResetPasswordResponseProtocol, OFCodableSendable {
     public let result: String?
 }

@@ -9,6 +9,6 @@ public protocol OFUnlinkOAuthResponseProtocol {
     var result: String? { get }
 }
 
-public struct OFUnlinkOAuthResponse: Decodable, OFUnlinkOAuthResponseProtocol {
+public struct OFUnlinkOAuthResponse: OFUnlinkOAuthResponseProtocol, OFCodableSendable {
     public let result: String?
 }

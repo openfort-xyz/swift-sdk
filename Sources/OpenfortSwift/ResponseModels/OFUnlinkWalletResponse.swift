@@ -10,7 +10,7 @@ public protocol OFUnlinkWalletResponseProtocol {
     var unlinked: Bool? { get }
 }
 
-public struct OFUnlinkWalletResponse: Decodable, OFUnlinkWalletResponseProtocol {
+public struct OFUnlinkWalletResponse: OFUnlinkWalletResponseProtocol, OFCodableSendable {
     public let walletAddress: String?
     public let unlinked: Bool?
 }

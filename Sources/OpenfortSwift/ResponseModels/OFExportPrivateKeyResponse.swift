@@ -9,6 +9,6 @@ public protocol OFExportPrivateKeyResponseProtocol {
     var privateKey: String? { get }
 }
 
-public struct OFExportPrivateKeyResponse: Decodable, OFExportPrivateKeyResponseProtocol {
+public struct OFExportPrivateKeyResponse: OFExportPrivateKeyResponseProtocol, OFCodableSendable {
     public let privateKey: String?
 }
