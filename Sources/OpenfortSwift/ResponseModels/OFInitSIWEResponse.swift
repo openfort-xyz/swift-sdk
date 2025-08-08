@@ -6,13 +6,13 @@
 //
 
 public protocol OFInitSIWEResponseProtocol {
-    var address: String? { get }
-    var nonce: String? { get }
-    var expiresAt: Int? { get }
+    var address: String { get }
+    var nonce: String { get }
+    var expiresAt: Int { get }
 }
 
 public struct OFInitSIWEResponse: Decodable, OFInitSIWEResponseProtocol {
-    public let address: String?
-    public let nonce: String?
-    public let expiresAt: Int?
+    public let address: String
+    public let nonce: String
+    public let expiresAt: Int
 }
