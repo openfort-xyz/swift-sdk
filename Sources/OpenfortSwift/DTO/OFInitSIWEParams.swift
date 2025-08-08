@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFInitSIWEParams: Codable {
+public struct OFInitSIWEParams: Codable, Sendable {
     public let address: String
     public let ecosystemGame: String?
 

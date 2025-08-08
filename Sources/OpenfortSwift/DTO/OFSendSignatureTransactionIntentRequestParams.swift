@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFSendSignatureTransactionIntentRequestParams: Codable {
+public struct OFSendSignatureTransactionIntentRequestParams: Codable, Sendable {
     public let transactionIntentId: String
     public let signableHash: String?
     public let signature: String?

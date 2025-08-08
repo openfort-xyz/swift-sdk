@@ -7,10 +7,10 @@
 
 struct EmptyDecodable: Decodable {}
 
-public struct AnyCodable: Codable {
-    public let value: Any
+public struct AnyCodable: Codable, Sendable {
+    public let value: Sendable
 
-    public init(_ value: Any) {
+    public init(_ value: Sendable) {
         self.value = value
     }
 

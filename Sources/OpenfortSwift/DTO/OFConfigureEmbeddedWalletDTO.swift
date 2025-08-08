@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-22.
 //
 
-public struct OFShieldAuthenticationDTO: Codable {
+public struct OFShieldAuthenticationDTO: Codable, Sendable {
     let auth: String
     let token: String
     let authProvider: String

@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFStoreCredentialsParams: Codable {
+public struct OFStoreCredentialsParams: Codable, Sendable {
     public let provider: String
     public let token: String
     public let tokenType: String

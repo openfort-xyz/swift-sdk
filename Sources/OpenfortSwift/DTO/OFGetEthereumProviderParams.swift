@@ -5,8 +5,8 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFGetEthereumProviderParams: Codable {
-    public struct ProviderInfo: Codable {
+public struct OFGetEthereumProviderParams: Codable, Sendable {
+    public struct ProviderInfo: Codable, Sendable {
         public let icon: String?
         public let name: String?
         public let rdns: String?

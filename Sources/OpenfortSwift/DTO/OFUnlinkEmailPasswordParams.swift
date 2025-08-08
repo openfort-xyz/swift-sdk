@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFUnlinkEmailPasswordParams: Codable {
+public struct OFUnlinkEmailPasswordParams: Codable, Sendable {
     public let email: String
     public let authToken: String
 

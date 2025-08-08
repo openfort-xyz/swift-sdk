@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFInitOAuthParams: Codable {
+public struct OFInitOAuthParams: Codable, Sendable {
     public let provider: String
     public let options: [String: AnyCodable]?
     public let ecosystemGame: String?

@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFSignTypedDataParams: Codable {
+public struct OFSignTypedDataParams: Codable, Sendable {
     public let domain: [String: AnyCodable]
     public let types: [String: AnyCodable]
     public let message: [String: AnyCodable]

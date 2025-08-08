@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFVerifyEmailParams: Codable {
+public struct OFVerifyEmailParams: Codable, Sendable {
     public let email: String
     public let state: String
 

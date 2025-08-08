@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFSignUpWithEmailPasswordParams: Codable {
+public struct OFSignUpWithEmailPasswordParams: Codable, Sendable {
     public let email: String
     public let password: String
     public let name: String?
