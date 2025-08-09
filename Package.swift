@@ -21,6 +21,7 @@ let package = Package(
             name: "OpenfortSwift",
             resources: [
                     .process("index.html"),
+                    .process("index.js"),
                     .process("storage.js"),
                     .process("securestorage.js"),
                     .process("openfort.js"),
