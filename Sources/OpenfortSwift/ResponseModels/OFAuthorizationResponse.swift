@@ -13,11 +13,6 @@ public protocol OFAuthorizationResponseProtocol {
     var details: ActionDetails? { get }
 }
 
-public protocol OFPlayerInfoResponsable {
-    var id: String? { get }
-    var email: String? { get }
-}
-
 public struct OFAuthorizationResponse: OFAuthorizationResponseProtocol, OFCodableSendable {
     // Common fields
     public let token: String?
@@ -26,12 +21,6 @@ public struct OFAuthorizationResponse: OFAuthorizationResponseProtocol, OFCodabl
     public let action: String?
     public let details: ActionDetails?
     
-}
-
-public struct OFPlayerInfo: OFPlayerInfoResponsable, OFCodableSendable {
-    public let id: String?
-    public let email: String?
-    // Add other fields as needed
 }
 
 public struct ActionDetails: OFCodableSendable {

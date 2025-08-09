@@ -5,10 +5,4 @@
 //  Created by Pavel Gurkovskii on 2025-07-10.
 //
 
-public protocol OFPingResponseProtocol {
-    var pong: Bool? { get }
-}
-
-public struct OFPingResponse: OFPingResponseProtocol, OFCodableSendable {
-    public let pong: Bool?
-}
+public typealias OFPingResponse = Bool
