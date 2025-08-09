@@ -144,7 +144,6 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             OFMethods.signUpWith: handlerFor(OFSignUpResponse.self),
             OFMethods.linkEmailPassword: handlerFor(OFLinkEmailPasswordResponse.self),
             OFMethods.unlinkEmailPassword: handlerFor(OFUnlinkEmailPasswordResponse.self),
-            OFMethods.verifyEmail: handlerFor(OFVerifyEmailResponse.self),
             OFMethods.initOAuth: handlerFor(OFInitOAuthResponse.self),
             OFMethods.unlinkOAuth: handlerFor(OFUnlinkOAuthResponse.self),
             OFMethods.loginWithIdToken: handlerFor(OFAuthorizationResponse.self),

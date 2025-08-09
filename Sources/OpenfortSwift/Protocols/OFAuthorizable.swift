@@ -214,23 +214,23 @@ extension OFAuthorizable {
         }
     }
 
-    public func verifyEmail(params: OFVerifyEmailParams) async throws -> OFVerifyEmailResponse? {
+    public func verifyEmail(params: OFVerifyEmailParams) async throws {
         let method = OFMethods.verifyEmail
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        return try await evaluateAndObserveAsync(
+        try await evaluateAndObserveAsync(
             js: "window.verifyEmailSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.verifyEmail
-        )
+        ) as EmptyDecodable?
     }
 
-    public func verifyEmail(params: OFVerifyEmailParams, completion: @escaping (Result<OFVerifyEmailResponse?, Error>) -> Void) {
+    public func verifyEmail(params: OFVerifyEmailParams, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let result = try await verifyEmail(params: params)
-                completion(.success(result))
+                try await verifyEmail(params: params)
+                completion(.success(()))
             } catch {
                 completion(.failure(error))
             }
