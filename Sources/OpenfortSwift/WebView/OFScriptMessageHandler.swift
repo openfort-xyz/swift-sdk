@@ -165,7 +165,6 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             OFMethods.list: handlerFor(OFListResponse.self),
             OFMethods.ping: handlerFor(OFPingResponse.self),
             OFMethods.signMessage: handlerFor(OFSignMessageResponse.self),
-            OFMethods.setEmbeddedRecovery: handlerFor(OFSetEmbeddedRecoveryResponse.self),
             OFMethods.getEmbeddedState: handlerFor(OFGetEmbeddedStateResponse.self),
             OFMethods.getURL: handlerFor(OFGetURLResponse.self),
             OFMethods.sendSignatureTransactionIntentRequest: handlerFor(OFSendSignatureTransactionIntentRequestResponse.self),
