@@ -95,15 +95,6 @@ public extension OFEmbeddedWalletAccessable {
     }
 
     func configure(params: OFConfigureEmbeddedWalletDTO) async throws -> OFConfigureResponse? {
-        
-        self.webView?.evaluateJavaScript("window.ReactNativeWebView.injectedObjectJson()") { (result, error) in
-            if let error = error {
-                print("Error evaluating JS: \(error)")
-            } else if let jsonString = result as? String {
-                print("Injected object JSON: \(jsonString)")
-                // You can parse the jsonString to a Swift Dictionary if needed
-            }
-        }
         let method = OFMethods.configure
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -222,26 +213,26 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    func setEmbeddedRecovery(params: OFSetEmbeddedRecoveryParams) async throws -> OFSetEmbeddedRecoveryResponse? {
+    func setEmbeddedRecovery(params: OFSetEmbeddedRecoveryParams) async throws {
         let method = OFMethods.setEmbeddedRecovery
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        return try await evaluateAndObserveAsync(
+        try await evaluateAndObserveAsync(
             js: "window.setEmbeddedRecoverySync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.setEmbeddedRecovery
-        )
+        ) as EmptyDecodable?
     }
     
     func setEmbeddedRecovery(
         params: OFSetEmbeddedRecoveryParams,
-        completion: @escaping (Result<OFSetEmbeddedRecoveryResponse?, Error>) -> Void
+        completion: @escaping (Result<Void, Error>) -> Void
     ) {
         Task {
             do {
-                let result = try await setEmbeddedRecovery(params: params)
-                completion(.success(result))
+                try await setEmbeddedRecovery(params: params)
+                completion(.success(()))
             } catch {
                 completion(.failure(error))
             }
