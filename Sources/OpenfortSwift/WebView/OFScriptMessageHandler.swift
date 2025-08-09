@@ -144,9 +144,6 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             OFMethods.signUpWith: handlerFor(OFSignUpResponse.self),
             OFMethods.linkEmailPassword: handlerFor(OFLinkEmailPasswordResponse.self),
             OFMethods.unlinkEmailPassword: handlerFor(OFUnlinkEmailPasswordResponse.self),
-            OFMethods.resetPassword: handlerFor(OFResetPasswordResponse.self),
-            OFMethods.requestResetPassword: handlerFor(OFRequestResetPasswordResponse.self),
-            OFMethods.requestEmailVerification: handlerFor(OFRequestEmailVerificationResponse.self),
             OFMethods.verifyEmail: handlerFor(OFVerifyEmailResponse.self),
             OFMethods.initOAuth: handlerFor(OFInitOAuthResponse.self),
             OFMethods.unlinkOAuth: handlerFor(OFUnlinkOAuthResponse.self),
@@ -172,7 +169,7 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             OFMethods.getEmbeddedState: handlerFor(OFGetEmbeddedStateResponse.self),
             OFMethods.getURL: handlerFor(OFGetURLResponse.self),
             OFMethods.sendSignatureTransactionIntentRequest: handlerFor(OFSendSignatureTransactionIntentRequestResponse.self),
-            OFMethods.sendSignatureSessionRequest: handlerFor(OFSendSignatureSessionRequestResponse.self),
+            OFMethods.sendSignatureSessionRequest: handlerFor(OFSessionResponse.self),
             OFMethods.getUserInstance: handlerFor(OFGetUserInstanceResponse.self),
             OFMethods.getAccessToken: handlerFor(OFGetAccessTokenResponse.self),
         ]

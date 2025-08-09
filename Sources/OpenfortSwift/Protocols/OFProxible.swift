@@ -41,7 +41,7 @@ public extension OFProxible {
     
     func sendSignatureSessionRequest(
         params: OFSendSignatureSessionRequestParams
-    ) async throws -> OFSendSignatureSessionRequestResponse? {
+    ) async throws -> OFSessionResponse? {
         let method = OFMethods.sendSignatureSessionRequest
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -55,7 +55,7 @@ public extension OFProxible {
     
     func sendSignatureSessionRequest(
         params: OFSendSignatureSessionRequestParams,
-        completion: @escaping (Result<OFSendSignatureSessionRequestResponse?, Error>) -> Void
+        completion: @escaping (Result<OFSessionResponse?, Error>) -> Void
     ) {
         Task {
             do {

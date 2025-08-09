@@ -7,25 +7,25 @@
 
 
 public protocol OFLinkThirdPartyProviderResponseProtocol {
-    var player: AuthPlayerResponsePlayer? { get }
+    var player: OFAuthPlayerResponsePlayer? { get }
     var id: String { get }
     var object: String { get }
     var createdAt: Int { get }
     var linkedAccounts: [OFLinkedAccountResponse] { get }
 }
 
-public protocol AuthPlayerResponsePlayerProtocol {
+public protocol OFAuthPlayerResponsePlayerProtocol {
     var id: String { get }
     var object: String { get }
     var createdAt: Int { get }
     var name: String { get }
     var description: String? { get }
     var metadata: [String: JSONValue]? { get }
-    var transactionIntents: [TransactionIntentResponse]? { get }
-    var accounts: [PlayerResponseAccountsInner]? { get }
+    var transactionIntents: [OFTransactionIntentResponse]? { get }
+    var accounts: [OFPlayerResponseAccountsInner]? { get }
 }
 
-public protocol PlayerResponseAccountsInnerProtocol {
+public protocol OFPlayerResponseAccountsInnerProtocol {
     var id: String { get }
     var object: String { get }
     var createdAt: Int { get }
@@ -37,29 +37,29 @@ public protocol PlayerResponseAccountsInnerProtocol {
     var chainId: Int { get }
     var accountType: String { get }
     var pendingOwnerAddress: String? { get }
-    var transactionIntents: [EntityIdResponse]? { get }
-    var player: EntityIdResponse { get }
+    var transactionIntents: [OFEntityIdResponse]? { get }
+    var player: OFEntityIdResponse { get }
 }
 
-public protocol EntityIdResponseProtocol { var id: String { get } }
+public protocol OFEntityIdResponseProtocol { var id: String { get } }
 
-public protocol TransactionIntentResponseProtocol {
+public protocol OFTransactionIntentResponseProtocol {
     var id: String { get }
     var object: String { get }
     var createdAt: Int { get }
     var updatedAt: Int { get }
-    var abstractionType: TransactionAbstractionType { get }
-    var details: TransactionDetails? { get }
+    var abstractionType: OFTransactionAbstractionType { get }
+    var details: OFTransactionDetails? { get }
     var chainId: Int { get }
-    var response: ResponseResponse? { get }
-    var interactions: [Interaction]? { get }
-    var nextAction: NextActionResponse? { get }
-    var policy: PolicyOrEntity? { get }
-    var player: PlayerOrEntity? { get }
-    var account: AccountOrEntity? { get }
+    var response: OFResponseResponse? { get }
+    var interactions: [OFInteraction]? { get }
+    var nextAction: OFNextActionResponse? { get }
+    var policy: OFPolicyOrEntity? { get }
+    var player: OFPlayerOrEntity? { get }
+    var account: OFAccountOrEntity? { get }
 }
 
-public protocol ResponseResponseProtocol {
+public protocol OFResponseResponseProtocol {
     var createdAt: Int { get }
     var blockNumber: Int? { get }
     var transactionHash: String? { get }
@@ -68,12 +68,12 @@ public protocol ResponseResponseProtocol {
     var gasFee: String? { get }
     var l1GasFee: String? { get }
     var status: Int? { get }
-    var logs: [Log]? { get }
+    var logs: [OFLog]? { get }
     var to: String? { get }
     var error: JSONValue? { get }
 }
 
-public protocol LogProtocol {
+public protocol OFLogProtocol {
     var blockNumber: Int { get }
     var blockHash: String { get }
     var transactionIndex: Int { get }
@@ -86,7 +86,7 @@ public protocol LogProtocol {
     var orphaned: Bool? { get }
 }
 
-public protocol InteractionProtocol {
+public protocol OFInteractionProtocol {
     var to: String? { get }
     var value: String? { get }
     var contract: String? { get }
@@ -96,18 +96,18 @@ public protocol InteractionProtocol {
     var data: String? { get }
 }
 
-public protocol NextActionResponseProtocol {
+public protocol OFNextActionResponseProtocol {
     var type: String { get }
-    var payload: NextActionPayload { get }
+    var payload: OFNextActionPayload { get }
 }
 
-public protocol NextActionPayloadProtocol {
+public protocol OFNextActionPayloadProtocol {
     var userOperation: JSONValue? { get }
     var userOperationHash: String? { get }
     var signableHash: String? { get }
 }
 
-public protocol TransactionIntentResponsePolicyProtocol {
+public protocol OFTransactionIntentResponsePolicyProtocol {
     var id: String { get }
     var object: String { get }
     var createdAt: Int { get }
@@ -115,20 +115,20 @@ public protocol TransactionIntentResponsePolicyProtocol {
     var deleted: Bool { get }
     var enabled: Bool { get }
     var chainId: Int { get }
-    var paymaster: EntityIdResponse? { get }
-    var strategy: PolicyStrategy { get }
-    var transactionIntents: [EntityIdResponse] { get }
-    var policyRules: [EntityIdResponse] { get }
+    var paymaster: OFEntityIdResponse? { get }
+    var strategy: OFPolicyStrategy { get }
+    var transactionIntents: [OFEntityIdResponse] { get }
+    var policyRules: [OFEntityIdResponse] { get }
 }
 
-public protocol PolicyStrategyProtocol {
+public protocol OFPolicyStrategyProtocol {
     var sponsorSchema: String { get }
     var depositor: String? { get }
     var tokenContract: String { get }
     var tokenContractAmount: String { get }
 }
 
-public protocol TransactionIntentResponseAccountProtocol {
+public protocol OFTransactionIntentResponseAccountProtocol {
     var id: String { get }
     var object: String { get }
     var createdAt: Int { get }
@@ -140,28 +140,28 @@ public protocol TransactionIntentResponseAccountProtocol {
     var chainId: Int { get }
     var accountType: String { get }
     var pendingOwnerAddress: String? { get }
-    var transactionIntents: [EntityIdResponse]? { get }
-    var player: EntityIdResponse { get }
+    var transactionIntents: [OFEntityIdResponse]? { get }
+    var player: OFEntityIdResponse { get }
     var name: String? { get }
 }
 
-public protocol TransactionIntentResponsePlayerProtocol {
+public protocol OFTransactionIntentResponsePlayerProtocol {
     var id: String { get }
     var object: String { get }
     var createdAt: Int { get }
     var name: String { get }
     var description: String? { get }
     var metadata: [String: JSONValue]? { get }
-    var transactionIntents: [EntityIdResponse]? { get }
-    var accounts: [EntityIdResponse]? { get }
+    var transactionIntents: [OFEntityIdResponse]? { get }
+    var accounts: [OFEntityIdResponse]? { get }
 }
 
 import Foundation
 
 // MARK: - Root
 
-public struct OFAuthPlayerResponse: Codable, Sendable, OFLinkThirdPartyProviderResponseProtocol {
-    public let player: AuthPlayerResponsePlayer?
+public struct OFAuthPlayerResponse: OFCodableSendable, OFLinkThirdPartyProviderResponseProtocol {
+    public let player: OFAuthPlayerResponsePlayer?
     public let id: String
     public let object: String           // "player"
     public let createdAt: Int
@@ -170,20 +170,20 @@ public struct OFAuthPlayerResponse: Codable, Sendable, OFLinkThirdPartyProviderR
 
 // MARK: - Player (dependent)
 
-public struct AuthPlayerResponsePlayer: Codable, Sendable, AuthPlayerResponsePlayerProtocol {
+public struct OFAuthPlayerResponsePlayer: OFCodableSendable, OFAuthPlayerResponsePlayerProtocol {
     public let id: String
     public let object: String           // "player"
     public let createdAt: Int
     public let name: String
     public let description: String?
     public let metadata: [String: JSONValue]?
-    public let transactionIntents: [TransactionIntentResponse]?
-    public let accounts: [PlayerResponseAccountsInner]?
+    public let transactionIntents: [OFTransactionIntentResponse]?
+    public let accounts: [OFPlayerResponseAccountsInner]?
 }
 
 // MARK: - Linked Accounts (dependent)
 
-public enum AuthProvider: String, Codable, Sendable {
+public enum OFAuthProvider: String, OFCodableSendable {
     case email
     case wallet
     case apple
@@ -203,7 +203,7 @@ public enum AuthProvider: String, Codable, Sendable {
 
 // MARK: - Accounts inside Player (dependent)
 
-public struct PlayerResponseAccountsInner: Codable, Sendable, PlayerResponseAccountsInnerProtocol {
+public struct OFPlayerResponseAccountsInner: OFCodableSendable, OFPlayerResponseAccountsInnerProtocol {
     public let id: String
     public let object: String           // "account"
     public let createdAt: Int
@@ -215,52 +215,52 @@ public struct PlayerResponseAccountsInner: Codable, Sendable, PlayerResponseAcco
     public let chainId: Int
     public let accountType: String
     public let pendingOwnerAddress: String?
-    public let transactionIntents: [EntityIdResponse]?
-    public let player: EntityIdResponse
+    public let transactionIntents: [OFEntityIdResponse]?
+    public let player: OFEntityIdResponse
 }
 
-public struct EntityIdResponse: Codable, Sendable, EntityIdResponseProtocol {
+public struct OFEntityIdResponse: OFCodableSendable, OFEntityIdResponseProtocol {
     public let id: String
 }
 
 // MARK: - Transaction Intent (dependent)
 
-public enum TransactionAbstractionType: String, Codable, Sendable {
+public enum OFTransactionAbstractionType: String, OFCodableSendable {
     case accountAbstractionV6
     case zkSync
     case standard
 }
 
-public struct TransactionIntentResponse: Codable, Sendable, TransactionIntentResponseProtocol {
+public struct OFTransactionIntentResponse: OFCodableSendable, OFTransactionIntentResponseProtocol {
     public let id: String
     public let object: String           // "transactionIntent"
     public let createdAt: Int
     public let updatedAt: Int
-    public let abstractionType: TransactionAbstractionType
-    public let details: TransactionDetails?
+    public let abstractionType: OFTransactionAbstractionType
+    public let details: OFTransactionDetails?
     public let chainId: Int
-    public let response: ResponseResponse?
-    public let interactions: [Interaction]?
-    public let nextAction: NextActionResponse?
-    public let policy: PolicyOrEntity?
-    public let player: PlayerOrEntity?
-    public let account: AccountOrEntity?
+    public let response: OFResponseResponse?
+    public let interactions: [OFInteraction]?
+    public let nextAction: OFNextActionResponse?
+    public let policy: OFPolicyOrEntity?
+    public let player: OFPlayerOrEntity?
+    public let account: OFAccountOrEntity?
 }
 
 // Polymorphic helpers for union fields in TS
 
-public enum PolicyOrEntity: Codable, Sendable {
-    case policy(TransactionIntentResponsePolicy)
-    case entity(EntityIdResponse)
+public enum OFPolicyOrEntity: OFCodableSendable {
+    case policy(OFTransactionIntentResponsePolicy)
+    case entity(OFEntityIdResponse)
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.singleValueContainer()
-        if let policy = try? c.decode(TransactionIntentResponsePolicy.self) {
+        if let policy = try? c.decode(OFTransactionIntentResponsePolicy.self) {
             self = .policy(policy)
-        } else if let entity = try? c.decode(EntityIdResponse.self) {
+        } else if let entity = try? c.decode(OFEntityIdResponse.self) {
             self = .entity(entity)
         } else {
-            throw DecodingError.typeMismatch(PolicyOrEntity.self, .init(codingPath: decoder.codingPath, debugDescription: "Neither policy nor entity"))
+            throw DecodingError.typeMismatch(OFPolicyOrEntity.self, .init(codingPath: decoder.codingPath, debugDescription: "Neither policy nor entity"))
         }
     }
     public func encode(to encoder: Encoder) throws {
@@ -272,18 +272,18 @@ public enum PolicyOrEntity: Codable, Sendable {
     }
 }
 
-public enum PlayerOrEntity: Codable, Sendable {
-    case player(TransactionIntentResponsePlayer)
-    case entity(EntityIdResponse)
+public enum OFPlayerOrEntity: OFCodableSendable {
+    case player(OFTransactionIntentResponsePlayer)
+    case entity(OFEntityIdResponse)
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.singleValueContainer()
-        if let player = try? c.decode(TransactionIntentResponsePlayer.self) {
+        if let player = try? c.decode(OFTransactionIntentResponsePlayer.self) {
             self = .player(player)
-        } else if let entity = try? c.decode(EntityIdResponse.self) {
+        } else if let entity = try? c.decode(OFEntityIdResponse.self) {
             self = .entity(entity)
         } else {
-            throw DecodingError.typeMismatch(PlayerOrEntity.self, .init(codingPath: decoder.codingPath, debugDescription: "Neither player nor entity"))
+            throw DecodingError.typeMismatch(OFPlayerOrEntity.self, .init(codingPath: decoder.codingPath, debugDescription: "Neither player nor entity"))
         }
     }
     public func encode(to encoder: Encoder) throws {
@@ -295,18 +295,18 @@ public enum PlayerOrEntity: Codable, Sendable {
     }
 }
 
-public enum AccountOrEntity: Codable, Sendable {
-    case account(TransactionIntentResponseAccount)
-    case entity(EntityIdResponse)
+public enum OFAccountOrEntity: OFCodableSendable {
+    case account(OFTransactionIntentResponseAccount)
+    case entity(OFEntityIdResponse)
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.singleValueContainer()
-        if let account = try? c.decode(TransactionIntentResponseAccount.self) {
+        if let account = try? c.decode(OFTransactionIntentResponseAccount.self) {
             self = .account(account)
-        } else if let entity = try? c.decode(EntityIdResponse.self) {
+        } else if let entity = try? c.decode(OFEntityIdResponse.self) {
             self = .entity(entity)
         } else {
-            throw DecodingError.typeMismatch(AccountOrEntity.self, .init(codingPath: decoder.codingPath, debugDescription: "Neither account nor entity"))
+            throw DecodingError.typeMismatch(OFAccountOrEntity.self, .init(codingPath: decoder.codingPath, debugDescription: "Neither account nor entity"))
         }
     }
     public func encode(to encoder: Encoder) throws {
@@ -320,21 +320,21 @@ public enum AccountOrEntity: Codable, Sendable {
 
 // MARK: - Details unions
 
-public enum TransactionDetails: Codable, Sendable {
-    case accountAbstractionV6(AccountAbstractionV6Details)
+public enum OFTransactionDetails: OFCodableSendable {
+    case accountAbstractionV6(OFAccountAbstractionV6Details)
     case zkSync(ZKSyncDetails)
-    case standard(StandardDetails)
+    case standard(OFStandardDetails)
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.singleValueContainer()
-        if let v6 = try? c.decode(AccountAbstractionV6Details.self) {
+        if let v6 = try? c.decode(OFAccountAbstractionV6Details.self) {
             self = .accountAbstractionV6(v6)
         } else if let zk = try? c.decode(ZKSyncDetails.self) {
             self = .zkSync(zk)
-        } else if let std = try? c.decode(StandardDetails.self) {
+        } else if let std = try? c.decode(OFStandardDetails.self) {
             self = .standard(std)
         } else {
-            throw DecodingError.typeMismatch(TransactionDetails.self, .init(codingPath: decoder.codingPath, debugDescription: "Unknown details variant"))
+            throw DecodingError.typeMismatch(OFTransactionDetails.self, .init(codingPath: decoder.codingPath, debugDescription: "Unknown details variant"))
         }
     }
     public func encode(to encoder: Encoder) throws {
@@ -347,12 +347,12 @@ public enum TransactionDetails: Codable, Sendable {
     }
 }
 
-public struct AccountAbstractionV6Details: Codable, Sendable {
-    public let userOperation: UserOperationV6
+public struct OFAccountAbstractionV6Details: OFCodableSendable {
+    public let userOperation: OFUserOperationV6
     public let userOperationHash: String
 }
 
-public struct UserOperationV6: Codable, Sendable {
+public struct OFUserOperationV6: OFCodableSendable {
     public let callData: String
     public let callGasLimit: String
     public let initCode: String?
@@ -366,7 +366,7 @@ public struct UserOperationV6: Codable, Sendable {
     public let verificationGasLimit: String
 }
 
-public struct ZKSyncDetails: Codable, Sendable {
+public struct ZKSyncDetails: OFCodableSendable {
     public let from: String
     public let to: String
     public let data: String?
@@ -379,7 +379,7 @@ public struct ZKSyncDetails: Codable, Sendable {
     public let value: String?
 }
 
-public struct StandardDetails: Codable, Sendable {
+public struct OFStandardDetails: OFCodableSendable {
     public let from: String
     public let to: String
     public let data: String?
@@ -392,7 +392,7 @@ public struct StandardDetails: Codable, Sendable {
 
 // MARK: - Other dependents used by TransactionIntentResponse
 
-public struct ResponseResponse: Codable, Sendable, ResponseResponseProtocol {
+public struct OFResponseResponse: OFCodableSendable, OFResponseResponseProtocol {
     public let createdAt: Int
     public let blockNumber: Int?
     public let transactionHash: String?
@@ -401,12 +401,12 @@ public struct ResponseResponse: Codable, Sendable, ResponseResponseProtocol {
     public let gasFee: String?
     public let l1GasFee: String?
     public let status: Int?
-    public let logs: [Log]?
+    public let logs: [OFLog]?
     public let to: String?
     public let error: JSONValue?
 }
 
-public struct Log: Codable, Sendable, LogProtocol {
+public struct OFLog: OFCodableSendable, OFLogProtocol {
     public let blockNumber: Int
     public let blockHash: String
     public let transactionIndex: Int
@@ -419,7 +419,7 @@ public struct Log: Codable, Sendable, LogProtocol {
     public let orphaned: Bool?
 }
 
-public struct Interaction: Codable, Sendable, InteractionProtocol {
+public struct OFInteraction: OFCodableSendable, OFInteractionProtocol {
     public let to: String?
     public let value: String?
     public let contract: String?
@@ -429,18 +429,18 @@ public struct Interaction: Codable, Sendable, InteractionProtocol {
     public let data: String?
 }
 
-public struct NextActionResponse: Codable, Sendable, NextActionResponseProtocol {
+public struct OFNextActionResponse: OFCodableSendable, OFNextActionResponseProtocol {
     public let type: String                  // "sign_with_wallet"
-    public let payload: NextActionPayload
+    public let payload: OFNextActionPayload
 }
 
-public struct NextActionPayload: Codable, Sendable, NextActionPayloadProtocol {
+public struct OFNextActionPayload: OFCodableSendable, OFNextActionPayloadProtocol {
     public let userOperation: JSONValue?
     public let userOperationHash: String?
     public let signableHash: String?
 }
 
-public struct TransactionIntentResponsePolicy: Codable, Sendable, TransactionIntentResponsePolicyProtocol {
+public struct OFTransactionIntentResponsePolicy: OFCodableSendable, OFTransactionIntentResponsePolicyProtocol {
     public let id: String
     public let object: String               // "policy"
     public let createdAt: Int
@@ -448,20 +448,20 @@ public struct TransactionIntentResponsePolicy: Codable, Sendable, TransactionInt
     public let deleted: Bool
     public let enabled: Bool
     public let chainId: Int
-    public let paymaster: EntityIdResponse?
-    public let strategy: PolicyStrategy
-    public let transactionIntents: [EntityIdResponse]
-    public let policyRules: [EntityIdResponse]
+    public let paymaster: OFEntityIdResponse?
+    public let strategy: OFPolicyStrategy
+    public let transactionIntents: [OFEntityIdResponse]
+    public let policyRules: [OFEntityIdResponse]
 }
 
-public struct PolicyStrategy: Codable, Sendable, PolicyStrategyProtocol {
+public struct OFPolicyStrategy: OFCodableSendable, OFPolicyStrategyProtocol {
     public let sponsorSchema: String        // "fixed_rate"
     public let depositor: String?
     public let tokenContract: String
     public let tokenContractAmount: String
 }
 
-public struct TransactionIntentResponseAccount: Codable, Sendable, TransactionIntentResponseAccountProtocol {
+public struct OFTransactionIntentResponseAccount: OFCodableSendable, OFTransactionIntentResponseAccountProtocol {
     public let id: String
     public let object: String               // "developerAccount"
     public let createdAt: Int
@@ -473,25 +473,25 @@ public struct TransactionIntentResponseAccount: Codable, Sendable, TransactionIn
     public let chainId: Int
     public let accountType: String
     public let pendingOwnerAddress: String?
-    public let transactionIntents: [EntityIdResponse]?
-    public let player: EntityIdResponse
+    public let transactionIntents: [OFEntityIdResponse]?
+    public let player: OFEntityIdResponse
     public let name: String?
 }
 
-public struct TransactionIntentResponsePlayer: Codable, Sendable, TransactionIntentResponsePlayerProtocol {
+public struct OFTransactionIntentResponsePlayer: OFCodableSendable, OFTransactionIntentResponsePlayerProtocol {
     public let id: String
     public let object: String               // "player"
     public let createdAt: Int
     public let name: String
     public let description: String?
     public let metadata: [String: JSONValue]?
-    public let transactionIntents: [EntityIdResponse]?
-    public let accounts: [EntityIdResponse]?
+    public let transactionIntents: [OFEntityIdResponse]?
+    public let accounts: [OFEntityIdResponse]?
 }
 
 // MARK: - JSONValue helper for dynamic shapes (TS `any` / `{ [k: string]: ... }`)
 
-public enum JSONValue: Codable, Sendable {
+public enum JSONValue: OFCodableSendable {
     case string(String)
     case int(Int)
     case double(Double)
