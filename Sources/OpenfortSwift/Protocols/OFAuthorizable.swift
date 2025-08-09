@@ -145,46 +145,46 @@ extension OFAuthorizable {
         }
     }
 
-    public func resetPassword(params: OFResetPasswordParams) async throws -> OFResetPasswordResponse? {
+    public func resetPassword(params: OFResetPasswordParams) async throws {
         let method = OFMethods.resetPassword
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        return try await evaluateAndObserveAsync(
+        try await evaluateAndObserveAsync(
             js: "window.resetPasswordSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.resetPassword
-        )
+        ) as EmptyDecodable?
     }
 
-    public func resetPassword(params: OFResetPasswordParams, completion: @escaping (Result<OFResetPasswordResponse?, Error>) -> Void) {
+    public func resetPassword(params: OFResetPasswordParams, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
                 let result = try await resetPassword(params: params)
-                completion(.success(result))
+                completion(.success(()))
             } catch {
                 completion(.failure(error))
             }
         }
     }
 
-    public func requestResetPassword(params: OFRequestResetPasswordParams) async throws -> OFRequestResetPasswordResponse? {
+    public func requestResetPassword(params: OFRequestResetPasswordParams) async throws {
         let method = OFMethods.requestResetPassword
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        return try await evaluateAndObserveAsync(
+        try await evaluateAndObserveAsync(
             js: "window.requestResetPasswordSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.requestResetPassword
-        )
+        ) as EmptyDecodable?
     }
 
-    public func requestResetPassword(params: OFRequestResetPasswordParams, completion: @escaping (Result<OFRequestResetPasswordResponse?, Error>) -> Void) {
+    public func requestResetPassword(params: OFRequestResetPasswordParams, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let result = try await requestResetPassword(params: params)
-                completion(.success(result))
+                try await requestResetPassword(params: params)
+                completion(.success(()))
             } catch {
                 completion(.failure(error))
             }
