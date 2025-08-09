@@ -487,23 +487,23 @@ extension OFAuthorizable {
         }
     }
 
-    public func storeCredentials(params: OFStoreCredentialsParams) async throws -> OFStoreCredentialsResponse? {
+    public func storeCredentials(params: OFStoreCredentialsParams) async throws  {
         let method = OFMethods.storeCredentials
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        return try await evaluateAndObserveAsync(
+        try await evaluateAndObserveAsync(
             js: "window.storeCredentialsSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.storeCredentials
-        )
+        ) as EmptyDecodable?
     }
 
-    public func storeCredentials(params: OFStoreCredentialsParams, completion: @escaping (Result<OFStoreCredentialsResponse?, Error>) -> Void) {
+    public func storeCredentials(params: OFStoreCredentialsParams, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let result = try await storeCredentials(params: params)
-                completion(.success(result))
+                 try await storeCredentials(params: params)
+                completion(.success(()))
             } catch {
                 completion(.failure(error))
             }
