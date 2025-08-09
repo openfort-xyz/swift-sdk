@@ -7,7 +7,6 @@
 
 import Foundation
 
-// Define a protocol that lists the required properties
 public protocol LinkedAccountResponseProtocol {
     var provider: String { get }
     var email: String? { get }
@@ -21,7 +20,6 @@ public protocol LinkedAccountResponseProtocol {
     var metadata: [String: AnyCodable]? { get }
 }
 
-// Your model conforms to Codable and the protocol
 public struct OFLinkedAccountResponse: LinkedAccountResponseProtocol, OFCodableSendable {
     public let provider: String
     public let email: String?
