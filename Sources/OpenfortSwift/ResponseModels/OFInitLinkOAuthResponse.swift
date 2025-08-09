@@ -7,10 +7,10 @@
 
 public protocol OFInitLinkOAuthResponseProtocol {
     var url: String? { get }
-    var state: String? { get }
+    var key: String? { get }
 }
 
 public struct OFInitLinkOAuthResponse: OFInitLinkOAuthResponseProtocol, OFCodableSendable {
     public let url: String?
-    public let state: String?
+    public let key: String?
 }
