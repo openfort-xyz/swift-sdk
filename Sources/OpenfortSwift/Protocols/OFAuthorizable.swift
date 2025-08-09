@@ -38,11 +38,11 @@ extension OFAuthorizable {
 
     public func logOut() async throws {
         let method = OFMethods.logOut
-        try await evaluateAndObserveAsync(
+        try await evaluateAndObserveVoidAsync(
             js: "window.logoutSync();",
             method: method,
             errorDomain: OFErrorDomains.logOut
-        ) as EmptyDecodable?
+        )
     }
 
     public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
@@ -150,17 +150,17 @@ extension OFAuthorizable {
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        try await evaluateAndObserveAsync(
+        try await evaluateAndObserveVoidAsync(
             js: "window.resetPasswordSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.resetPassword
-        ) as EmptyDecodable?
+        )
     }
 
     public func resetPassword(params: OFResetPasswordParams, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let result = try await resetPassword(params: params)
+                try await resetPassword(params: params)
                 completion(.success(()))
             } catch {
                 completion(.failure(error))
@@ -173,11 +173,11 @@ extension OFAuthorizable {
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        try await evaluateAndObserveAsync(
+        try await evaluateAndObserveVoidAsync(
             js: "window.requestResetPasswordSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.requestResetPassword
-        ) as EmptyDecodable?
+        )
     }
 
     public func requestResetPassword(params: OFRequestResetPasswordParams, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -196,11 +196,11 @@ extension OFAuthorizable {
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        try await evaluateAndObserveAsync(
+        try await evaluateAndObserveVoidAsync(
             js: "window.requestEmailVerificationSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.requestEmailVerification
-        ) as EmptyDecodable?
+        )
     }
 
     public func requestEmailVerification(params: OFRequestEmailVerificationParams, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -219,11 +219,11 @@ extension OFAuthorizable {
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        try await evaluateAndObserveAsync(
+        try await evaluateAndObserveVoidAsync(
             js: "window.verifyEmailSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.verifyEmail
-        ) as EmptyDecodable?
+        )
     }
 
     public func verifyEmail(params: OFVerifyEmailParams, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -492,11 +492,11 @@ extension OFAuthorizable {
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        try await evaluateAndObserveAsync(
+        try await evaluateAndObserveVoidAsync(
             js: "window.storeCredentialsSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.storeCredentials
-        ) as EmptyDecodable?
+        )
     }
 
     public func storeCredentials(params: OFStoreCredentialsParams, completion: @escaping (Result<Void, Error>) -> Void) {

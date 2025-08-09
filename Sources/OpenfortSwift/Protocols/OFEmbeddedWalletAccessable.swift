@@ -218,11 +218,11 @@ public extension OFEmbeddedWalletAccessable {
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        try await evaluateAndObserveAsync(
+        try await evaluateAndObserveVoidAsync(
             js: "window.setEmbeddedRecoverySync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.setEmbeddedRecovery
-        ) as EmptyDecodable?
+        )
     }
     
     func setEmbeddedRecovery(

@@ -7,6 +7,7 @@
 @preconcurrency import WebKit
 
 @MainActor
+
 public protocol OFOpenfortRootable {
     var webView: WKWebView? { get }
     var jsonEncoder: JSONEncoder { get }
@@ -48,11 +49,11 @@ public extension OFOpenfortRootable {
         } else {
             js = "window.validateAndRefreshTokenSync();"
         }
-        try await evaluateAndObserveAsync(
+        try await evaluateAndObserveVoidAsync(
             js: js,
             method: method,
             errorDomain: OFErrorDomains.validateAndRefreshToken
-        ) as EmptyDecodable?
+        )
     }
     
     func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -69,6 +70,45 @@ public extension OFOpenfortRootable {
 
 extension OFOpenfortRootable {
     
+    /// Observe a notification for a method and complete with Void (no object expected)
+    internal func evaluateAndObserveVoid(
+        js: String,
+        method: String,
+        errorDomain: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        let notificationName = Notification.Name(method)
+        var observer: NSObjectProtocol?
+        observer = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
+            if let obs = observer { NotificationCenter.default.removeObserver(obs) }
+
+            if let userInfo = notification.userInfo,
+               let isSuccess = userInfo["success"] as? Bool {
+                if isSuccess {
+                    completion(.success(()))
+                } else {
+                    let error = NSError(domain: errorDomain, code: -1, userInfo: nil)
+                    completion(.failure(error))
+                }
+                return
+            }
+
+            // Fallback: if no `success` flag, treat presence of any object as success
+            if notification.object != nil {
+                completion(.success(()))
+            } else {
+                completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No response in notification"])) )
+            }
+        }
+        webView?.evaluateJavaScript(js) { _, error in
+            if let error = error {
+                if let obs = observer { NotificationCenter.default.removeObserver(obs) }
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Observe a notification for a method and decode an expected object of type T
     internal func evaluateAndObserve<T>(
         js: String,
         method: String,
@@ -83,32 +123,40 @@ extension OFOpenfortRootable {
             if let userInfo = notification.userInfo,
                let isSuccess = userInfo["success"] as? Bool {
                 if isSuccess {
-                    // If object is present, return it. If nil, still call success (nil for Optional<T> or () for Void).
                     if let object = notification.object as? T {
                         completion(.success(object))
                     } else {
                         completion(.success(nil))
                     }
                 } else {
-                    // Failure with details from userInfo
                     let error = NSError(domain: errorDomain, code: -1, userInfo: nil)
                     completion(.failure(error))
                 }
                 return
             }
 
-            // Fallback: no "success" in userInfo, legacy behavior
             guard let object = notification.object as? T else {
-                completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No response in notification"])))
+                completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No response in notification"])) )
                 return
             }
             completion(.success(object))
         }
-        webView?.evaluateJavaScript(js) { result, error in
+        webView?.evaluateJavaScript(js) { _, error in
             if let error = error {
                 if let obs = observer { NotificationCenter.default.removeObserver(obs) }
                 completion(.failure(error))
-                return
+            }
+        }
+    }
+
+    internal func evaluateAndObserveVoidAsync(
+        js: String,
+        method: String,
+        errorDomain: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            evaluateAndObserveVoid(js: js, method: method, errorDomain: errorDomain) { (result: Result<Void, Error>) in
+                continuation.resume(with: result)
             }
         }
     }

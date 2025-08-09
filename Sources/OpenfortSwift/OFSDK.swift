@@ -9,14 +9,11 @@ import WebKit
 import Combine
 
 @MainActor
-open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEmbeddedWalletAccessable, OFUserAccessable {
+public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEmbeddedWalletAccessable, OFUserAccessable {
     
-    /// Shared singleton instance of OFSDK
     public static let shared = OFSDK()
-    private static var initialized: Bool = false
-    /// Completion called when the SDK successfully loads
+    
     public var didLoad: (() -> Void)?
-    /// Completion called when the SDK fails to load with an error
     public var didFailedToLoad: ((Error) -> Void)?
     public var webView: WKWebView?
     public var jsonEncoder: JSONEncoder = JSONEncoder()
@@ -25,12 +22,11 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
     @Published public private(set) var embeddedState: OFEmbeddedState?
     public var embeddedStatePublisher: Published<OFEmbeddedState?>.Publisher { $embeddedState }
     
+    private static var initialized: Bool = false
     private var coordinator = OFWebViewCoordinator()
     private var messageHandler = OFScriptMessageHandler()
     private var embeddedStateTimer: Timer?
     
-    
-    /// Initializes the SDK. Call this once before using `OFSDK.shared`.
     @MainActor
     public static func setupSDK() {
         if initialized {
@@ -69,7 +65,6 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
                     case .success(let newValue):
                         self.embeddedState = OFEmbeddedState(rawValue: newValue ?? 0)
                     case .failure(_):
-                        // Optionally handle error, currently ignoring
                         break
                     }
                 })
@@ -81,6 +76,7 @@ open class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEm
         embeddedStateTimer?.invalidate()
         embeddedStateTimer = nil
     }
+    
     private var contentUrl: URL {
         Bundle.module.url(forResource: "index", withExtension: "html")!
     }

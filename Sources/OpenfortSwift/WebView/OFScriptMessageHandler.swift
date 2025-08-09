@@ -8,7 +8,7 @@
 import WebKit
 import Foundation
 
-internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
+internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
     weak var webView: WKWebView?
     let jsonDecoder = JSONDecoder()
@@ -118,14 +118,12 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
         case "app:secure-storage:set":
             if let dict = data["data"] as? [String: Any],
                let key = dict["key"] as? String,
-               let value = dict["value"] as? String,
-               let requestId = data["id"] {
+               let value = dict["value"] as? String {
                 OFKeychainHelper.save(value, for: key)
             }
             return true
         case "app:secure-storage:remove":
-            if let key = (data["data"] as? [String: Any])?["key"] as? String,
-               let requestId = data["id"] {
+            if let key = (data["data"] as? [String: Any])?["key"] as? String {
                 OFKeychainHelper.delete(for: key)
             }
             return true

@@ -5,8 +5,6 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-struct EmptyDecodable: Decodable {}
-
 public struct AnyCodable: Codable, Sendable {
     public let value: Sendable
 

@@ -7,7 +7,7 @@
 import Foundation
 import WebKit
 
-internal class OFWebViewCoordinator: NSObject, WKNavigationDelegate {
+internal final class OFWebViewCoordinator: NSObject, WKNavigationDelegate {
     var didLoad: (() -> Void)?
     var didFailedToLoad: ((Error) -> Void)?
     

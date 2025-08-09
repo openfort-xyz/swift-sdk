@@ -15,7 +15,7 @@ struct OFConfig {
     static var openfortPublishableKey: String { (cfg()?["OpenfortPublishableKey"] as? String) ?? "" }
     static var shieldPublishableKey: String { (cfg()?["ShieldPublishableKey"] as? String) ?? "" }
     static var shieldEncryptionKey: String { (cfg()?["ShieldEncryptionKey"] as? String) ?? "" }
-
+    
     static var iframeURL: String? { cfg()?["IframeURL"] as? String }
     static var shieldURL: String? { cfg()?["ShieldURL"] as? String }
     static var backendURL: String? { cfg()?["BackendURL"] as? String }
