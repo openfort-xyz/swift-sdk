@@ -5,12 +5,4 @@
 //  Created by Pavel Gurkovskii on 2025-07-10.
 //
 
-public protocol OFLinkWalletResponseProtocol {
-    var walletAddress: String? { get }
-    var linked: Bool? { get }
-}
-
-public struct OFLinkWalletResponse: OFLinkWalletResponseProtocol, OFCodableSendable {
-    public let walletAddress: String?
-    public let linked: Bool?
-}
+public typealias OFLinkWalletResponse = OFLinkThirdPartyProviderResponse
