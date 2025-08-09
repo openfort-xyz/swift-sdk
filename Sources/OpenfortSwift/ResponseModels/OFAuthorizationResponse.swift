@@ -8,7 +8,7 @@
 public protocol OFAuthorizationResponseProtocol {
     var token: String? { get }
     var refreshToken: String? { get }
-    var player: OFPlayerInfo? { get }
+    var player: OFAuthPlayerResponse? { get }
     var action: String? { get }
     var details: ActionDetails? { get }
 }
@@ -22,7 +22,7 @@ public struct OFAuthorizationResponse: OFAuthorizationResponseProtocol, OFCodabl
     // Common fields
     public let token: String?
     public let refreshToken: String?
-    public let player: OFPlayerInfo?
+    public let player: OFAuthPlayerResponse?
     public let action: String?
     public let details: ActionDetails?
     

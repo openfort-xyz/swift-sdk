@@ -160,7 +160,7 @@ import Foundation
 
 // MARK: - Root
 
-public struct OFLinkThirdPartyProviderResponse: Codable, Sendable, OFLinkThirdPartyProviderResponseProtocol {
+public struct OFAuthPlayerResponse: Codable, Sendable, OFLinkThirdPartyProviderResponseProtocol {
     public let player: AuthPlayerResponsePlayer?
     public let id: String
     public let object: String           // "player"

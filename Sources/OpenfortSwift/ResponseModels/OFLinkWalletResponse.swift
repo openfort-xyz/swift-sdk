@@ -5,4 +5,4 @@
 //  Created by Pavel Gurkovskii on 2025-07-10.
 //
 
-public typealias OFLinkWalletResponse = OFLinkThirdPartyProviderResponse
+public typealias OFLinkWalletResponse = OFAuthPlayerResponse

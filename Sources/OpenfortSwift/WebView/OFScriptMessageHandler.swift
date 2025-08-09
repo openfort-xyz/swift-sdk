@@ -156,7 +156,7 @@ internal class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             OFMethods.poolOAuth: handlerFor(OFPoolOAuthResponse.self),
             OFMethods.initSIWE: handlerFor(OFInitSIWEResponse.self),
             OFMethods.unlinkWallet: handlerFor(OFUnlinkWalletResponse.self),
-            OFMethods.linkThirdPartyProvider: handlerFor(OFLinkThirdPartyProviderResponse.self),
+            OFMethods.linkThirdPartyProvider: handlerFor(OFAuthPlayerResponse.self),
             OFMethods.authenticateWithThirdPartyProvider: handlerFor(OFAuthenticateWithThirdPartyProviderResponse.self),
             OFMethods.authenticateWithSIWE: handlerFor(OFAuthorizationResponse.self),
             OFMethods.storeCredentials: handlerFor(OFStoreCredentialsResponse.self),

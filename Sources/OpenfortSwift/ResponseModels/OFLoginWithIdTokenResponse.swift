@@ -6,11 +6,13 @@
 //
 
 public protocol OFLoginWithIdTokenResponseProtocol {
-    var idToken: String? { get }
-    var userId: String? { get }
+    var player: OFAuthPlayerResponse { get }
+    var token: String { get }
+    var refreshToken: String { get }
 }
 
 public struct OFLoginWithIdTokenResponse: OFLoginWithIdTokenResponseProtocol, OFCodableSendable {
-    public let idToken: String?
-    public let userId: String?
+    public let player: OFAuthPlayerResponse
+    public let token: String
+    public let refreshToken: String
 }

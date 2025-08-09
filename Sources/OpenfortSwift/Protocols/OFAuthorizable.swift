@@ -418,7 +418,7 @@ extension OFAuthorizable {
         }
     }
 
-    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams) async throws -> OFLinkThirdPartyProviderResponse? {
+    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams) async throws -> OFAuthPlayerResponse? {
         let method = OFMethods.linkThirdPartyProvider
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -430,7 +430,7 @@ extension OFAuthorizable {
         )
     }
 
-    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams, completion: @escaping (Result<OFLinkThirdPartyProviderResponse?, Error>) -> Void) {
+    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams, completion: @escaping (Result<OFAuthPlayerResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await linkThirdPartyProvider(params: params)
