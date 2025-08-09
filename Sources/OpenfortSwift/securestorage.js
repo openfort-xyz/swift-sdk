@@ -52,6 +52,7 @@ class SecureStorage {
     }
 
     static handleResponse(response) {
+        console.log("SecureStorage received response:", response);
         let res = response;
         if (typeof response === 'string') {
             try { res = JSON.parse(response); } catch {}
@@ -69,7 +70,7 @@ class SecureStorage {
         }
     }
 }
-window.secureStorage = window.secureStorage || new SecureStorage();
+// window.secureStorage = window.secureStorage || new SecureStorage();
 
 //window.ReactNativeWebView = window.ReactNativeWebView || {};
 //window.ReactNativeWebView.postMessage = function(data) {
