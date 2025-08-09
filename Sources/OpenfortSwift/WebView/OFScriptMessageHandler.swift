@@ -228,6 +228,11 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     }
 
     private func handleError(_ dict: [String: Any], method: String) {
+        NotificationCenter.default.post(
+            name: Notification.Name(method),
+            object: nil,
+            userInfo: ["success": false]
+        )
         let errorMsg = dict["error"] as? String ?? "Unknown error"
         print("\(method) error: \(errorMsg)")
     }
