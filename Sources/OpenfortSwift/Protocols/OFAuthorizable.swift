@@ -191,23 +191,23 @@ extension OFAuthorizable {
         }
     }
 
-    public func requestEmailVerification(params: OFRequestEmailVerificationParams) async throws -> OFRequestEmailVerificationResponse? {
+    public func requestEmailVerification(params: OFRequestEmailVerificationParams) async throws {
         let method = OFMethods.requestEmailVerification
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
-        return try await evaluateAndObserveAsync(
+        try await evaluateAndObserveAsync(
             js: "window.requestEmailVerificationSync(\(jsonString));",
             method: method,
             errorDomain: OFErrorDomains.requestEmailVerification
-        )
+        ) as EmptyDecodable?
     }
 
-    public func requestEmailVerification(params: OFRequestEmailVerificationParams, completion: @escaping (Result<OFRequestEmailVerificationResponse?, Error>) -> Void) {
+    public func requestEmailVerification(params: OFRequestEmailVerificationParams, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
-                let result = try await requestEmailVerification(params: params)
-                completion(.success(result))
+                try await requestEmailVerification(params: params)
+                completion(.success(()))
             } catch {
                 completion(.failure(error))
             }
