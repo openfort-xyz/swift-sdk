@@ -53,7 +53,7 @@ public struct OFConfig: Codable {
     let shieldPublishableKey: String
     let shieldUrl: String?
     
-    static func load(from data: Data?) -> OFConfig? {
+    public static func load(from data: Data?) -> OFConfig? {
         guard let data = data else {
             print("❌ empty data.")
             return nil
