@@ -126,19 +126,23 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             if let jsonString = String(data: jsonData, encoding: .utf8) {
                 print("SecureStorage: JSON response: \(jsonString)")
                 let js = """
-                    console.log('Swift: Attempting to call __secureStorageOnResponse');
-                    console.log('Swift: __secureStorageOnResponse exists?', typeof window.__secureStorageOnResponse);
-                    if (window.__secureStorageOnResponse) {
-                        var response = \(jsonString);
-                        console.log('Swift: Calling __secureStorageOnResponse with:', response);
-                        try {
-                            window.__secureStorageOnResponse(response);
-                            console.log('Swift: __secureStorageOnResponse called successfully');
-                        } catch (error) {
-                            console.error('Swift: Error calling __secureStorageOnResponse:', error);
-                        }
+                    console.log('Swift: Sending message to iframe');
+                    var response = \(jsonString);
+                    
+                    // Try to find the iframe and send message to it
+                    var iframe = document.querySelector('iframe');
+                    if (iframe && iframe.contentWindow) {
+                        console.log('Swift: Found iframe, posting message');
+                        iframe.contentWindow.postMessage(JSON.stringify(response), '*');
                     } else {
-                        console.log('Swift: __secureStorageOnResponse not available');
+                        console.log('Swift: No iframe found, trying direct call');
+                        // Fallback - try direct call in case we're in the same context
+                        if (window.__secureStorageOnResponse) {
+                            console.log('Swift: Calling __secureStorageOnResponse directly');
+                            window.__secureStorageOnResponse(response);
+                        } else {
+                            console.log('Swift: __secureStorageOnResponse not available');
+                        }
                     }
                 """
                 print("SecureStorage: Executing JS: \(js)")
