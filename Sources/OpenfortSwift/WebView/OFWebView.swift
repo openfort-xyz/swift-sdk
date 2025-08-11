@@ -12,11 +12,13 @@ internal class OFWebView: WKWebView {
     let fileUrl: URL
     let delegate: WKNavigationDelegate?
     let scriptMessageHandler: WKScriptMessageHandler?
+    private var config: OFConfig?
     
-    init(fileUrl: URL, delegate: WKNavigationDelegate?, scriptMessageHandler: WKScriptMessageHandler?) {
+    init(fileUrl: URL, delegate: WKNavigationDelegate?, scriptMessageHandler: WKScriptMessageHandler?, config: OFConfig?) {
         self.fileUrl = fileUrl
         self.delegate = delegate
         self.scriptMessageHandler = scriptMessageHandler
+        self.config = config
 
         // Configure webpage preferences for JavaScript
         let webPagePreferences = WKWebpagePreferences()
@@ -29,12 +31,6 @@ internal class OFWebView: WKWebView {
             userContentController.add(messageHandler, name: "ReactNativeWebView")
         }
 
-//        let script = """
-//        window.ReactNativeWebView = window.ReactNativeWebView || {};
-//        window.ReactNativeWebView.injectedObjectJson = function() {
-//            return JSON.stringify({ shouldUseAppBackedStorage: true });
-//        };
-//        """
 //        let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
 //        userContentController.addUserScript(userScript)
         
