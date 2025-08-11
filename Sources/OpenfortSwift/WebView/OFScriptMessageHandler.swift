@@ -55,20 +55,33 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
         
         switch method {
         case "KeychainSave":
-            OFKeychainHelper.save(data["value"] as! String, for: data["key"] as! String)
-            let requestId = data["requestId"] as! Int
+            guard let value = data["value"] as? String,
+                  let key = data["key"] as? String,
+                  let requestId = data["requestId"] as? Int else {
+                print("KeychainSave: Missing required parameters")
+                return false
+            }
+            OFKeychainHelper.save(value, for: key)
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
             webView?.evaluateJavaScript(js)
             return true
         case "KeychainRemove":
-            OFKeychainHelper.delete(for: data["key"] as! String)
-            let requestId = data["requestId"] as! Int
+            guard let key = data["key"] as? String,
+                  let requestId = data["requestId"] as? Int else {
+                print("KeychainRemove: Missing required parameters")
+                return false
+            }
+            OFKeychainHelper.delete(for: key)
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
             webView?.evaluateJavaScript(js)
             return true
         case "KeychainGet":
-            let value = OFKeychainHelper.retrieve(for: data["key"] as! String) ?? ""
-            let requestId = data["requestId"] as! Int
+            guard let key = data["key"] as? String,
+                  let requestId = data["requestId"] as? Int else {
+                print("KeychainGet: Missing required parameters")
+                return false
+            }
+            let value = OFKeychainHelper.retrieve(for: key) ?? ""
             if !value.isEmpty {
                 // Try to parse value as JSON
                 if let data = value.data(using: .utf8),
@@ -89,8 +102,11 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             }
             return true
         case "KeychainFlush":
+            guard let requestId = data["requestId"] as? Int else {
+                print("KeychainFlush: Missing requestId parameter")
+                return false
+            }
             OFKeychainHelper.clearAll()
-            let requestId = data["requestId"] as! Int
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
             webView?.evaluateJavaScript(js)
             return true
@@ -99,37 +115,117 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
         }
     }
     
+    // Helper method to send JSON responses to JavaScript
+    private func sendResponse(_ responseDict: [String: Any]) {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: responseDict, options: [])
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                let js = """
+                    if (window.__secureStorageOnResponse) {
+                        window.__secureStorageOnResponse(\(jsonString));
+                    }
+                """
+                webView?.evaluateJavaScript(js) { _, error in
+                    if let error = error {
+                        print("Error sending secure storage response: \(error)")
+                    }
+                }
+            }
+        } catch {
+            print("Error serializing response: \(error)")
+        }
+    }
+    
+    // Helper method to send error responses
+    private func sendErrorResponse(requestId: String, error: String) {
+        let responseDict: [String: Any] = [
+            "id": requestId,
+            "event": "app:secure-storage:response",
+            "data": ["success": false, "error": error]
+        ]
+        sendResponse(responseDict)
+    }
+    
     private func processMessageForSecureStorage(_ data: [String: Any]) -> Bool {
         guard let event = data["event"] as? String else { return false }
+        guard let requestId = data["id"] as? String else { return false }
 
         switch event {
         case "app:secure-storage:get":
-            // Call Swift storage logic, then send value back
-            // Example:
-            if let key = (data["data"] as? [String: Any])?["key"] as? String,
-               let requestId = data["id"] {
-                let value = OFKeychainHelper.retrieve(for: key) // Use your actual storage logic
-                let js = """
-                    window.__secureStorageOnResponse({ id: \(requestId), data: \(value != nil ? "\"\(value!)\"" : "null") });
-                """
-                webView?.evaluateJavaScript(js)
+            if let key = (data["data"] as? [String: Any])?["key"] as? String {
+                let value = OFKeychainHelper.retrieve(for: key)
+                
+                // Use proper JSON serialization
+                let responseDict: [String: Any] = [
+                    "id": requestId,
+                    "event": "app:secure-storage:response",
+                    "data": ["value": value as Any]
+                ]
+                
+                sendResponse(responseDict)
+            } else {
+                // Send error response for missing key
+                sendErrorResponse(requestId: requestId, error: "Missing key parameter")
             }
             return true
+            
         case "app:secure-storage:set":
+            var success = false
+            var errorMessage: String?
+            
             if let dict = data["data"] as? [String: Any],
                let key = dict["key"] as? String,
                let value = dict["value"] as? String {
                 OFKeychainHelper.save(value, for: key)
+                success = true
+            } else {
+                errorMessage = "Missing key or value parameter"
             }
+            
+            // Send response using proper JSON serialization
+            let responseDict: [String: Any] = [
+                "id": requestId,
+                "event": "app:secure-storage:response",
+                "data": errorMessage != nil ? ["success": false, "error": errorMessage!] : ["success": success]
+            ]
+            
+            sendResponse(responseDict)
             return true
+            
         case "app:secure-storage:remove":
+            var success = false
+            var errorMessage: String?
+            
             if let key = (data["data"] as? [String: Any])?["key"] as? String {
                 OFKeychainHelper.delete(for: key)
+                success = true
+            } else {
+                errorMessage = "Missing key parameter"
             }
+            
+            // Send response using proper JSON serialization
+            let responseDict: [String: Any] = [
+                "id": requestId,
+                "event": "app:secure-storage:response",
+                "data": errorMessage != nil ? ["success": false, "error": errorMessage!] : ["success": success]
+            ]
+            
+            sendResponse(responseDict)
             return true
+            
         case "app:secure-storage:flush":
             OFKeychainHelper.clearAll()
+            
+            // Send response using proper JSON serialization
+            let responseDict: [String: Any] = [
+                "id": requestId,
+                "event": "app:secure-storage:response",
+                "data": ["success": true]
+            ]
+            
+            sendResponse(responseDict)
             return true
+            
         default:
             return false
         }
