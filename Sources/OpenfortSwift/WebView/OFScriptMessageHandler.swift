@@ -126,12 +126,19 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             if let jsonString = String(data: jsonData, encoding: .utf8) {
                 print("SecureStorage: JSON response: \(jsonString)")
                 let js = """
+                    console.log('Swift: Attempting to call __secureStorageOnResponse');
+                    console.log('Swift: __secureStorageOnResponse exists?', typeof window.__secureStorageOnResponse);
                     if (window.__secureStorageOnResponse) {
                         var response = \(jsonString);
-                        console.log('Calling __secureStorageOnResponse with:', response);
-                        window.__secureStorageOnResponse(response);
+                        console.log('Swift: Calling __secureStorageOnResponse with:', response);
+                        try {
+                            window.__secureStorageOnResponse(response);
+                            console.log('Swift: __secureStorageOnResponse called successfully');
+                        } catch (error) {
+                            console.error('Swift: Error calling __secureStorageOnResponse:', error);
+                        }
                     } else {
-                        console.log('__secureStorageOnResponse not available');
+                        console.log('Swift: __secureStorageOnResponse not available');
                     }
                 """
                 print("SecureStorage: Executing JS: \(js)")
