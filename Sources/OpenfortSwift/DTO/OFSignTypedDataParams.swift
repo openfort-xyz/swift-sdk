@@ -15,6 +15,28 @@ public struct EIP712TypeField: OFCodableSendable {
     }
 }
 
+public struct EIP712PersonMessage: OFCodableSendable {
+    let name: String
+    let wallet: String
+
+    public init(name: String, wallet: String) {
+        self.name = name
+        self.wallet = wallet
+    }
+}
+
+public struct EIP712MailMessage: OFCodableSendable {
+    let from: EIP712PersonMessage
+    let to: EIP712PersonMessage
+    let content: String
+
+    public init(from: EIP712PersonMessage, to: EIP712PersonMessage, content: String) {
+        self.from = from
+        self.to = to
+        self.content = content
+    }
+}
+
 public struct EIP712Domain: OFCodableSendable {
     let name: String
     let version: String
@@ -32,9 +54,9 @@ public struct EIP712Domain: OFCodableSendable {
 public struct OFSignTypedDataParams: Codable, Sendable {
     let domain: EIP712Domain
     let types: [String: [EIP712TypeField]]
-    let message: [String: AnyCodable]
+    let message: EIP712MailMessage
 
-    public init(domain: EIP712Domain, types: [String: [EIP712TypeField]], message: [String: AnyCodable]) {
+    public init(domain: EIP712Domain, types: [String: [EIP712TypeField]] = [:], message: EIP712MailMessage) {
         self.domain = domain
         self.types = types
         self.message = message
