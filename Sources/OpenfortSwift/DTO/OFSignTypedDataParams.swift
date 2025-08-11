@@ -5,12 +5,24 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFSignTypedDataParams: Codable, Sendable {
-    public let domain: [String: AnyCodable]
-    public let types: [String: AnyCodable]
-    public let message: [String: AnyCodable]
+public struct EIP712TypeField: OFCodableSendable {
+    let name: String
+    let type: String
+}
 
-    public init(domain: [String: AnyCodable], types: [String: AnyCodable], message: [String: AnyCodable]) {
+public struct EIP712Domain: OFCodableSendable {
+    let name: String
+    let version: String
+    let chainId: Int
+    let verifyingContract: String
+}
+
+public struct OFSignTypedDataParams: Codable, Sendable {
+    let domain: EIP712Domain
+    let types: [String: [EIP712TypeField]]
+    let message: [String: AnyCodable]
+
+    public init(domain: EIP712Domain, types: [String: [EIP712TypeField]], message: [String: AnyCodable]) {
         self.domain = domain
         self.types = types
         self.message = message
