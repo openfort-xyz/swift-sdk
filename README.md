@@ -36,4 +36,38 @@ import OpenfortSwift
    - **shieldEncryptionKey** – Your Shield encryption key.
    - **shieldURL** – Shield service URL (optional).
 
+**5️⃣ Initialize the SDK**
+
+
+In your AppDelegate:
+
+ ```swift
+import UIKit
+import OpenfortSwift
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+
+        if let config = OFConfig.load(from: getConfigData()) {
+            OFSDK.setupSDK(config: config)
+        }
+
+        return true
+    }
+    
+    private func getConfigData() -> Data? {
+        if let url = Bundle.main.url(forResource: "OFConfig", withExtension: "plist") {
+            return try? Data(contentsOf: url)
+        }
+        return nil
+    }
+
+
+}
+```
 
