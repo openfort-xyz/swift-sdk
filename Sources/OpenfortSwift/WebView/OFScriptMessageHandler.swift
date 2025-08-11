@@ -120,17 +120,24 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
     // Helper method to send JSON responses to JavaScript
     private func sendResponse(_ responseDict: [String: Any]) {
+        print("SecureStorage: Sending response: \(responseDict)")
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: responseDict, options: [])
             if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("SecureStorage: JSON response: \(jsonString)")
                 let js = """
                     if (window.__secureStorageOnResponse) {
                         window.__secureStorageOnResponse(\(jsonString));
+                    } else {
+                        console.log('__secureStorageOnResponse not available');
                     }
                 """
+                print("SecureStorage: Executing JS: \(js)")
                 webView?.evaluateJavaScript(js) { _, error in
                     if let error = error {
                         print("Error sending secure storage response: \(error)")
+                    } else {
+                        print("SecureStorage: Response sent successfully")
                     }
                 }
             }
@@ -150,8 +157,16 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     }
     
     private func processMessageForSecureStorage(_ data: [String: Any]) -> Bool {
-        guard let event = data["event"] as? String else { return false }
-        guard let requestId = data["id"] as? String else { return false }
+        guard let event = data["event"] as? String else { 
+            print("SecureStorage: No event key found")
+            return false 
+        }
+        guard let requestId = data["id"] as? String else { 
+            print("SecureStorage: No id key found")
+            return false 
+        }
+        
+        print("SecureStorage: Processing event '\(event)' with id '\(requestId)'")
 
         switch event {
         case "app:secure-storage:get":
