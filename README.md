@@ -26,7 +26,7 @@ import OpenfortSwift
 
 **4️⃣ Configure `OFConfig.plist`**
 
-1. [Download the `OFConfig.plist` file](./OFConfig.plist) and add it to your Xcode project.
+1. Download the [`OFConfig.plist`](./OFConfig.plist) and add it to your Xcode project.
 2. Make sure to select **"Copy items if needed"** when adding the file to your project.
 3. Open the file in Xcode and configure the following keys with your own values:
    - **backendURL** – Your backend API base URL (optional).
