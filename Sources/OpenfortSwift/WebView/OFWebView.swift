@@ -28,7 +28,7 @@ internal class OFWebView: WKWebView {
         let userContentController = WKUserContentController()
         if let messageHandler = scriptMessageHandler {
             userContentController.add(messageHandler, name: "userHandler")
-            userContentController.add(messageHandler, name: "ReactNativeWebView")
+            // userContentController.add(messageHandler, name: "ReactNativeWebView")
         }
 
 //        let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
