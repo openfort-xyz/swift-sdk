@@ -127,7 +127,9 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
                 print("SecureStorage: JSON response: \(jsonString)")
                 let js = """
                     if (window.__secureStorageOnResponse) {
-                        window.__secureStorageOnResponse(\(jsonString));
+                        var response = \(jsonString);
+                        console.log('Calling __secureStorageOnResponse with:', response);
+                        window.__secureStorageOnResponse(response);
                     } else {
                         console.log('__secureStorageOnResponse not available');
                     }
@@ -158,11 +160,11 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
     private func processMessageForSecureStorage(_ data: [String: Any]) -> Bool {
         guard let event = data["event"] as? String else { 
-            print("SecureStorage: No event key found")
+            print("SecureStorage: No event key found", data)
             return false 
         }
         guard let requestId = data["id"] as? String else { 
-            print("SecureStorage: No id key found")
+            print("SecureStorage: No id key found", data)
             return false 
         }
         
