@@ -20,6 +20,10 @@ public extension OFUserAccessable {
         )
     }
 
+    /// Retrieves the current user instance from Openfort asynchronously via a completion handler.
+    ///
+    /// - Parameter completion: A closure that contains a `Result` with either the `OFGetUserInstanceResponse?` or an `Error`.
+    ///                         The result can be `nil` if no user is logged in.
     func getUser(
         completion: @escaping (Result<OFGetUserInstanceResponse?, Error>) -> Void
     ) {

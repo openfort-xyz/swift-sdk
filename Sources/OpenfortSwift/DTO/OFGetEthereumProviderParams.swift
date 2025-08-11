@@ -19,9 +19,9 @@ public struct OFGetEthereumProviderParams: Codable, Sendable {
     }
 
     public let policy: String?
-    public let chains: [Int: String]?        // Changed key type to Int for Record<number, string>
-    public let providerInfo: ProviderInfo?   // New field
-    public let announceProvider: Bool?       // New field
+    public let chains: [Int: String]?
+    public let providerInfo: ProviderInfo?
+    public let announceProvider: Bool?
 
     public init(
         policy: String? = nil,

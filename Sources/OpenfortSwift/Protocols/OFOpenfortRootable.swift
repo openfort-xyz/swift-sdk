@@ -20,6 +20,9 @@ public protocol OFOpenfortRootable {
 
 public extension OFOpenfortRootable {
     
+    /// Retrieves the current access token from the JavaScript SDK.
+    ///
+    /// - Returns: The current access token response, or `nil` if not available.
     func getAccessToken() async throws -> OFGetAccessTokenResponse? {
         let method = OFMethods.getAccessToken
         let js = "window.getAccessTokenSync();"
@@ -30,6 +33,9 @@ public extension OFOpenfortRootable {
         )
     }
     
+    /// Retrieves the current access token from the JavaScript SDK.
+    ///
+    /// - Parameter completion: Completion handler with a result containing the access token response or an error.
     func getAccessToken(completion: @escaping (Result<OFGetAccessTokenResponse?, Error>) -> Void) {
         Task {
             do {
@@ -41,6 +47,9 @@ public extension OFOpenfortRootable {
         }
     }
     
+    /// Validates and optionally refreshes the access token.
+    ///
+    /// - Parameter forceRefresh: If `true`, forces a refresh of the token; if `false` or `nil`, validates and refreshes as needed.
     func validateAndRefreshToken(forceRefresh: Bool? = nil) async throws {
         let method = OFMethods.validateAndRefreshToken
         let js: String
@@ -56,6 +65,11 @@ public extension OFOpenfortRootable {
         )
     }
     
+    /// Validates and optionally refreshes the access token.
+    ///
+    /// - Parameters:
+    ///   - forceRefresh: If `true`, forces a refresh of the token; if `false` or `nil`, validates and refreshes as needed.
+    ///   - completion: Completion handler with a result indicating success or error.
     func validateAndRefreshToken(forceRefresh: Bool? = nil, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
@@ -70,7 +84,15 @@ public extension OFOpenfortRootable {
 
 extension OFOpenfortRootable {
     
-    /// Observe a notification for a method and complete with Void (no object expected)
+    /// Executes a JavaScript command in the WebView and observes a notification for the specified method, completing with success or error.
+    ///
+    /// This method does not expect a typed object in the notification; it only listens for success/failure.
+    ///
+    /// - Parameters:
+    ///   - js: The JavaScript string to evaluate.
+    ///   - method: The notification method name to observe.
+    ///   - errorDomain: The error domain to use for errors.
+    ///   - completion: Completion handler with a result indicating success or error.
     internal func evaluateAndObserveVoid(
         js: String,
         method: String,
@@ -108,7 +130,16 @@ extension OFOpenfortRootable {
         }
     }
 
-    /// Observe a notification for a method and decode an expected object of type T
+    /// Executes a JavaScript command in the WebView and observes a notification for the specified method,
+    /// decoding and returning an expected object of type `T`.
+    ///
+    /// Listens for the notification and attempts to cast or decode the object to type `T`, handling success or error.
+    ///
+    /// - Parameters:
+    ///   - js: The JavaScript string to evaluate.
+    ///   - method: The notification method name to observe.
+    ///   - errorDomain: The error domain to use for errors.
+    ///   - completion: Completion handler with a result containing the decoded object or an error.
     internal func evaluateAndObserve<T>(
         js: String,
         method: String,
@@ -149,6 +180,15 @@ extension OFOpenfortRootable {
         }
     }
 
+    /// Async/await wrapper for `evaluateAndObserveVoid`.
+    ///
+    /// Executes a JavaScript command and waits for a notification indicating success or failure, without expecting a typed object.
+    ///
+    /// - Parameters:
+    ///   - js: The JavaScript string to evaluate.
+    ///   - method: The notification method name to observe.
+    ///   - errorDomain: The error domain to use for errors.
+    /// - Throws: An error if the operation fails.
     internal func evaluateAndObserveVoidAsync(
         js: String,
         method: String,
@@ -161,6 +201,16 @@ extension OFOpenfortRootable {
         }
     }
     
+    /// Async/await wrapper for `evaluateAndObserve`, decoding a JSON object from the notification into a `Decodable` type.
+    ///
+    /// Executes a JavaScript command and waits for a notification containing a JSON object, decoding it into type `T`.
+    ///
+    /// - Parameters:
+    ///   - js: The JavaScript string to evaluate.
+    ///   - method: The notification method name to observe.
+    ///   - errorDomain: The error domain to use for errors.
+    /// - Returns: A decoded object of type `T`, or `nil` if decoding fails.
+    /// - Throws: An error if the operation fails.
     internal func evaluateAndObserveAsync<T: Decodable>(
         js: String,
         method: String,
@@ -175,6 +225,10 @@ extension OFOpenfortRootable {
         }
     }
     
+    /// Encodes an encodable value into a JSON string.
+    ///
+    /// - Parameter value: The encodable value to encode.
+    /// - Returns: A JSON string if encoding is successful, or `nil` if encoding fails.
     internal func encodeToJSONString<T: Encodable>(_ value: T) -> String? {
         guard let jsonData = try? jsonEncoder.encode(value) else { return nil }
         return String(data: jsonData, encoding: .utf8)
