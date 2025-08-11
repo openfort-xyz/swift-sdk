@@ -186,7 +186,7 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             let responseDict: [String: Any] = [
                 "id": requestId,
                 "event": "app:secure-storage:response",
-                "data": errorMessage != nil ? ["success": false, "error": errorMessage!] : ["success": success]
+                "data": errorMessage != nil ? ["success": false, "error": errorMessage!] as [String: Any] : ["success": success] as [String: Any]
             ]
             
             sendResponse(responseDict)
@@ -207,7 +207,7 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             let responseDict: [String: Any] = [
                 "id": requestId,
                 "event": "app:secure-storage:response",
-                "data": errorMessage != nil ? ["success": false, "error": errorMessage!] : ["success": success]
+                "data": errorMessage != nil ? ["success": false, "error": errorMessage!] as [String: Any] : ["success": success] as [String: Any]
             ]
             
             sendResponse(responseDict)
