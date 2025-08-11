@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async () => {
+/*document.addEventListener('DOMContentLoaded', async () => {
     const storage = new KeychainStorage();
     
     const openfort = new Openfort({
@@ -17,4 +17,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     window.openfort = openfort;
 
-});
+});*/

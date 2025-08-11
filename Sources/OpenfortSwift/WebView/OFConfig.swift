@@ -20,29 +20,47 @@ struct OFConfig1 {
     static var shieldURL: String? { cfg()?["ShieldURL"] as? String }
     static var backendURL: String? { cfg()?["BackendURL"] as? String }
     
-    static let openfortSyncScript = """
-    document.addEventListener('DOMContentLoaded', async () => {
-        const storage = new KeychainStorage();
-        
-        const openfort = new Openfort({
-            baseConfiguration: {
-                publishableKey: '\(openfortPublishableKey)',
-            },
-            shieldConfiguration: {
-                shieldPublishableKey: '\(shieldPublishableKey)',
-                shieldEncryptionKey: '\(shieldEncryptionKey)',
-            },
-            overrides: {
-    \( ( { if let iframeURL = iframeURL, !iframeURL.isEmpty { return "                iframeUrl: '\(iframeURL)'," } else { return "" } } )() )
-    \( ( { if let shieldURL = shieldURL, !shieldURL.isEmpty { return "                shieldUrl: '\(shieldURL)'," } else { return "" } } )() )
-    \( ( { if let backendURL = backendURL, !backendURL.isEmpty { return "                backendUrl: '\(backendURL)'," } else { return "" } } )() )
-                storage: storage,
-            },
+    static func openfortSyncScript(
+        openfortPublishableKey: String,
+        shieldPublishableKey: String,
+        shieldEncryptionKey: String,
+        iframeURL: String?,
+        shieldURL: String?,
+        backendURL: String?
+    ) -> String {
+        var overrides: [String] = []
+        if let iframeURL = iframeURL, !iframeURL.isEmpty {
+            overrides.append("                iframeUrl: '\(iframeURL)',")
+        }
+        if let shieldURL = shieldURL, !shieldURL.isEmpty {
+            overrides.append("                shieldUrl: '\(shieldURL)',")
+        }
+        if let backendURL = backendURL, !backendURL.isEmpty {
+            overrides.append("                backendUrl: '\(backendURL)',")
+        }
+        overrides.append("                storage: storage,")
+        let overridesString = overrides.joined(separator: "\n")
+        return """
+        document.addEventListener('DOMContentLoaded', async () => {
+            const storage = new KeychainStorage();
+            
+            const openfort = new Openfort({
+                baseConfiguration: {
+                    publishableKey: '\(openfortPublishableKey)',
+                },
+                shieldConfiguration: {
+                    shieldPublishableKey: '\(shieldPublishableKey)',
+                    shieldEncryptionKey: '\(shieldEncryptionKey)',
+                },
+                overrides: {
+\(overridesString)
+                },
+            });
+            
+            window.openfort = openfort;
         });
-        
-        window.openfort = openfort;
-    });
-    """
+        """
+    }
 }
 
 public struct OFConfig: Codable {
@@ -66,5 +84,41 @@ public struct OFConfig: Codable {
             print("❌ Failed to decode: \(error)")
             return nil
         }
+    }
+    
+    
+    func openfortSyncScript() -> String {
+        var overrides: [String] = []
+        if let iframeURL = iframeUrl, !iframeURL.isEmpty {
+            overrides.append("                iframeUrl: '\(iframeURL)',")
+        }
+        if let shieldURL = shieldUrl, !shieldURL.isEmpty {
+            overrides.append("                shieldUrl: '\(shieldURL)',")
+        }
+        if let backendURL = backendUrl, !backendURL.isEmpty {
+            overrides.append("                backendUrl: '\(backendURL)',")
+        }
+        overrides.append("                storage: storage,")
+        let overridesString = overrides.joined(separator: "\n")
+        return """
+        document.addEventListener('DOMContentLoaded', async () => {
+            const storage = new KeychainStorage();
+            
+            const openfort = new Openfort({
+                baseConfiguration: {
+                    publishableKey: '\(openfortPublishableKey)',
+                },
+                shieldConfiguration: {
+                    shieldPublishableKey: '\(shieldPublishableKey)',
+                    shieldEncryptionKey: '\(shieldEncryptionKey)',
+                },
+                overrides: {
+        \(overridesString)
+                },
+            });
+            
+            window.openfort = openfort;
+        });
+        """
     }
 }

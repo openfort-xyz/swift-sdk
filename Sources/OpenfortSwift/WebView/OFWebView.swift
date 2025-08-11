@@ -30,10 +30,12 @@ internal class OFWebView: WKWebView {
             userContentController.add(messageHandler, name: "userHandler")
             userContentController.add(messageHandler, name: "ReactNativeWebView")
         }
-
-//        let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
-//        userContentController.addUserScript(userScript)
         
+        if let script = config?.openfortSyncScript() {
+            let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+            userContentController.addUserScript(userScript)
+        }
+
         // Configure the web view
         let config = WKWebViewConfiguration()
         config.defaultWebpagePreferences = webPagePreferences
