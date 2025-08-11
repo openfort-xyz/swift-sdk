@@ -8,6 +8,11 @@
 public struct EIP712TypeField: OFCodableSendable {
     let name: String
     let type: String
+
+    public init(name: String, type: String) {
+        self.name = name
+        self.type = type
+    }
 }
 
 public struct EIP712Domain: OFCodableSendable {
@@ -15,6 +20,13 @@ public struct EIP712Domain: OFCodableSendable {
     let version: String
     let chainId: Int
     let verifyingContract: String
+    
+    public init(name: String, version: String, chainId: Int, verifyingContract: String) {
+        self.name = name
+        self.version = version
+        self.chainId = chainId
+        self.verifyingContract = verifyingContract
+    }
 }
 
 public struct OFSignTypedDataParams: Codable, Sendable {
