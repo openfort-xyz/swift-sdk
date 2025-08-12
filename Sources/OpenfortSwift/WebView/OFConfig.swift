@@ -1,12 +1,12 @@
 import Foundation
 
 public struct OFConfig: Codable {
-    let backendUrl: String?
-    let iframeUrl: String?
-    let openfortPublishableKey: String
-    let shieldEncryptionKey: String
-    let shieldPublishableKey: String
-    let shieldUrl: String?
+    public let backendUrl: String?
+    public let iframeUrl: String?
+    public let openfortPublishableKey: String
+    public let shieldEncryptionKey: String
+    public let shieldPublishableKey: String
+    public let shieldUrl: String?
     
     public static func load(from data: Data?) -> OFConfig? {
         guard let data = data else {
