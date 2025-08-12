@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             shieldEncryptionKey: 'AnOZE0fPHC4+n+8jpg9mCNXmPMVY0eRVewi7dQ/7G2yv',
         },
         overrides: {
-            iframeUrl: 'http://localhost:5173',
+            iframeUrl: 'http://localhost:80',
             storage: storage,
         },
     });
