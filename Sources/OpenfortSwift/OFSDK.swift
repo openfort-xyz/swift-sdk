@@ -11,7 +11,7 @@ import Combine
 @MainActor
 public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEmbeddedWalletAccessable, OFUserAccessable {
     
-    private var config: OFConfig?
+    private var _config: OFConfig?
     public static let shared = OFSDK()
     
     public var didLoad: (() -> Void)?
@@ -33,9 +33,13 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
         if initialized {
             return
         }
-        shared.config = config
+        shared._config = config
         shared.setupInstance()
         initialized = true
+    }
+    
+    public var config: OFConfig? {
+        _config
     }
     
     @MainActor
