@@ -105,20 +105,17 @@ public extension OFEmbeddedWalletAccessable {
     /// Calls `window.getEthereumProviderSync(...)` and returns transport details needed
     /// to interoperate with EVM tooling.
     /// - Parameter params: Provider options (`OFGetEthereumProviderParams`).
-    /// - Returns: `OFGetEthereumProviderResponse` or `nil`.
+    /// - Returns: `OpenfortEIP1193Web3Provider` or `nil`.
     /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
     func getEthereumProvider(params: OFGetEthereumProviderParams) async throws -> OpenfortEIP1193Web3Provider? {
-        let method = OFMethods.getEthereumProvider
-        guard let jsonString = encodeToJSONString(params) else {
-            throw OFError.encodingFailed
-        }
-        return OpenfortEIP1193Web3Provider(webView: webView!)
+        
+        return OpenfortEIP1193Web3Provider(webView: webView!, getProviderParams: params)
     }
     
     /// Returns an EVM provider descriptor (completion-based API).
     /// - Parameters:
     ///   - params: Provider options (`OFGetEthereumProviderParams`).
-    ///   - completion: Called with an optional `OFGetEthereumProviderResponse` or an error.
+    ///   - completion: Called with an optional `OpenfortEIP1193Web3Provider` or an error.
     func getEthereumProvider(
         params: OFGetEthereumProviderParams,
         completion: @escaping (Result<OpenfortEIP1193Web3Provider?, Error>) -> Void
