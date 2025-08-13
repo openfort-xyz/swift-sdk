@@ -55,6 +55,12 @@ public struct OFConfig: Codable {
             });
             
             window.openfort = openfort;
+        if (window.webkit?.messageHandlers?.userHandler) {
+            window.webkit.messageHandlers.userHandler.postMessage({
+                method: 'openfortReady',
+                success: true
+            });
+        }
         });
         """
     }
