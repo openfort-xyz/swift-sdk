@@ -40,31 +40,46 @@ public struct OFConfig: Codable {
 
         return """
         (function () {
+          // Safe poster to Swift
           function post(method, payload) {
             try {
-              if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.userHandler) {
-                window.webkit.messageHandlers.userHandler.postMessage(Object.assign({ method: method }, payload || {}));
-              }
-            } catch (e) {
-              // swallow
-            }
+              var mh = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.userHandler;
+              if (mh) mh.postMessage(Object.assign({ method: method }, payload || {}));
+            } catch (_) { /* no-op */ }
           }
 
-          async function initOpenfort() {
-            try {
-              const storage = new KeychainStorage();
+          // Poll until condition is true
+          function whenReady(check, next, interval) {
+            if (check()) return next();
+            setTimeout(function () { whenReady(check, next, interval); }, interval || 30);
+          }
 
-              const openfort = new Openfort({
+          // We need both the JS SDK constructor and the WK bridge
+          function depsReady() {
+            var ctorReady = typeof window.Openfort === 'function';
+            var storageReady = typeof window.KeychainStorage === 'function'; // from securestorage.js
+            var bridgeReady = !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.userHandler);
+            return ctorReady && storageReady && bridgeReady;
+          }
+
+          function initOpenfort() {
+            try {
+              // If DOM already parsed, fine; scripts may still be loading—we already waited for constructors.
+              var storage = new KeychainStorage();
+
+              var openfort = new Openfort({
                 baseConfiguration: {
-                  publishableKey: '\(openfortPublishableKey)',
+                  publishableKey: 'YOUR_PUBLISHABLE_KEY'
                 },
                 shieldConfiguration: {
-                  shieldPublishableKey: '\(shieldPublishableKey)',
-                  shieldEncryptionKey: '\(shieldEncryptionKey)',
+                  shieldPublishableKey: 'YOUR_SHIELD_PUBLISHABLE_KEY',
+                  shieldEncryptionKey: 'YOUR_SHIELD_ENCRYPTION_KEY'
                 },
                 overrides: {
-        \(overridesString)
-                },
+                  // optionally: iframeUrl, shieldUrl, backendUrl
+                  // storage: storage
+                  storage: storage
+                }
               });
 
               window.openfort = openfort;
@@ -75,12 +90,7 @@ public struct OFConfig: Codable {
             }
           }
 
-          if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initOpenfort, { once: true });
-          } else {
-            // already 'interactive' or 'complete' — run immediately
-            initOpenfort();
-          }
+          whenReady(depsReady, initOpenfort, 30);
         })();
         """
     }
