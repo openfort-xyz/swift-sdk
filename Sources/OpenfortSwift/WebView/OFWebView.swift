@@ -32,7 +32,7 @@ internal class OFWebView: WKWebView {
         }
         
         if let script = config?.openfortSyncScript() {
-            let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+            let userScript = WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
             userContentController.addUserScript(userScript)
         }
 
