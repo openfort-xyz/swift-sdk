@@ -37,31 +37,51 @@ public struct OFConfig: Codable {
         }
         overrides.append("                storage: storage,")
         let overridesString = overrides.joined(separator: "\n")
+
         return """
-        document.addEventListener('DOMContentLoaded', async () => {
-            const storage = new KeychainStorage();
-            
-            const openfort = new Openfort({
+        (function () {
+          function post(method, payload) {
+            try {
+              if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.userHandler) {
+                window.webkit.messageHandlers.userHandler.postMessage(Object.assign({ method: method }, payload || {}));
+              }
+            } catch (e) {
+              // swallow
+            }
+          }
+
+          async function initOpenfort() {
+            try {
+              const storage = new KeychainStorage();
+
+              const openfort = new Openfort({
                 baseConfiguration: {
-                    publishableKey: '\(openfortPublishableKey)',
+                  publishableKey: '\(openfortPublishableKey)',
                 },
                 shieldConfiguration: {
-                    shieldPublishableKey: '\(shieldPublishableKey)',
-                    shieldEncryptionKey: '\(shieldEncryptionKey)',
+                  shieldPublishableKey: '\(shieldPublishableKey)',
+                  shieldEncryptionKey: '\(shieldEncryptionKey)',
                 },
                 overrides: {
         \(overridesString)
                 },
-            });
-            
-            window.openfort = openfort;
-        if (window.webkit?.messageHandlers?.userHandler) {
-            window.webkit.messageHandlers.userHandler.postMessage({
-                method: 'openfortReady',
-                success: true
-            });
-        }
-        });
+              });
+
+              window.openfort = openfort;
+              window.__openfortReady = true;
+              post('openfortReady', { success: true });
+            } catch (e) {
+              post('openfortInitError', { success: false, error: (e && e.message) ? e.message : String(e) });
+            }
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initOpenfort, { once: true });
+          } else {
+            // already 'interactive' or 'complete' — run immediately
+            initOpenfort();
+          }
+        })();
         """
     }
 }
