@@ -193,6 +193,17 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
                 return
             }
             if let dict = data as? [String: Any] {
+                if T.self == String.self {
+                    let dataJson = try JSONSerialization.data(withJSONObject: dict, options: [])
+                    if let jsonString = String(data: dataJson, encoding: .utf8) {
+                        NotificationCenter.default.post(
+                            name: Notification.Name(method),
+                            object: jsonString as? T,
+                            userInfo: ["success": true]
+                        )
+                        return
+                    }
+                }
                 jsonData = try JSONSerialization.data(withJSONObject: dict, options: [])
             } else if let d = data as? T {
                 NotificationCenter.default.post(
