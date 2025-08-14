@@ -93,12 +93,20 @@ extension OFOpenfortRootable {
     ///   - method: The notification method name to observe.
     ///   - errorDomain: The error domain to use for errors.
     ///   - completion: Completion handler with a result indicating success or error.
-    internal func evaluateAndObserveVoid(
+    internal mutating func evaluateAndObserveVoid(
         js: String,
         method: String,
         errorDomain: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
+        let runEval = {
+            self.webView?.evaluateJavaScript(js) { _, error in
+                if let error = error {
+                    completion(.failure(error))
+                }
+            }
+        }
+        
         let notificationName = Notification.Name(method)
         var observer: NSObjectProtocol?
         observer = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
@@ -122,8 +130,14 @@ extension OFOpenfortRootable {
                 completion(.failure(NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No response in notification"])) )
             }
         }
-        webView?.evaluateJavaScript(js) { _, error in
-            if let error = error {
+        
+        if isInitialized {
+            runEval()
+        } else {
+            didLoad = {
+                runEval()
+            }
+            didFailedToLoad = { error in
                 if let obs = observer { NotificationCenter.default.removeObserver(obs) }
                 completion(.failure(error))
             }
@@ -140,12 +154,20 @@ extension OFOpenfortRootable {
     ///   - method: The notification method name to observe.
     ///   - errorDomain: The error domain to use for errors.
     ///   - completion: Completion handler with a result containing the decoded object or an error.
-    internal func evaluateAndObserve<T>(
+    internal mutating func evaluateAndObserve<T>(
         js: String,
         method: String,
         errorDomain: String,
         completion: @escaping (Result<T?, Error>) -> Void
     ) {
+        let runEval = {
+            self.webView?.evaluateJavaScript(js) { _, error in
+                if let error = error {
+                    completion(.failure(error))
+                }
+            }
+        }
+        
         let notificationName = Notification.Name(method)
         var observer: NSObjectProtocol?
         observer = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: .main) { notification in
@@ -172,8 +194,14 @@ extension OFOpenfortRootable {
             }
             completion(.success(object))
         }
-        webView?.evaluateJavaScript(js) { _, error in
-            if let error = error {
+        
+        if isInitialized {
+            runEval()
+        } else {
+            didLoad = {
+                runEval()
+            }
+            didFailedToLoad = { error in
                 if let obs = observer { NotificationCenter.default.removeObserver(obs) }
                 completion(.failure(error))
             }
@@ -189,7 +217,7 @@ extension OFOpenfortRootable {
     ///   - method: The notification method name to observe.
     ///   - errorDomain: The error domain to use for errors.
     /// - Throws: An error if the operation fails.
-    internal func evaluateAndObserveVoidAsync(
+    internal mutating func evaluateAndObserveVoidAsync(
         js: String,
         method: String,
         errorDomain: String
@@ -211,7 +239,7 @@ extension OFOpenfortRootable {
     ///   - errorDomain: The error domain to use for errors.
     /// - Returns: A decoded object of type `T`, or `nil` if decoding fails.
     /// - Throws: An error if the operation fails.
-    internal func evaluateAndObserveAsync<T: Decodable>(
+    internal mutating func evaluateAndObserveAsync<T: Decodable>(
         js: String,
         method: String,
         errorDomain: String
