@@ -11,11 +11,11 @@
 public protocol OFOpenfortRootable {
     var webView: WKWebView? { get }
     var jsonEncoder: JSONEncoder { get }
-    var isInitialized: Bool { get set }
+    var isInitialized: Bool { get }
     /// Completion called when the SDK successfully loads
-    var didLoad: (() -> Void)? { get set }
+    var didLoad: (() -> Void)? { get  }
     /// Completion called when the SDK fails to load with an error
-    var didFailedToLoad: ((Error) -> Void)? { get set }
+    var didFailedToLoad: ((Error) -> Void)? { get }
 }
 
 public extension OFOpenfortRootable {

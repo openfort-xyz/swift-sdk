@@ -13,11 +13,11 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     
     public static let shared = OFSDK()
     
-    public var didLoad: (() -> Void)?
-    public var didFailedToLoad: ((Error) -> Void)?
-    public var webView: WKWebView?
-    public var jsonEncoder: JSONEncoder = JSONEncoder()
-    public var isInitialized: Bool = false
+    public internal(set) var didLoad: (() -> Void)?
+    public internal(set) var didFailedToLoad: ((Error) -> Void)?
+    public internal(set) var webView: WKWebView?
+    public internal(set) var jsonEncoder: JSONEncoder = JSONEncoder()
+    public internal(set) var isInitialized: Bool = false
     
     @Published public private(set) var embeddedState: OFEmbeddedState?
     public var embeddedStatePublisher: Published<OFEmbeddedState?>.Publisher { $embeddedState }
