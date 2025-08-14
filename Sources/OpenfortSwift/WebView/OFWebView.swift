@@ -39,9 +39,10 @@ internal class OFWebView: WKWebView {
             }
         }
         
-        addScript(named: "storage", injectionTime: .atDocumentEnd)
-        addScript(named: "securestorage", injectionTime: .atDocumentEnd)
-        addScript(named: "openfort", injectionTime: .atDocumentEnd)
+        // openfort must be available before openfort-sync runs, hence earlier injection for the first three scripts
+        addScript(named: "storage", injectionTime: .atDocumentStart)
+        addScript(named: "securestorage", injectionTime: .atDocumentStart)
+        addScript(named: "openfort", injectionTime: .atDocumentStart)
         addScript(named: "utils", injectionTime: .atDocumentEnd)
         addScript(named: "openfort-sync", injectionTime: .atDocumentEnd)
         if let script = config?.openfortSyncScript() {
