@@ -31,6 +31,21 @@ internal class OFWebView: WKWebView {
            // userContentController.add(messageHandler, name: "ReactNativeWebView")
         }
         
+        func addScript(named name: String, injectionTime: WKUserScriptInjectionTime) {
+            if let scriptPath = Bundle.module.url(forResource: name, withExtension: "js"),
+               let scriptContent = try? String(contentsOf: scriptPath) {
+                let userScript = WKUserScript(source: scriptContent, injectionTime: injectionTime, forMainFrameOnly: false)
+                userContentController.addUserScript(userScript)
+            }
+        }
+
+        // Load scripts in the exact order you want
+        addScript(named: "storage", injectionTime: .atDocumentStart)
+        addScript(named: "securestorage", injectionTime: .atDocumentStart)
+        addScript(named: "openfort", injectionTime: .atDocumentStart)
+        addScript(named: "utils", injectionTime: .atDocumentStart)
+        addScript(named: "openfort-sync", injectionTime: .atDocumentStart)
+        
         if let script = config?.openfortSyncScript() {
             let userScript = WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
             userContentController.addUserScript(userScript)
