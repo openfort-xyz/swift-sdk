@@ -37,59 +37,22 @@ public struct OFConfig: Codable {
         }
         overrides.append("                storage: storage,")
         let overridesString = overrides.joined(separator: "\n")
-
         return """
-        (function () {
-          // Safe poster to Swift
-          function post(method, payload) {
-            try {
-              var mh = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.userHandler;
-              if (mh) mh.postMessage(Object.assign({ method: method }, payload || {}));
-            } catch (_) { /* no-op */ }
-          }
-
-          // Poll until condition is true
-          function whenReady(check, next, interval) {
-            if (check()) return next();
-            setTimeout(function () { whenReady(check, next, interval); }, interval || 30);
-          }
-
-          // We need both the JS SDK constructor and the WK bridge
-          function depsReady() {
-            var ctorReady = typeof window.Openfort === 'function';
-            return ctorReady;
-          }
-
-          function initOpenfort() {
-            try {
-              // If DOM already parsed, fine; scripts may still be loading—we already waited for constructors.
-              var storage = new KeychainStorage();
-
-              var openfort = new Openfort({
+            const storage = new KeychainStorage();
+            const openfort = new Openfort({
                 baseConfiguration: {
-                  publishableKey: 'YOUR_PUBLISHABLE_KEY'
+                    publishableKey: '\(openfortPublishableKey)',
                 },
                 shieldConfiguration: {
-                  shieldPublishableKey: 'YOUR_SHIELD_PUBLISHABLE_KEY',
-                  shieldEncryptionKey: 'YOUR_SHIELD_ENCRYPTION_KEY'
+                    shieldPublishableKey: '\(shieldPublishableKey)',
+                    shieldEncryptionKey: '\(shieldEncryptionKey)',
                 },
                 overrides: {
-                  // optionally: iframeUrl, shieldUrl, backendUrl
-                  // storage: storage
-                  storage: storage
-                }
-              });
-
-              window.openfort = openfort;
-              window.__openfortReady = true;
-              post('openfortReady', { success: true });
-            } catch (e) {
-              post('openfortInitError', { success: false, error: (e && e.message) ? e.message : String(e) });
-            }
-          }
-
-          whenReady(depsReady, initOpenfort, 30);
-        })();
+        \(overridesString)
+                },
+            });
+            
+            window.openfort = openfort;
         """
     }
 }
