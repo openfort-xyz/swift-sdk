@@ -38,6 +38,7 @@ public struct OFConfig: Codable {
         overrides.append("                storage: storage,")
         let overridesString = overrides.joined(separator: "\n")
         return """
+        document.addEventListener('DOMContentLoaded', async () => {
             const storage = new KeychainStorage();
             const openfort = new Openfort({
                 baseConfiguration: {
@@ -53,6 +54,7 @@ public struct OFConfig: Codable {
             });
             
             window.openfort = openfort;
+        });
         """
     }
 }

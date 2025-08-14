@@ -38,16 +38,14 @@ internal class OFWebView: WKWebView {
                 userContentController.addUserScript(userScript)
             }
         }
-
-        // Load scripts in the exact order you want
+        
         addScript(named: "storage", injectionTime: .atDocumentStart)
         addScript(named: "securestorage", injectionTime: .atDocumentStart)
         addScript(named: "openfort", injectionTime: .atDocumentStart)
         addScript(named: "utils", injectionTime: .atDocumentStart)
         addScript(named: "openfort-sync", injectionTime: .atDocumentStart)
-        
         if let script = config?.openfortSyncScript() {
-            let userScript = WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+            let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
             userContentController.addUserScript(userScript)
         }
 
