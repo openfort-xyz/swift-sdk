@@ -13,8 +13,6 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     
     public static let shared = OFSDK()
     
-    public internal(set) var didLoad: (() -> Void)?
-    public internal(set) var didFailedToLoad: ((Error) -> Void)?
     public internal(set) var webView: WKWebView?
     public internal(set) var jsonEncoder: JSONEncoder = JSONEncoder()
     public internal(set) var isInitialized: Bool = false
@@ -38,17 +36,21 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     
     @MainActor
     private func setupInstance() {
+        let readyName = Notification.Name("openfortReady")
+        let failName  = Notification.Name("openfortInitError")
+        
         coordinator.didLoad = { [weak self] in
             self?.isInitialized = true
-            self?.didLoad?()
             if self?.embeddedStateTimer == nil {
                 self?.startPollingEmbeddedState()
             }
+            NotificationCenter.default.post(name: readyName, object: self)
         }
         
         coordinator.didFailedToLoad = { [weak self] error in
             self?.isInitialized = false
-            self?.didFailedToLoad?(error)
+            self?.stopPollingEmbeddedState()
+            NotificationCenter.default.post(name: failName, object: self, userInfo: ["error": (error as NSError).localizedDescription])
         }
         
         self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
