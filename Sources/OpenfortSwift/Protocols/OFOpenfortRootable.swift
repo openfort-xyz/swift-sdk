@@ -84,6 +84,33 @@ public extension OFOpenfortRootable {
 
 extension OFOpenfortRootable {
     
+    /// Runs `onReady` once the SDK is initialized, or immediately if it's already initialized.
+    /// If initialization fails, calls `onFail` with the error. This does not mutate `self`.
+    @inline(__always)
+    internal func whenInitialized(onReady: @escaping () -> Void, onFail: @escaping (Error) -> Void) {
+        if isInitialized {
+            onReady()
+            return
+        }
+        let center = NotificationCenter.default
+        let readyName = Notification.Name("openfortReady")
+        let failName  = Notification.Name("openfortInitError")
+        var okObs: NSObjectProtocol?
+        var failObs: NSObjectProtocol?
+        okObs = center.addObserver(forName: readyName, object: nil, queue: .main) { _ in
+            if let o = okObs { center.removeObserver(o) }
+            if let f = failObs { center.removeObserver(f) }
+            onReady()
+        }
+        failObs = center.addObserver(forName: failName, object: nil, queue: .main) { note in
+            if let o = okObs { center.removeObserver(o) }
+            if let f = failObs { center.removeObserver(f) }
+            let msg = (note.userInfo?["error"] as? String) ?? "Initialization failed"
+            let err = NSError(domain: "OFInitialization", code: -1, userInfo: [NSLocalizedDescriptionKey: msg])
+            onFail(err)
+        }
+    }
+    
     /// Executes a JavaScript command in the WebView and observes a notification for the specified method, completing with success or error.
     ///
     /// This method does not expect a typed object in the notification; it only listens for success/failure.
@@ -93,14 +120,15 @@ extension OFOpenfortRootable {
     ///   - method: The notification method name to observe.
     ///   - errorDomain: The error domain to use for errors.
     ///   - completion: Completion handler with a result indicating success or error.
-    internal mutating func evaluateAndObserveVoid(
+    internal func evaluateAndObserveVoid(
         js: String,
         method: String,
         errorDomain: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
+        let webView = self.webView
         let runEval = {
-            self.webView?.evaluateJavaScript(js) { _, error in
+            webView?.evaluateJavaScript(js) { _, error in
                 if let error = error {
                     completion(.failure(error))
                 }
@@ -131,17 +159,12 @@ extension OFOpenfortRootable {
             }
         }
         
-        if isInitialized {
+        whenInitialized(onReady: {
             runEval()
-        } else {
-            didLoad = {
-                runEval()
-            }
-            didFailedToLoad = { error in
-                if let obs = observer { NotificationCenter.default.removeObserver(obs) }
-                completion(.failure(error))
-            }
-        }
+        }, onFail: { error in
+            if let obs = observer { NotificationCenter.default.removeObserver(obs) }
+            completion(.failure(error))
+        })
     }
 
     /// Executes a JavaScript command in the WebView and observes a notification for the specified method,
@@ -154,14 +177,16 @@ extension OFOpenfortRootable {
     ///   - method: The notification method name to observe.
     ///   - errorDomain: The error domain to use for errors.
     ///   - completion: Completion handler with a result containing the decoded object or an error.
-    internal mutating func evaluateAndObserve<T>(
+    internal func evaluateAndObserve<T>(
         js: String,
         method: String,
         errorDomain: String,
         completion: @escaping (Result<T?, Error>) -> Void
     ) {
+        
+        let webView = self.webView
         let runEval = {
-            self.webView?.evaluateJavaScript(js) { _, error in
+            webView?.evaluateJavaScript(js) { _, error in
                 if let error = error {
                     completion(.failure(error))
                 }
@@ -195,17 +220,12 @@ extension OFOpenfortRootable {
             completion(.success(object))
         }
         
-        if isInitialized {
+        whenInitialized(onReady: {
             runEval()
-        } else {
-            didLoad = {
-                runEval()
-            }
-            didFailedToLoad = { error in
-                if let obs = observer { NotificationCenter.default.removeObserver(obs) }
-                completion(.failure(error))
-            }
-        }
+        }, onFail: { error in
+            if let obs = observer { NotificationCenter.default.removeObserver(obs) }
+            completion(.failure(error))
+        })
     }
 
     /// Async/await wrapper for `evaluateAndObserveVoid`.
@@ -217,7 +237,7 @@ extension OFOpenfortRootable {
     ///   - method: The notification method name to observe.
     ///   - errorDomain: The error domain to use for errors.
     /// - Throws: An error if the operation fails.
-    internal mutating func evaluateAndObserveVoidAsync(
+    internal func evaluateAndObserveVoidAsync(
         js: String,
         method: String,
         errorDomain: String
@@ -239,7 +259,7 @@ extension OFOpenfortRootable {
     ///   - errorDomain: The error domain to use for errors.
     /// - Returns: A decoded object of type `T`, or `nil` if decoding fails.
     /// - Throws: An error if the operation fails.
-    internal mutating func evaluateAndObserveAsync<T: Decodable>(
+    internal func evaluateAndObserveAsync<T: Decodable>(
         js: String,
         method: String,
         errorDomain: String
