@@ -53,21 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
 
-        if let config = OFConfig.load(from: getConfigData()) {
-            OFSDK.setupSDK(config: config)
-        }
+        OFSDK.setupSDK()
 
         return true
     }
-    
-    private func getConfigData() -> Data? {
-        if let url = Bundle.main.url(forResource: "OFConfig", withExtension: "plist") {
-            return try? Data(contentsOf: url)
-        }
-        return nil
-    }
-
-
 }
 ```
 
