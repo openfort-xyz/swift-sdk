@@ -57,9 +57,7 @@ public struct OFConfig: Codable {
           // We need both the JS SDK constructor and the WK bridge
           function depsReady() {
             var ctorReady = typeof window.Openfort === 'function';
-            var storageReady = typeof window.KeychainStorage === 'function'; // from securestorage.js
-            var bridgeReady = !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.userHandler);
-            return ctorReady && storageReady && bridgeReady;
+            return ctorReady;
           }
 
           function initOpenfort() {
