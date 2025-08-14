@@ -190,8 +190,8 @@
             k = a.interopDefault(C),
             P = e("./core/AxiosHeaders.js"),
             x = a.interopDefault(P),
-            D = e("./adapters/adapters.js"),
-            N = a.interopDefault(D),
+            N = e("./adapters/adapters.js"),
+            D = a.interopDefault(N),
             U = e("./helpers/HttpStatusCode.js"),
             J = a.interopDefault(U);
         let M = function e(t) {
@@ -207,7 +207,7 @@
         }(h.default);
         M.Axios = d.default, M.CanceledError = E.default, M.CancelToken = j.default, M.isCancel = A.default, M.VERSION = v.VERSION, M.toFormData = R.default, M.AxiosError = T.default, M.Cancel = M.CanceledError, M.all = function(e) {
             return Promise.all(e)
-        }, M.spread = _.default, M.isAxiosError = k.default, M.mergeConfig = p.default, M.AxiosHeaders = x.default, M.formToJSON = e => (0, m.default)(i.default.isHTMLForm(e) ? new FormData(e) : e), M.getAdapter = N.default.getAdapter, M.HttpStatusCode = J.default, M.default = M, r.default = M
+        }, M.spread = _.default, M.isAxiosError = k.default, M.mergeConfig = p.default, M.AxiosHeaders = x.default, M.formToJSON = e => (0, m.default)(i.default.isHTMLForm(e) ? new FormData(e) : e), M.getAdapter = D.default.getAdapter, M.HttpStatusCode = J.default, M.default = M, r.default = M
     }, {
         "./utils.js": "2ioTY",
         "./helpers/bind.js": "9mfTC",
@@ -252,7 +252,7 @@
             if ("object" !== E(e)) return !1;
             let t = y(e);
             return (null === t || t === Object.prototype || null === Object.getPrototypeOf(t)) && !(g in e) && !(m in e)
-        }, _ = w("Date"), C = w("File"), k = w("Blob"), P = w("FileList"), x = w("URLSearchParams"), [D, N, U, J] = ["ReadableStream", "Request", "Response", "Headers"].map(w);
+        }, _ = w("Date"), C = w("File"), k = w("Blob"), P = w("FileList"), x = w("URLSearchParams"), [N, D, U, J] = ["ReadableStream", "Request", "Response", "Headers"].map(w);
 
         function M(e, t, {
             allOwnKeys: r = !1
@@ -321,8 +321,8 @@
             isBoolean: e => !0 === e || !1 === e,
             isObject: T,
             isPlainObject: O,
-            isReadableStream: D,
-            isRequest: N,
+            isReadableStream: N,
+            isRequest: D,
             isResponse: U,
             isHeaders: J,
             isUndefined: A,
@@ -899,7 +899,7 @@
                     return r;
                 case "utf8":
                 case "utf-8":
-                    return N(e).length;
+                    return D(e).length;
                 case "ucs2":
                 case "ucs-2":
                 case "utf16le":
@@ -910,7 +910,7 @@
                 case "base64":
                     return U(e).length;
                 default:
-                    if (a) return s ? -1 : N(e).length;
+                    if (a) return s ? -1 : D(e).length;
                     t = ("" + t).toLowerCase(), a = !0
             }
         }
@@ -1244,7 +1244,7 @@
                     }(this, e, t, r);
                 case "utf8":
                 case "utf-8":
-                    return a = t, n = r, J(N(e, this.length - a), this, a, n);
+                    return a = t, n = r, J(D(e, this.length - a), this, a, n);
                 case "ascii":
                 case "latin1":
                 case "binary":
@@ -1530,9 +1530,9 @@
                 a = r;
             return Number.isInteger(r) && Math.abs(r) > 0x100000000 ? a = C(String(r)) : "bigint" == typeof r && (a = String(r), (r > BigInt(2) ** BigInt(32) || r < -(BigInt(2) ** BigInt(32))) && (a = C(a)), a += "n"), s += ` It must be ${t}. Received ${a}`
         }, RangeError);
-        let D = /[^+/0-9A-Za-z-_]/g;
+        let N = /[^+/0-9A-Za-z-_]/g;
 
-        function N(e, t) {
+        function D(e, t) {
             let r;
             t = t || 1 / 0;
             let s = e.length,
@@ -1573,7 +1573,7 @@
 
         function U(e) {
             return a.toByteArray(function(e) {
-                if ((e = (e = e.split("=")[0]).trim().replace(D, "")).length < 2) return "";
+                if ((e = (e = e.split("=")[0]).trim().replace(N, "")).length < 2) return "";
                 for (; e.length % 4 != 0;) e += "=";
                 return e
             }(e))
@@ -3463,8 +3463,12 @@
             async create(e) {
                 if (!this.sdkConfiguration.shieldConfiguration) throw Error("shieldConfiguration is required");
                 let t = await this.ensureConnection(),
-                    r = await this.buildIFrameRequestConfiguration(),
-                    s = {
+                    r = await this.buildIFrameRequestConfiguration();
+                r.chainId = e.chainId, r.password = e?.entropy?.recoveryPassword ?? null, r.recovery = {
+                    ...r.recovery,
+                    encryptionSession: e?.entropy?.encryptionSession
+                };
+                let s = {
                         uuid: (0, u.randomUUID)(),
                         action: h.Event.CREATE,
                         recovery: r.recovery,
@@ -4763,7 +4767,7 @@
     b25yF: [function(e, t, r, s) {
         var a = e("@parcel/transformer-js/src/esmodule-helpers.js");
         a.defineInteropFlag(r), a.export(r, "PACKAGE", () => i), a.export(r, "VERSION", () => n);
-        let n = "0.9.7",
+        let n = "0.9.8",
             i = "@openfort/openfort-js"
     }, {
         "@parcel/transformer-js/src/esmodule-helpers.js": "cI3Jn"
@@ -7076,7 +7080,7 @@
     }],
     kXgGE: [function(e, t, r, s) {
         var a = e("@parcel/transformer-js/src/esmodule-helpers.js");
-        a.defineInteropFlag(r), a.export(r, "compactDecrypt", () => n.compactDecrypt), a.export(r, "flattenedDecrypt", () => i.flattenedDecrypt), a.export(r, "generalDecrypt", () => o.generalDecrypt), a.export(r, "GeneralEncrypt", () => l.GeneralEncrypt), a.export(r, "compactVerify", () => c.compactVerify), a.export(r, "flattenedVerify", () => d.flattenedVerify), a.export(r, "generalVerify", () => u.generalVerify), a.export(r, "jwtVerify", () => p.jwtVerify), a.export(r, "jwtDecrypt", () => f.jwtDecrypt), a.export(r, "CompactEncrypt", () => h.CompactEncrypt), a.export(r, "FlattenedEncrypt", () => y.FlattenedEncrypt), a.export(r, "CompactSign", () => m.CompactSign), a.export(r, "FlattenedSign", () => g.FlattenedSign), a.export(r, "GeneralSign", () => E.GeneralSign), a.export(r, "SignJWT", () => w.SignJWT), a.export(r, "EncryptJWT", () => j.EncryptJWT), a.export(r, "calculateJwkThumbprint", () => b.calculateJwkThumbprint), a.export(r, "calculateJwkThumbprintUri", () => b.calculateJwkThumbprintUri), a.export(r, "EmbeddedJWK", () => A.EmbeddedJWK), a.export(r, "createLocalJWKSet", () => v.createLocalJWKSet), a.export(r, "createRemoteJWKSet", () => I.createRemoteJWKSet), a.export(r, "jwksCache", () => I.jwksCache), a.export(r, "experimental_jwksCache", () => I.experimental_jwksCache), a.export(r, "UnsecuredJWT", () => R.UnsecuredJWT), a.export(r, "exportPKCS8", () => S.exportPKCS8), a.export(r, "exportSPKI", () => S.exportSPKI), a.export(r, "exportJWK", () => S.exportJWK), a.export(r, "importSPKI", () => T.importSPKI), a.export(r, "importPKCS8", () => T.importPKCS8), a.export(r, "importX509", () => T.importX509), a.export(r, "importJWK", () => T.importJWK), a.export(r, "decodeProtectedHeader", () => O.decodeProtectedHeader), a.export(r, "decodeJwt", () => _.decodeJwt), a.export(r, "errors", () => C), a.export(r, "generateKeyPair", () => k.generateKeyPair), a.export(r, "generateSecret", () => P.generateSecret), a.export(r, "base64url", () => x), a.export(r, "cryptoRuntime", () => N.default);
+        a.defineInteropFlag(r), a.export(r, "compactDecrypt", () => n.compactDecrypt), a.export(r, "flattenedDecrypt", () => i.flattenedDecrypt), a.export(r, "generalDecrypt", () => o.generalDecrypt), a.export(r, "GeneralEncrypt", () => l.GeneralEncrypt), a.export(r, "compactVerify", () => c.compactVerify), a.export(r, "flattenedVerify", () => d.flattenedVerify), a.export(r, "generalVerify", () => u.generalVerify), a.export(r, "jwtVerify", () => p.jwtVerify), a.export(r, "jwtDecrypt", () => f.jwtDecrypt), a.export(r, "CompactEncrypt", () => h.CompactEncrypt), a.export(r, "FlattenedEncrypt", () => y.FlattenedEncrypt), a.export(r, "CompactSign", () => m.CompactSign), a.export(r, "FlattenedSign", () => g.FlattenedSign), a.export(r, "GeneralSign", () => E.GeneralSign), a.export(r, "SignJWT", () => w.SignJWT), a.export(r, "EncryptJWT", () => j.EncryptJWT), a.export(r, "calculateJwkThumbprint", () => b.calculateJwkThumbprint), a.export(r, "calculateJwkThumbprintUri", () => b.calculateJwkThumbprintUri), a.export(r, "EmbeddedJWK", () => A.EmbeddedJWK), a.export(r, "createLocalJWKSet", () => v.createLocalJWKSet), a.export(r, "createRemoteJWKSet", () => I.createRemoteJWKSet), a.export(r, "jwksCache", () => I.jwksCache), a.export(r, "experimental_jwksCache", () => I.experimental_jwksCache), a.export(r, "UnsecuredJWT", () => R.UnsecuredJWT), a.export(r, "exportPKCS8", () => S.exportPKCS8), a.export(r, "exportSPKI", () => S.exportSPKI), a.export(r, "exportJWK", () => S.exportJWK), a.export(r, "importSPKI", () => T.importSPKI), a.export(r, "importPKCS8", () => T.importPKCS8), a.export(r, "importX509", () => T.importX509), a.export(r, "importJWK", () => T.importJWK), a.export(r, "decodeProtectedHeader", () => O.decodeProtectedHeader), a.export(r, "decodeJwt", () => _.decodeJwt), a.export(r, "errors", () => C), a.export(r, "generateKeyPair", () => k.generateKeyPair), a.export(r, "generateSecret", () => P.generateSecret), a.export(r, "base64url", () => x), a.export(r, "cryptoRuntime", () => D.default);
         var n = e("./jwe/compact/decrypt.js"),
             i = e("./jwe/flattened/decrypt.js"),
             o = e("./jwe/general/decrypt.js"),
@@ -7106,8 +7110,8 @@
             k = e("./key/generate_key_pair.js"),
             P = e("./key/generate_secret.js"),
             x = e("./util/base64url.js"),
-            D = e("./util/runtime.js"),
-            N = a.interopDefault(D)
+            N = e("./util/runtime.js"),
+            D = a.interopDefault(N)
     }, {
         "./jwe/compact/decrypt.js": "7DFBy",
         "./jwe/flattened/decrypt.js": "luo4b",
@@ -10947,26 +10951,25 @@ ${r}
     }],
     cN17n: [function(e, t, r, s) {
         var a = e("@parcel/transformer-js/src/esmodule-helpers.js");
-        a.defineInteropFlag(r), a.export(r, "EmbeddedWalletApi", () => b);
+        a.defineInteropFlag(r), a.export(r, "EmbeddedWalletApi", () => j);
         var n = e("../../../packages/internal/openapi-clients/dist/index.js"),
-            i = e("../storage/istorage.js"),
-            o = e("../core/configuration/account.js"),
-            l = e("../core/configuration/authentication.js"),
-            c = e("../core/config/config.js"),
-            d = e("../core/errors/openfortError.js"),
-            u = e("../wallets/evm/walletHelpers.js"),
-            p = e("../wallets/evm/evmProvider.js");
+            i = e("../core/configuration/account.js"),
+            o = e("../core/configuration/authentication.js"),
+            l = e("../core/config/config.js"),
+            c = e("../core/errors/openfortError.js"),
+            d = e("../wallets/evm/walletHelpers.js"),
+            u = e("../wallets/evm/evmProvider.js");
         e("../wallets/evm/types.js");
-        var f = e("../wallets/evm/provider/eip6963.js"),
-            h = e("../types/types.js"),
-            y = e("../wallets/iframeManager.js"),
-            m = e("../wallets/embedded.js");
+        var p = e("../wallets/evm/provider/eip6963.js"),
+            f = e("../types/types.js"),
+            h = e("../wallets/iframeManager.js"),
+            y = e("../wallets/embedded.js");
         e("../wallets/messaging/browserMessenger/backwardCompatibility.js");
-        var g = e("../wallets/messaging/browserMessenger/messengers/WindowMessenger.js"),
-            E = a.interopDefault(g),
-            w = e("../wallets/messaging/ReactNativeMessenger.js"),
-            j = e("../utils/debug.js");
-        class b {
+        var m = e("../wallets/messaging/browserMessenger/messengers/WindowMessenger.js"),
+            g = a.interopDefault(m),
+            E = e("../wallets/messaging/ReactNativeMessenger.js"),
+            w = e("../utils/debug.js");
+        class j {
             storage;
             validateAndRefreshToken;
             ensureInitialized;
@@ -10979,46 +10982,46 @@ ${r}
             messagePoster = null;
             messenger = null;
             constructor(e, t, r, s) {
-                this.storage = e, this.validateAndRefreshToken = t, this.ensureInitialized = r, this.eventEmitter = s, this.eventEmitter.on(h.OpenfortEvents.TOKEN_REFRESHED, () => {
-                    (0, j.debugLog)("Handling token refresh event in EmbeddedWalletApi"), this.handleTokenRefreshed()
-                }), this.eventEmitter.on(h.OpenfortEvents.LOGGED_OUT, () => {
-                    (0, j.debugLog)("Handling logout event in EmbeddedWalletApi"), this.handleLogout()
+                this.storage = e, this.validateAndRefreshToken = t, this.ensureInitialized = r, this.eventEmitter = s, this.eventEmitter.on(f.OpenfortEvents.TOKEN_REFRESHED, () => {
+                    (0, w.debugLog)("Handling token refresh event in EmbeddedWalletApi"), this.handleTokenRefreshed()
+                }), this.eventEmitter.on(f.OpenfortEvents.LOGGED_OUT, () => {
+                    (0, w.debugLog)("Handling logout event in EmbeddedWalletApi"), this.handleLogout()
                 })
             }
             get backendApiClients() {
-                let e = c.SDKConfiguration.fromStorage();
-                if (!e) throw new(0, d.OpenfortError)("Configuration not found", d.OpenfortErrorType.INVALID_CONFIGURATION);
+                let e = l.SDKConfiguration.fromStorage();
+                if (!e) throw new(0, c.OpenfortError)("Configuration not found", c.OpenfortErrorType.INVALID_CONFIGURATION);
                 return new(0, n.BackendApiClients)({
                     basePath: e.backendUrl,
                     accessToken: e.baseConfiguration.publishableKey
                 })
             }
             async getIframeManager() {
-                if ((0, j.debugLog)("[HANDSHAKE DEBUG] getIframeManager called"), this.iframeManager) return (0, j.debugLog)("[HANDSHAKE DEBUG] Returning existing iframeManager instance"), this.iframeManager;
-                if (this.iframeManagerPromise) return (0, j.debugLog)("[HANDSHAKE DEBUG] Returning existing iframeManagerPromise"), this.iframeManagerPromise;
-                (0, j.debugLog)("[HANDSHAKE DEBUG] Creating new iframeManager"), this.iframeManagerPromise = this.createIframeManager();
+                if ((0, w.debugLog)("[HANDSHAKE DEBUG] getIframeManager called"), this.iframeManager) return (0, w.debugLog)("[HANDSHAKE DEBUG] Returning existing iframeManager instance"), this.iframeManager;
+                if (this.iframeManagerPromise) return (0, w.debugLog)("[HANDSHAKE DEBUG] Returning existing iframeManagerPromise"), this.iframeManagerPromise;
+                (0, w.debugLog)("[HANDSHAKE DEBUG] Creating new iframeManager"), this.iframeManagerPromise = this.createIframeManager();
                 try {
-                    return (0, j.debugLog)("[HANDSHAKE DEBUG] Awaiting iframeManager creation"), this.iframeManager = await this.iframeManagerPromise, (0, j.debugLog)("[HANDSHAKE DEBUG] IframeManager created successfully"), this.iframeManagerPromise = null, this.iframeManager
+                    return (0, w.debugLog)("[HANDSHAKE DEBUG] Awaiting iframeManager creation"), this.iframeManager = await this.iframeManagerPromise, (0, w.debugLog)("[HANDSHAKE DEBUG] IframeManager created successfully"), this.iframeManagerPromise = null, this.iframeManager
                 } catch (e) {
-                    throw (0, j.debugLog)("[HANDSHAKE DEBUG] Error creating iframeManager:", e), this.iframeManagerPromise = null, e
+                    throw (0, w.debugLog)("[HANDSHAKE DEBUG] Error creating iframeManager:", e), this.iframeManagerPromise = null, e
                 }
             }
             async createIframeManager() {
                 let e;
-                (0, j.debugLog)("[HANDSHAKE DEBUG] createIframeManager starting");
-                let t = c.SDKConfiguration.fromStorage();
-                if (!t) throw (0, j.debugLog)("[HANDSHAKE DEBUG] Configuration not found"), new(0, d.OpenfortError)("Configuration not found", d.OpenfortErrorType.INVALID_CONFIGURATION);
-                if ((0, j.debugLog)("[HANDSHAKE DEBUG] Configuration found"), this.messagePoster)(0, j.debugLog)("[HANDSHAKE DEBUG] Creating ReactNativeMessenger with messagePoster"), this.messenger = new(0, w.ReactNativeMessenger)(this.messagePoster), (0, j.debugLog)("[HANDSHAKE DEBUG] Created new ReactNativeMessenger instance"), e = this.messenger;
+                (0, w.debugLog)("[HANDSHAKE DEBUG] createIframeManager starting");
+                let t = l.SDKConfiguration.fromStorage();
+                if (!t) throw (0, w.debugLog)("[HANDSHAKE DEBUG] Configuration not found"), new(0, c.OpenfortError)("Configuration not found", c.OpenfortErrorType.INVALID_CONFIGURATION);
+                if ((0, w.debugLog)("[HANDSHAKE DEBUG] Configuration found"), this.messagePoster)(0, w.debugLog)("[HANDSHAKE DEBUG] Creating ReactNativeMessenger with messagePoster"), this.messenger = new(0, E.ReactNativeMessenger)(this.messagePoster), (0, w.debugLog)("[HANDSHAKE DEBUG] Created new ReactNativeMessenger instance"), e = this.messenger;
                 else {
-                    (0, j.debugLog)("[HANDSHAKE DEBUG] Creating WindowMessenger for browser mode");
+                    (0, w.debugLog)("[HANDSHAKE DEBUG] Creating WindowMessenger for browser mode");
                     let r = this.createIframe(t.iframeUrl),
                         s = new URL(t.iframeUrl).origin;
-                    e = new(0, E.default)({
+                    e = new(0, g.default)({
                         remoteWindow: r.contentWindow,
                         allowedOrigins: [s]
-                    }), (0, j.debugLog)("[HANDSHAKE DEBUG] Created WindowMessenger")
+                    }), (0, w.debugLog)("[HANDSHAKE DEBUG] Created WindowMessenger")
                 }
-                return (0, j.debugLog)("[HANDSHAKE DEBUG] Creating IframeManager instance"), new(0, y.IframeManager)(t, this.storage, e)
+                return (0, w.debugLog)("[HANDSHAKE DEBUG] Creating IframeManager instance"), new(0, h.IframeManager)(t, this.storage, e)
             }
             async ensureSigner() {
                 if (this.signer) return this.signer;
@@ -11034,31 +11037,31 @@ ${r}
             }
             async createSigner() {
                 let e = await this.getIframeManager();
-                return new(0, m.EmbeddedSigner)(e, this.storage, this.backendApiClients, this.eventEmitter)
+                return new(0, y.EmbeddedSigner)(e, this.storage, this.backendApiClients, this.eventEmitter)
             }
             createIframe(e) {
-                if ("undefined" == typeof document) throw new(0, d.OpenfortError)("Document is not available. Please provide a message poster for non-browser environments.", d.OpenfortErrorType.INVALID_CONFIGURATION);
+                if ("undefined" == typeof document) throw new(0, c.OpenfortError)("Document is not available. Please provide a message poster for non-browser environments.", c.OpenfortErrorType.INVALID_CONFIGURATION);
                 let t = document.getElementById("openfort-iframe");
                 t && t.remove();
                 let r = document.createElement("iframe");
-                return r.style.display = "none", r.id = "openfort-iframe", r.src = e, document.body.appendChild(r), (0, j.debugLog)("Iframe created and appended to document"), r
+                return r.style.display = "none", r.id = "openfort-iframe", r.src = e, document.body.appendChild(r), (0, w.debugLog)("Iframe created and appended to document"), r
             }
             async configure(e) {
                 let t;
                 await this.validateAndRefreshToken();
                 let r = e.recoveryParams ?? {
-                    recoveryMethod: h.RecoveryMethod.AUTOMATIC
+                    recoveryMethod: f.RecoveryMethod.AUTOMATIC
                 };
-                (r.recoveryMethod === h.RecoveryMethod.PASSWORD || e.shieldAuthentication?.encryptionSession) && (t = {
+                (r.recoveryMethod === f.RecoveryMethod.PASSWORD || e.shieldAuthentication?.encryptionSession) && (t = {
                     encryptionSession: e.shieldAuthentication?.encryptionSession,
-                    recoveryPassword: r.recoveryMethod === h.RecoveryMethod.PASSWORD ? r.password : void 0
+                    recoveryPassword: r.recoveryMethod === f.RecoveryMethod.PASSWORD ? r.password : void 0
                 });
                 let s = await this.ensureSigner(),
                     a = await s.configure({
                         chainId: e.chainId,
                         entropy: t
                     }),
-                    n = await l.Authentication.fromStorage(this.storage);
+                    n = await o.Authentication.fromStorage(this.storage);
                 return {
                     id: a.id,
                     chainId: a.chainId,
@@ -11074,11 +11077,11 @@ ${r}
                 let t;
                 await this.validateAndRefreshToken();
                 let r = e.recoveryParams ?? {
-                    recoveryMethod: h.RecoveryMethod.AUTOMATIC
+                    recoveryMethod: f.RecoveryMethod.AUTOMATIC
                 };
-                (r.recoveryMethod === h.RecoveryMethod.PASSWORD || e.shieldAuthentication?.encryptionSession) && (t = {
+                (r.recoveryMethod === f.RecoveryMethod.PASSWORD || e.shieldAuthentication?.encryptionSession) && (t = {
                     encryptionSession: e.shieldAuthentication?.encryptionSession,
-                    recoveryPassword: r.recoveryMethod === h.RecoveryMethod.PASSWORD ? r.password : void 0
+                    recoveryPassword: r.recoveryMethod === f.RecoveryMethod.PASSWORD ? r.password : void 0
                 });
                 let s = await this.ensureSigner(),
                     a = await s.create({
@@ -11086,9 +11089,8 @@ ${r}
                         chainType: e.chainType,
                         chainId: e.chainId,
                         entropy: t
-                    });
-                this.signer = null, this.signerPromise = null;
-                let n = await l.Authentication.fromStorage(this.storage);
+                    }),
+                    n = await o.Authentication.fromStorage(this.storage);
                 return {
                     id: a.id,
                     chainId: a.chainId,
@@ -11104,19 +11106,18 @@ ${r}
                 let t;
                 await this.validateAndRefreshToken();
                 let r = e.recoveryParams ?? {
-                    recoveryMethod: h.RecoveryMethod.AUTOMATIC
+                    recoveryMethod: f.RecoveryMethod.AUTOMATIC
                 };
-                (r.recoveryMethod === h.RecoveryMethod.PASSWORD || e.shieldAuthentication?.encryptionSession) && (t = {
+                (r.recoveryMethod === f.RecoveryMethod.PASSWORD || e.shieldAuthentication?.encryptionSession) && (t = {
                     encryptionSession: e.shieldAuthentication?.encryptionSession,
-                    recoveryPassword: r.recoveryMethod === h.RecoveryMethod.PASSWORD ? r.password : void 0
+                    recoveryPassword: r.recoveryMethod === f.RecoveryMethod.PASSWORD ? r.password : void 0
                 });
                 let s = await this.ensureSigner(),
                     a = await s.recover({
                         account: e.account,
                         entropy: t
-                    });
-                this.signer = null, this.signerPromise = null;
-                let n = await l.Authentication.fromStorage(this.storage);
+                    }),
+                    n = await o.Authentication.fromStorage(this.storage);
                 return {
                     id: a.id,
                     chainId: a.chainId,
@@ -11140,17 +11141,17 @@ ${r}
             async signTypedData(t, r, s) {
                 await this.validateAndRefreshToken();
                 let a = await this.ensureSigner(),
-                    n = await o.Account.fromStorage(this.storage);
-                if (!n) throw new(0, d.OpenfortError)("No account found", d.OpenfortErrorType.MISSING_SIGNER_ERROR);
-                let i = {
+                    n = await i.Account.fromStorage(this.storage);
+                if (!n) throw new(0, c.OpenfortError)("No account found", c.OpenfortErrorType.MISSING_SIGNER_ERROR);
+                let o = {
                     ...r
                 };
-                delete i.EIP712Domain;
+                delete o.EIP712Domain;
                 let {
                     _TypedDataEncoder: l
-                } = await e("e9b2dbfd4a72e730"), c = l.hash(t, i, s);
-                return await (0, u.signMessage)({
-                    hash: c,
+                } = await e("e9b2dbfd4a72e730"), u = l.hash(t, o, s);
+                return await (0, d.signMessage)({
+                    hash: u,
                     implementationType: n.implementationType || n.type,
                     chainId: Number(n.chainId),
                     signer: a,
@@ -11172,7 +11173,7 @@ ${r}
             }) {
                 await this.validateAndRefreshToken();
                 let s = await this.ensureSigner();
-                if ("password" === e && !t) throw new(0, d.OpenfortError)("Recovery password is required", d.OpenfortErrorType.INVALID_CONFIGURATION);
+                if ("password" === e && !t) throw new(0, c.OpenfortError)("Recovery password is required", c.OpenfortErrorType.INVALID_CONFIGURATION);
                 await s.setEmbeddedRecovery({
                     recoveryMethod: e,
                     recoveryPassword: t,
@@ -11180,10 +11181,10 @@ ${r}
                 })
             }
             async get() {
-                let e = await o.Account.fromStorage(this.storage);
-                if (!e) throw new(0, d.OpenfortError)("No signer configured", d.OpenfortErrorType.MISSING_SIGNER_ERROR);
-                let t = await l.Authentication.fromStorage(this.storage);
-                if (!t) throw new(0, d.OpenfortError)("No access token found", d.OpenfortErrorType.NOT_LOGGED_IN_ERROR);
+                let e = await i.Account.fromStorage(this.storage);
+                if (!e) throw new(0, c.OpenfortError)("No signer configured", c.OpenfortErrorType.MISSING_SIGNER_ERROR);
+                let t = await o.Authentication.fromStorage(this.storage);
+                if (!t) throw new(0, c.OpenfortError)("No access token found", c.OpenfortErrorType.NOT_LOGGED_IN_ERROR);
                 return {
                     id: e.id,
                     chainId: e.chainId,
@@ -11196,13 +11197,13 @@ ${r}
                 }
             }
             async list() {
-                let e = c.SDKConfiguration.fromStorage();
-                if (!e) throw new(0, d.OpenfortError)("Configuration not found", d.OpenfortErrorType.INVALID_CONFIGURATION);
+                let e = l.SDKConfiguration.fromStorage();
+                if (!e) throw new(0, c.OpenfortError)("Configuration not found", c.OpenfortErrorType.INVALID_CONFIGURATION);
                 await this.validateAndRefreshToken();
-                let t = await l.Authentication.fromStorage(this.storage);
-                if (!t) throw new(0, d.OpenfortError)("No access token found", d.OpenfortErrorType.NOT_LOGGED_IN_ERROR);
-                return (0, d.withOpenfortError)(async () => (await this.backendApiClients.accountsApi.getAccountsV2({
-                    accountType: h.AccountTypeEnum.SMART_ACCOUNT
+                let t = await o.Authentication.fromStorage(this.storage);
+                if (!t) throw new(0, c.OpenfortError)("No access token found", c.OpenfortErrorType.NOT_LOGGED_IN_ERROR);
+                return (0, c.withOpenfortError)(async () => (await this.backendApiClients.accountsApi.getAccountsV2({
+                    accountType: f.AccountTypeEnum.SMART_ACCOUNT
                 }, {
                     headers: {
                         authorization: `Bearer ${e.baseConfiguration.publishableKey}`,
@@ -11221,15 +11222,15 @@ ${r}
                     implementationType: e.smartAccount?.implementationType,
                     chainId: e.chainId
                 })), {
-                    default: d.OpenfortErrorType.AUTHENTICATION_ERROR
+                    default: c.OpenfortErrorType.AUTHENTICATION_ERROR
                 })
             }
             async getEmbeddedState() {
                 try {
-                    if (!await l.Authentication.fromStorage(this.storage)) return h.EmbeddedState.UNAUTHENTICATED;
-                    return await o.Account.fromStorage(this.storage) ? h.EmbeddedState.READY : h.EmbeddedState.EMBEDDED_SIGNER_NOT_CONFIGURED
+                    if (!await o.Authentication.fromStorage(this.storage)) return f.EmbeddedState.UNAUTHENTICATED;
+                    return await i.Account.fromStorage(this.storage) ? f.EmbeddedState.READY : f.EmbeddedState.EMBEDDED_SIGNER_NOT_CONFIGURED
                 } catch (e) {
-                    return (0, j.debugLog)("Failed to get embedded state:", e), h.EmbeddedState.UNAUTHENTICATED
+                    return (0, w.debugLog)("Failed to get embedded state:", e), f.EmbeddedState.UNAUTHENTICATED
                 }
             }
             async getEthereumProvider(e) {
@@ -11238,9 +11239,9 @@ ${r}
                         announceProvider: !0,
                         ...e
                     },
-                    r = await l.Authentication.fromStorage(this.storage),
-                    s = await o.Account.fromStorage(this.storage);
-                return this.provider ? this.provider && t.policy && this.provider.updatePolicy(t.policy) : (this.provider = new(0, p.EvmProvider)({
+                    r = await o.Authentication.fromStorage(this.storage),
+                    s = await i.Account.fromStorage(this.storage);
+                return this.provider ? this.provider && t.policy && this.provider.updatePolicy(t.policy) : (this.provider = new(0, u.EvmProvider)({
                     storage: this.storage,
                     openfortEventEmitter: this.eventEmitter,
                     ensureSigner: this.ensureSigner.bind(this),
@@ -11250,9 +11251,9 @@ ${r}
                     policyId: t.policy,
                     validateAndRefreshSession: this.validateAndRefreshToken.bind(this),
                     chains: t.chains
-                }), t.announceProvider && (0, f.announceProvider)({
+                }), t.announceProvider && (0, p.announceProvider)({
                     info: {
-                        ...f.openfortProviderInfo,
+                        ...p.openfortProviderInfo,
                         ...t.providerInfo
                     },
                     provider: this.provider
@@ -11265,7 +11266,7 @@ ${r}
                     });
                     let t = await this.getIframeManager();
                     if (!t.isLoaded()) return !1;
-                    let r = await l.Authentication.fromStorage(this.storage);
+                    let r = await o.Authentication.fromStorage(this.storage);
                     if (r) try {
                         return await t.getCurrentDevice(r.player), !0
                     } catch (e) {
@@ -11273,35 +11274,35 @@ ${r}
                     }
                     return t.isLoaded()
                 } catch (e) {
-                    return (0, j.debugLog)("Ping failed:", e), !1
+                    return (0, w.debugLog)("Ping failed:", e), !1
                 }
             }
             getURL() {
-                let e = c.SDKConfiguration.fromStorage();
-                if (!e) throw new(0, d.OpenfortError)("Configuration not found", d.OpenfortErrorType.INVALID_CONFIGURATION);
+                let e = l.SDKConfiguration.fromStorage();
+                if (!e) throw new(0, c.OpenfortError)("Configuration not found", c.OpenfortErrorType.INVALID_CONFIGURATION);
                 return e.iframeUrl
             }
             async setMessagePoster(e) {
-                if (!e || "function" != typeof e.postMessage) throw new(0, d.OpenfortError)("Invalid message poster", d.OpenfortErrorType.INVALID_CONFIGURATION);
+                if (!e || "function" != typeof e.postMessage) throw new(0, c.OpenfortError)("Invalid message poster", c.OpenfortErrorType.INVALID_CONFIGURATION);
                 this.messagePoster = e, this.messenger && this.messenger.destroy(), this.iframeManager && this.iframeManager.destroy(), this.signer = null, this.signerPromise = null, this.iframeManager = null, this.iframeManagerPromise = null, this.messenger = null
             }
             async handleTokenRefreshed() {
                 if (this.iframeManager) try {
-                    await this.iframeManager.updateAuthentication(), (0, j.debugLog)("Updated IframeManager authentication after token refresh")
+                    await this.iframeManager.updateAuthentication(), (0, w.debugLog)("Updated IframeManager authentication after token refresh")
                 } catch (e) {
-                    (0, j.debugLog)("Failed to update IframeManager authentication:", e)
-                } else(0, j.debugLog)("IframeManager not initialized, skipping authentication update")
+                    (0, w.debugLog)("Failed to update IframeManager authentication:", e)
+                } else(0, w.debugLog)("IframeManager not initialized, skipping authentication update")
             }
             async handleLogout() {
-                this.provider = null, this.messenger = null, this.iframeManager = null, this.iframeManagerPromise = null, this.signer = null, this.signerPromise = null, this.storage.remove(i.StorageKeys.ACCOUNT)
+                this.signer && await this.signer.disconnect(), this.provider = null, this.messenger = null, this.iframeManager = null, this.iframeManagerPromise = null, this.signer = null, this.signerPromise = null
             }
             async onMessage(e) {
-                if (!e || "object" != typeof e) return void(0, j.debugLog)("Invalid message received:", e);
-                (0, j.debugLog)("[HANDSHAKE DEBUG] EmbeddedWalletApi onMessage:", e);
+                if (!e || "object" != typeof e) return void(0, w.debugLog)("Invalid message received:", e);
+                (0, w.debugLog)("[HANDSHAKE DEBUG] EmbeddedWalletApi onMessage:", e);
                 let t = "penpal" === e.namespace && "SYN" === e.type || e.penpal && "string" == typeof e.penpal;
-                if (t && this.messenger && this.messagePoster) return (0, j.debugLog)("[HANDSHAKE DEBUG] Passing message directly to existing ReactNativeMessenger"), void this.messenger.handleMessage(e);
+                if (t && this.messenger && this.messagePoster) return (0, w.debugLog)("[HANDSHAKE DEBUG] Passing message directly to existing ReactNativeMessenger"), void this.messenger.handleMessage(e);
                 let r = await this.getIframeManager();
-                (0, j.debugLog)(`[HANDSHAKE DEBUG] IframeManager obtained, isLoaded: ${r.isLoaded()}`), t && !r.isLoaded() && (0, j.debugLog)("[HANDSHAKE DEBUG] Received penpal message before connection initialized, setting up connection..."), (0, j.debugLog)("[HANDSHAKE DEBUG] Calling iframeManager.onMessage"), await r.onMessage(e), (0, j.debugLog)("[HANDSHAKE DEBUG] iframeManager.onMessage completed")
+                (0, w.debugLog)(`[HANDSHAKE DEBUG] IframeManager obtained, isLoaded: ${r.isLoaded()}`), t && !r.isLoaded() && (0, w.debugLog)("[HANDSHAKE DEBUG] Received penpal message before connection initialized, setting up connection..."), (0, w.debugLog)("[HANDSHAKE DEBUG] Calling iframeManager.onMessage"), await r.onMessage(e), (0, w.debugLog)("[HANDSHAKE DEBUG] iframeManager.onMessage completed")
             }
             isReady() {
                 return this.iframeManager?.isLoaded() || !1
@@ -11309,7 +11310,6 @@ ${r}
         }
     }, {
         "../../../packages/internal/openapi-clients/dist/index.js": "5IDb0",
-        "../storage/istorage.js": "8EpXG",
         "../core/configuration/account.js": "f6fHD",
         "../core/configuration/authentication.js": "1Nfd7",
         "../core/config/config.js": "8pPBU",
@@ -12383,16 +12383,17 @@ ${r}
     }],
     "18PER": [function(e, t, r, s) {
         var a = e("@parcel/transformer-js/src/esmodule-helpers.js");
-        a.defineInteropFlag(r), a.export(r, "EmbeddedSigner", () => d);
+        a.defineInteropFlag(r), a.export(r, "EmbeddedSigner", () => u);
         var n = e("../core/configuration/authentication.js"),
             i = e("../core/errors/openfortError.js"),
             o = e("../types/types.js");
         e("./types.js");
         var l = e("../core/configuration/account.js");
-        e("./messaging/browserMessenger/backwardCompatibility.js"), e("../storage/istorage.js");
-        var c = e("../core/config/config.js");
+        e("./messaging/browserMessenger/backwardCompatibility.js");
+        var c = e("../storage/istorage.js"),
+            d = e("../core/config/config.js");
         e("../core/errors/sentry.js"), e("jose"), e("./evm/types.js"), e("./evm/JsonRpcError.js"), e("eventemitter3"), e("./evm/provider/eip6963.js");
-        class d {
+        class u {
             iframeManager;
             storage;
             backendApiClients;
@@ -12404,7 +12405,7 @@ ${r}
                 let t = await this.iframeManager.configure(e),
                     r = await n.Authentication.fromStorage(this.storage);
                 if (!r) throw new(0, i.OpenfortError)("No access token found", i.OpenfortErrorType.NOT_LOGGED_IN_ERROR);
-                let s = c.SDKConfiguration.fromStorage();
+                let s = d.SDKConfiguration.fromStorage();
                 if (!s) throw new(0, i.OpenfortError)("Configuration not found", i.OpenfortErrorType.INVALID_CONFIGURATION);
                 return t?.account || (0, i.withOpenfortError)(async () => {
                     let e = await this.backendApiClients.accountsApi.getAccountsV2({
@@ -12485,7 +12486,7 @@ ${r}
                 let t = await this.iframeManager.create(e),
                     r = await n.Authentication.fromStorage(this.storage);
                 if (!r) throw new(0, i.OpenfortError)("No access token found", i.OpenfortErrorType.NOT_LOGGED_IN_ERROR);
-                let s = c.SDKConfiguration.fromStorage();
+                let s = d.SDKConfiguration.fromStorage();
                 if (!s) throw new(0, i.OpenfortError)("Configuration not found", i.OpenfortErrorType.INVALID_CONFIGURATION);
                 return (0, i.withOpenfortError)(async () => {
                     let e = await this.backendApiClients.accountsApi.getAccountV2({
@@ -12520,7 +12521,7 @@ ${r}
                 let t = await this.iframeManager.recover(e),
                     r = await n.Authentication.fromStorage(this.storage);
                 if (!r) throw new(0, i.OpenfortError)("No access token found", i.OpenfortErrorType.NOT_LOGGED_IN_ERROR);
-                let s = c.SDKConfiguration.fromStorage();
+                let s = d.SDKConfiguration.fromStorage();
                 if (!s) throw new(0, i.OpenfortError)("Configuration not found", i.OpenfortErrorType.INVALID_CONFIGURATION);
                 return (0, i.withOpenfortError)(async () => {
                     let e = await this.backendApiClients.accountsApi.getAccountV2({
@@ -12559,7 +12560,7 @@ ${r}
                 await this.iframeManager.setEmbeddedRecovery(e, t, r)
             }
             async disconnect() {
-                this.eventEmitter.emit(o.OpenfortEvents.LOGGED_OUT)
+                await this.iframeManager.disconnect(), this.storage.remove(c.StorageKeys.ACCOUNT)
             }
         }
     }, {
