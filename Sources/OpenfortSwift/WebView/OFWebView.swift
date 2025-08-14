@@ -39,13 +39,13 @@ internal class OFWebView: WKWebView {
             }
         }
         
-        addScript(named: "storage", injectionTime: .atDocumentStart)
-        addScript(named: "securestorage", injectionTime: .atDocumentStart)
-        addScript(named: "openfort", injectionTime: .atDocumentStart)
-        addScript(named: "utils", injectionTime: .atDocumentStart)
-        addScript(named: "openfort-sync", injectionTime: .atDocumentStart)
+        addScript(named: "storage", injectionTime: .atDocumentEnd)
+        addScript(named: "securestorage", injectionTime: .atDocumentEnd)
+        addScript(named: "openfort", injectionTime: .atDocumentEnd)
+        addScript(named: "utils", injectionTime: .atDocumentEnd)
+        addScript(named: "openfort-sync", injectionTime: .atDocumentEnd)
         if let script = config?.openfortSyncScript() {
-            let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+            let userScript = WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
             userContentController.addUserScript(userScript)
         }
 
