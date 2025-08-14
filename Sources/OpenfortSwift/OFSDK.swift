@@ -11,7 +11,6 @@ import Combine
 @MainActor
 public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxible, OFEmbeddedWalletAccessable, OFUserAccessable {
     
-    private var _config: OFConfig?
     public static let shared = OFSDK()
     
     public var didLoad: (() -> Void)?
@@ -29,17 +28,12 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     private var embeddedStateTimer: Timer?
     
     @MainActor
-    public static func setupSDK(config: OFConfig) {
+    public static func setupSDK() {
         if initialized {
             return
         }
-        shared._config = config
         shared.setupInstance()
         initialized = true
-    }
-    
-    public var config: OFConfig? {
-        _config
     }
     
     @MainActor
@@ -57,7 +51,7 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
             self?.didFailedToLoad?(error)
         }
         
-        self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler, config: config)
+        self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
         messageHandler.webView = self.webView
     }
     

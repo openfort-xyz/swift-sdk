@@ -12,13 +12,11 @@ internal class OFWebView: WKWebView {
     let fileUrl: URL
     let delegate: WKNavigationDelegate?
     let scriptMessageHandler: WKScriptMessageHandler?
-    private var config: OFConfig?
     
-    init(fileUrl: URL, delegate: WKNavigationDelegate?, scriptMessageHandler: WKScriptMessageHandler?, config: OFConfig?) {
+    init(fileUrl: URL, delegate: WKNavigationDelegate?, scriptMessageHandler: WKScriptMessageHandler?) {
         self.fileUrl = fileUrl
         self.delegate = delegate
         self.scriptMessageHandler = scriptMessageHandler
-        self.config = config
 
         // Configure webpage preferences for JavaScript
         let webPagePreferences = WKWebpagePreferences()
@@ -45,10 +43,11 @@ internal class OFWebView: WKWebView {
         addScript(named: "openfort", injectionTime: .atDocumentStart)
         addScript(named: "utils", injectionTime: .atDocumentEnd)
         addScript(named: "openfort-sync", injectionTime: .atDocumentEnd)
-        if let script = config?.openfortSyncScript() {
-            let userScript = WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+        
+        let script = OFConfig.openfortSyncScript()
+        let userScript = WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
             userContentController.addUserScript(userScript)
-        }
+        
 
         // Configure the web view
         let config = WKWebViewConfiguration()

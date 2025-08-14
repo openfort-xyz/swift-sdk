@@ -1,38 +1,43 @@
 import Foundation
 
-public struct OFConfig: Codable {
-    public let backendUrl: String?
-    public let iframeUrl: String?
-    public let openfortPublishableKey: String
-    public let shieldEncryptionKey: String
-    public let shieldPublishableKey: String
-    public let shieldUrl: String?
+internal struct OFConfig: Codable {
+    let backendUrl: String?
+    let iframeUrl: String?
+    let openfortPublishableKey: String
+    let shieldEncryptionKey: String
+    let shieldPublishableKey: String
+    let shieldUrl: String?
     
-    public static func load(from data: Data?) -> OFConfig? {
-        guard let data = data else {
-            print("❌ empty data.")
+    static func loadFromMainBundle() -> OFConfig? {
+        guard let url = Bundle.main.url(forResource: "OFConfig", withExtension: "plist"),
+              let data = try? Data(contentsOf: url) else {
+            print("OFConfig.plist not found")
             return nil
         }
         
-        let decoder = PropertyListDecoder()
         do {
+            let decoder = PropertyListDecoder()
             return try decoder.decode(OFConfig.self, from: data)
         } catch {
-            print("❌ Failed to decode: \(error)")
+            print("Failed to decode OFConfig.plist:", error)
             return nil
         }
     }
-    
-    
-    func openfortSyncScript() -> String {
+
+    static func openfortSyncScript() -> String {
+        guard let config = loadFromMainBundle() else {
+            print("OFConfig not loaded")
+            return ""
+        }
+        
         var overrides: [String] = []
-        if let iframeURL = iframeUrl, !iframeURL.isEmpty {
+        if let iframeURL = config.iframeUrl, !iframeURL.isEmpty {
             overrides.append("                iframeUrl: '\(iframeURL)',")
         }
-        if let shieldURL = shieldUrl, !shieldURL.isEmpty {
+        if let shieldURL = config.shieldUrl, !shieldURL.isEmpty {
             overrides.append("                shieldUrl: '\(shieldURL)',")
         }
-        if let backendURL = backendUrl, !backendURL.isEmpty {
+        if let backendURL = config.backendUrl, !backendURL.isEmpty {
             overrides.append("                backendUrl: '\(backendURL)',")
         }
         overrides.append("                storage: storage,")
@@ -41,11 +46,11 @@ public struct OFConfig: Codable {
             const storage = new KeychainStorage();
             const openfort = new Openfort({
                 baseConfiguration: {
-                    publishableKey: '\(openfortPublishableKey)',
+                    publishableKey: '\(config.openfortPublishableKey)',
                 },
                 shieldConfiguration: {
-                    shieldPublishableKey: '\(shieldPublishableKey)',
-                    shieldEncryptionKey: '\(shieldEncryptionKey)',
+                    shieldPublishableKey: '\(config.shieldPublishableKey)',
+                    shieldEncryptionKey: '\(config.shieldEncryptionKey)',
                 },
                 overrides: {
         \(overridesString)
