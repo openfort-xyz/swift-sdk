@@ -59,7 +59,7 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     
     private func startPollingEmbeddedState() {
         embeddedStateTimer?.invalidate()
-        embeddedStateTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+        embeddedStateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
             Task { @MainActor in
                 self.getEmbeddedState(completion: { result in
