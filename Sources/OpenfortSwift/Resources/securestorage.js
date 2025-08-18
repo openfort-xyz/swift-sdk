@@ -1,9 +1,9 @@
 //window.webkit?.messageHandlers?.userHandler?.postMessage({ debug: "injectedJS ran!" });
 //
-//window.ReactNativeWebView = window.ReactNativeWebView || {};
-//window.ReactNativeWebView.injectedObjectJson = function() {
-//    return JSON.stringify({ shouldUseAppBackedStorage: true });
-//};
+window.ReactNativeWebView = window.ReactNativeWebView || {};
+window.ReactNativeWebView.injectedObjectJson = function() {
+    return JSON.stringify({ shouldUseAppBackedStorage: true });
+};
 
 class SecureStorage {
     static _pendingRequests = {};
@@ -69,7 +69,7 @@ class SecureStorage {
         }
     }
 }
-window.secureStorage = window.secureStorage || new SecureStorage();
+//window.secureStorage = window.secureStorage || new SecureStorage();
 
 //window.ReactNativeWebView = window.ReactNativeWebView || {};
 //window.ReactNativeWebView.postMessage = function(data) {
@@ -106,6 +106,6 @@ window.secureStorage = window.secureStorage || new SecureStorage();
 //    }
 //};
 
-window.__secureStorageOnResponse = function(response) {
-    SecureStorage.handleResponse(response);
-};
+//window.__secureStorageOnResponse = function(response) {
+//    SecureStorage.handleResponse(response);
+//};
