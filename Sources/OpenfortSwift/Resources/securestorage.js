@@ -101,11 +101,4 @@ window.shouldUseAppBackedStorage = true;
     },
     true
   );
-
-  // Optional: announce readiness to Swift
-  try {
-    if (isSwiftAvailable()) {
-      window.webkit.messageHandlers[HANDLER_NAME].postMessage({ method: 'secureStorageBridgeReady' });
-    }
-  } catch (_) {}
 })();
