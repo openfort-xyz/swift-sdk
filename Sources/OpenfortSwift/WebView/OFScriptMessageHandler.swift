@@ -117,8 +117,22 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     }
     
     private func processMessageForSecureStorage(_ data: [String: Any]) -> Bool {
+        
         guard let event = data["event"] as? String else { return false }
 
+        // If this is already a response payload carrying a failure, just handle the error and stop.
+        if let payload = data["data"] as? [String: Any] {
+            if let success = payload["success"] as? Bool, success == false {
+                let err = (payload["error"] as? String) ?? "Operation failed"
+                handleError(["error": err], method: event)
+                return true
+            } else if let successNum = payload["success"] as? Int, successNum == 0 {
+                let err = (payload["error"] as? String) ?? "Operation failed"
+                handleError(["error": err], method: event)
+                return true
+            }
+        }
+        
         switch event {
         case "app:secure-storage:get":
             guard let event = data["event"] as? String else { return false }
