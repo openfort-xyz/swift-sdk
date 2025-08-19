@@ -96,50 +96,86 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
         }
     }
     
+    /// Serializes a dictionary to JSON and posts it to the page via window.postMessage
+    private func postMessageToJS(_ object: [String: Any]) {
+        guard JSONSerialization.isValidJSONObject(object),
+              let data = try? JSONSerialization.data(withJSONObject: object, options: []),
+              let json = String(data: data, encoding: .utf8) else {
+            print("postMessageToJS: invalid JSON object")
+            return
+        }
+        let js = "window.postMessage(\(json), '*');"
+        webView?.evaluateJavaScript(js, completionHandler: nil)
+    }
+    
     private func processMessageForSecureStorage(_ data: [String: Any]) -> Bool {
         guard let event = data["event"] as? String else { return false }
 
         switch event {
         case "app:secure-storage:get":
-            // Call Swift storage logic, then send value back
-            // Example:
-            if let key = (data["data"] as? [String: Any])?["key"] as? String,
-               let requestId = data["id"] {
-                let value = OFKeychainHelper.retrieve(for: key) ?? ""
-                if !value.isEmpty {
-                    // Try to parse value as JSON
-                    if let data = value.data(using: .utf8),
-                       let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
-                       JSONSerialization.isValidJSONObject(jsonObject) {
-                        // It's a JSON object/array, pass as-is
-                        let js = "window.__keychainOnGet({ requestId: \(requestId), value: \(value) })"
-                        webView?.evaluateJavaScript(js)
-                    } else {
-                        // It's a plain string, escape and quote
-                        let js = "window.__keychainOnGet({ requestId: \(requestId), value: \"\(value)\" })"
-                        webView?.evaluateJavaScript(js)
-                    }
-                } else {
-                    // If nil or empty, send null
-                    let js = "window.__keychainOnGet({ requestId: \(requestId), value: null })"
-                    webView?.evaluateJavaScript(js)
-                }
+            guard let event = data["event"] as? String else { return false }
+            let requestId = data["id"]
+            if let key = (data["data"] as? [String: Any])?["key"] as? String {
+                let value = OFKeychainHelper.retrieve(for: key)
+                let normalizedValue: Any = value ?? NSNull()
+                let payload: [String: Any] = [
+                    "event": event,
+                    "id": requestId as Any,
+                    "data": [
+                        "value": normalizedValue
+                    ]
+                ]
+                postMessageToJS(payload)
             }
             return true
         case "app:secure-storage:set":
+            guard let event = data["event"] as? String else { return false }
+            let requestId = data["id"]
+            var success = false
             if let dict = data["data"] as? [String: Any],
                let key = dict["key"] as? String,
                let value = dict["value"] as? String {
                 OFKeychainHelper.save(value, for: key)
+                success = true
             }
+            let payload: [String: Any] = [
+                "event": event,
+                "id": requestId as Any,
+                "data": [
+                    "success": success
+                ]
+            ]
+            postMessageToJS(payload)
             return true
         case "app:secure-storage:remove":
+            guard let event = data["event"] as? String else { return false }
+            let requestId = data["id"]
+            var success = false
             if let key = (data["data"] as? [String: Any])?["key"] as? String {
                 OFKeychainHelper.delete(for: key)
+                success = true
             }
+            let payload: [String: Any] = [
+                "event": event,
+                "id": requestId as Any,
+                "data": [
+                    "success": success
+                ]
+            ]
+            postMessageToJS(payload)
             return true
         case "app:secure-storage:flush":
+            guard let event = data["event"] as? String else { return false }
+            let requestId = data["id"]
             OFKeychainHelper.clearAll()
+            let payload: [String: Any] = [
+                "event": event,
+                "id": requestId as Any,
+                "data": [
+                    "success": true
+                ]
+            ]
+            postMessageToJS(payload)
             return true
         default:
             return false
