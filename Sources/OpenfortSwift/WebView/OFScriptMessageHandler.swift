@@ -20,10 +20,14 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             return
         }
 
-        guard let method = dict["method"] as? String else {
+        if message.name == "secureHandler" {
             if processMessageForSecureStorage(dict) {
                 return
             }
+        }
+        
+        guard let method = dict["method"] as? String else {
+            
             print("No 'method' key in message: \(dict)")
             return
         }
@@ -98,8 +102,12 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
     /// Serializes a dictionary to JSON and posts it to the page via window.postMessage
     private func postMessageToJS(_ object: [String: Any]) {
-        guard JSONSerialization.isValidJSONObject(object),
-              let data = try? JSONSerialization.data(withJSONObject: object, options: []),
+        var enriched = object
+        // Mark messages so the JS bridge can distinguish Swift responses
+        enriched["__fromSwift"] = true
+
+        guard JSONSerialization.isValidJSONObject(enriched),
+              let data = try? JSONSerialization.data(withJSONObject: enriched, options: []),
               let json = String(data: data, encoding: .utf8) else {
             print("postMessageToJS: invalid JSON object")
             return
