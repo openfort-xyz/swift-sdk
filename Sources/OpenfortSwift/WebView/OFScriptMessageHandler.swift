@@ -20,15 +20,9 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             return
         }
 
-        
-        
         guard let method = dict["method"] as? String else {
             print("No 'method' key in message: \(dict)")
             return
-        }
-        
-        if method == "shouldUseAppBackedStorage" {
-            print("shouldUseAppBackedStorage")
         }
         
         if processMessageForKeychain(dict) {
