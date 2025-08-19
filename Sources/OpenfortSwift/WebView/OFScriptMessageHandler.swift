@@ -21,6 +21,9 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
         }
 
         guard let method = dict["method"] as? String else {
+            if processMessageForSecureStorage(dict) {
+                return
+            }
             print("No 'method' key in message: \(dict)")
             return
         }
@@ -29,9 +32,7 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             return
         }
         
-        if processMessageForSecureStorage(dict) {
-            return
-        }
+        
         
         let success = dict["success"] as? Bool ?? false
         if success {
@@ -104,11 +105,25 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             // Example:
             if let key = (data["data"] as? [String: Any])?["key"] as? String,
                let requestId = data["id"] {
-                let value = OFKeychainHelper.retrieve(for: key) // Use your actual storage logic
-                let js = """
-                    window.__secureStorageOnResponse({ id: \(requestId), data: \(value != nil ? "\"\(value!)\"" : "null") });
-                """
-                webView?.evaluateJavaScript(js)
+                let value = OFKeychainHelper.retrieve(for: key) ?? ""
+                if !value.isEmpty {
+                    // Try to parse value as JSON
+                    if let data = value.data(using: .utf8),
+                       let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
+                       JSONSerialization.isValidJSONObject(jsonObject) {
+                        // It's a JSON object/array, pass as-is
+                        let js = "window.__keychainOnGet({ requestId: \(requestId), value: \(value) })"
+                        webView?.evaluateJavaScript(js)
+                    } else {
+                        // It's a plain string, escape and quote
+                        let js = "window.__keychainOnGet({ requestId: \(requestId), value: \"\(value)\" })"
+                        webView?.evaluateJavaScript(js)
+                    }
+                } else {
+                    // If nil or empty, send null
+                    let js = "window.__keychainOnGet({ requestId: \(requestId), value: null })"
+                    webView?.evaluateJavaScript(js)
+                }
             }
             return true
         case "app:secure-storage:set":
