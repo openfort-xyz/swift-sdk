@@ -80,21 +80,22 @@ window.shouldUseAppBackedStorage = true;
     'message',
     async (evt) => {
       const msg = evt && evt.data;
-      // Ignore messages that originate from Swift to avoid loops
-      if (!msg || msg.__fromSwift === true) return;
+      // Ignore messages that originate from Swift or were posted by this bridge to avoid loops
+      if (!msg || msg.__fromSwift === true || msg.__fromSecureBridge === true) return;
 
       const { event } = msg;
       if (!isSecureStorageEvent(event)) return;
 
       try {
         const response = await roundTrip(msg);
-        // Post response back to the lib; mark as JS so we can filter on our side if needed
-        window.postMessage({ ...response }, '*');
+        // Post response back to the lib and tag it so this listener ignores it
+        window.postMessage({ ...response, __fromSecureBridge: true }, '*');
       } catch (error) {
         const fail = {
           event,
           id: msg.id ?? null,
-          data: { success: false, value: null, error: String(error && error.message ? error.message : error) }
+          data: { success: false, value: null, error: String(error && error.message ? error.message : error) },
+          __fromSecureBridge: true
         };
         window.postMessage(fail, '*');
       }
