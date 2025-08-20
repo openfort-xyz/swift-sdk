@@ -5,7 +5,7 @@ window.shouldUseAppBackedStorage = true;
 
 (function () {
   const HANDLER_NAME = 'secureHandler';
-  const TIMEOUT_MS = 5000;
+  const TIMEOUT_MS = 10000;
 
   const pending = new Map(); // id -> { resolve, reject, timer }
 
