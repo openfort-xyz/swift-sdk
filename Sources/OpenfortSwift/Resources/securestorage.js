@@ -6,6 +6,9 @@ window.shouldUseAppBackedStorage = true;
 (function () {
   const HANDLER_NAME = 'secureHandler';
   const TIMEOUT_MS = 10000;
+  let _id = 1;
+  function nextId() { return String(_id++); }
+  const handled = new Set(); // ids already forwarded back to the page
 
   const pending = new Map(); // id -> { resolve, reject, timer }
 
@@ -31,11 +34,12 @@ window.shouldUseAppBackedStorage = true;
       const data = evt && evt.data;
       if (!data || data.__fromSwift !== true || typeof data.id === 'undefined') return;
 
-      const entry = pending.get(data.id);
+      const key = String(data.id);
+      const entry = pending.get(key);
       if (!entry) return;
 
       clearTimeout(entry.timer);
-      pending.delete(data.id);
+      pending.delete(key);
       entry.resolve(data);
     },
     true
@@ -44,7 +48,7 @@ window.shouldUseAppBackedStorage = true;
   // Forward a message to Swift and await the response
   function roundTrip(message) {
     return new Promise((resolve, reject) => {
-      const id = message.id;
+      const id = String(message.id ?? nextId());
       message.id = id;
 
       const timer = setTimeout(() => {
@@ -54,7 +58,6 @@ window.shouldUseAppBackedStorage = true;
 
       pending.set(id, { resolve, reject, timer });
 
-      // Tag so Swift can distinguish origin if needed
       const toSwift = { ...message };
       postToSwift(toSwift);
     });
@@ -75,22 +78,26 @@ window.shouldUseAppBackedStorage = true;
     'message',
     async (evt) => {
       const msg = evt && evt.data;
-      // Ignore messages that originate from Swift or were posted by this bridge to avoid loops
-      if (!msg || msg.__fromSwift === true || msg.__fromSecureBridge === true) return;
+      // Ignore messages that originate from Swift to avoid loops
+      if (!msg || msg.__fromSwift === true) return;
 
       const { event } = msg;
       if (!isSecureStorageEvent(event)) return;
 
+      const msgId = String(msg.id ?? '');
+      if (msgId && handled.has(msgId)) return; // already forwarded
+
       try {
         const response = await roundTrip(msg);
-        // Post response back to the lib and tag it so this listener ignores it
-        window.postMessage({ ...response, __fromSecureBridge: true }, '*');
+        const respId = String(response.id ?? '');
+        if (respId) handled.add(respId);
+        window.postMessage({ ...response }, '*');
       } catch (error) {
+        if (msgId) handled.add(msgId);
         const fail = {
           event,
           id: msg.id ?? null,
-          data: { success: false, value: null, error: String(error && error.message ? error.message : error) },
-          __fromSecureBridge: true
+          data: { success: false, value: null, error: String(error && error.message ? error.message : error) }
         };
         window.postMessage(fail, '*');
       }
