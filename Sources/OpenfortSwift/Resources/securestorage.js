@@ -7,12 +7,7 @@ window.shouldUseAppBackedStorage = true;
   const HANDLER_NAME = 'secureHandler';
   const TIMEOUT_MS = 5000;
 
-  let _id = 1;
   const pending = new Map(); // id -> { resolve, reject, timer }
-
-  function nextId() {
-    return _id++;
-  }
 
   function isSwiftAvailable() {
     try {
@@ -49,7 +44,7 @@ window.shouldUseAppBackedStorage = true;
   // Forward a message to Swift and await the response
   function roundTrip(message) {
     return new Promise((resolve, reject) => {
-      const id = message.id ?? nextId();
+      const id = message.id;
       message.id = id;
 
       const timer = setTimeout(() => {
