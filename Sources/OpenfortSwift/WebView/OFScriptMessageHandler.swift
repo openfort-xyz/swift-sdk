@@ -139,7 +139,7 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
             let requestId = data["id"]
             if let key = (data["data"] as? [String: Any])?["key"] as? String {
                 let value = OFKeychainHelper.retrieve(for: key)
-                let normalizedValue = value ?? "null"
+                let normalizedValue: Any = value ?? NSNull()
                 let payload: [String: Any] = [
                     "event": event,
                     "id": requestId as Any,
