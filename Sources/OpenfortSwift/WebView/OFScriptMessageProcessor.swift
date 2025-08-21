@@ -137,7 +137,7 @@ internal final class OFScriptMessageProcessor {
         }
         
         func fail(event: String, id: Any?, error: String = "Operation failed") {
-            reply(event: event, id: id, data: ["success": false, "error": error])
+            reply(event: event, id: id, data: ["success": false])
             handleError(["error": error], method: event)
         }
         
