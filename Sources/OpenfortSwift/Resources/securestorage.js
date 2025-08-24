@@ -55,10 +55,16 @@ window.shouldUseAppBackedStorage = true;
             : raw;
         if (!msg) return;
 
-        // 🔒 Do not forward messages that originated from Swift
-        if (msg.__fromSwift === true) return;
-
         const { event, data } = msg;
+
+        // Ignore responses coming back from Swift/SDK (they include a success flag)
+        if (data && typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, 'success')) {
+          return;
+        }
+
+        if (!msg.id) {
+          return;
+        }
 
         // Only handle secure storage events
         if (!isSecureStorageEvent(event)) return;
