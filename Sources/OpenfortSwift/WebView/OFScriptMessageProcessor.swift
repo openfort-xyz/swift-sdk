@@ -157,10 +157,9 @@ internal final class OFScriptMessageProcessor {
                 return true
             }
         }
-        
+        let requestId = data["id"]
         switch event {
         case "app:secure-storage:get":
-            let requestId = data["id"]
             if let key = (data["data"] as? [String: Any])?["key"] as? String {
                 let value = OFKeychainHelper.retrieve(for: key)
                 let normalizedValue: Any = value ?? NSNull()
@@ -168,7 +167,6 @@ internal final class OFScriptMessageProcessor {
             }
             return true
         case "app:secure-storage:set":
-            let requestId = data["id"]
             if let dict = data["data"] as? [String: Any],
                let key = dict["key"] as? String,
                let value = dict["value"] as? String {
@@ -179,7 +177,6 @@ internal final class OFScriptMessageProcessor {
             }
             return true
         case "app:secure-storage:remove":
-            let requestId = data["id"]
             if let key = (data["data"] as? [String: Any])?["key"] as? String {
                 OFKeychainHelper.delete(for: key)
                 succeed(event: event, id: requestId)
@@ -188,7 +185,6 @@ internal final class OFScriptMessageProcessor {
             }
             return true
         case "app:secure-storage:flush":
-            let requestId = data["id"]
             OFKeychainHelper.clearAll()
             succeed(event: event, id: requestId)
             return true
