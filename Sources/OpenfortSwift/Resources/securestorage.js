@@ -107,7 +107,7 @@ window.shouldUseAppBackedStorage = true;
           id: msg.id ?? null,
           data: { success: false, value: null, error: String(error && error.message ? error.message : error) }
         };
-        window.postMessage(fail, '*');
+        window.postMessage(fail, window.location.origin);
       }
     },
     true
