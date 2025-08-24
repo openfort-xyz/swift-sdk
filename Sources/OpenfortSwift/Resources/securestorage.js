@@ -38,22 +38,28 @@ window.shouldUseAppBackedStorage = true;
   }
 
   // Listen for requests from the Openfort lib (posted via window.postMessage)
-  window.addEventListener(
-    'message',
-    async (evt) => {
-      const msg = evt && evt.data;
-      // Ignore messages that originate from Swift to avoid loops
-      if (!msg) return;
+    window.addEventListener(
+      'message',
+      (evt) => {
+        const raw = evt && evt.data;
+        const msg = typeof raw === 'string' ? (() => { try { return JSON.parse(raw); } catch { return null; } })() : raw;
+        if (!msg) return;
 
-      const { event } = msg;
-      if (!isSecureStorageEvent(event)) return;
+        const { event, data } = msg;
+        if (!isSecureStorageEvent(event)) return;
 
-      try {
-        forwardToSwift(msg);
-      } catch (error) {
-        // Optional: console.warn('Failed to forward to Swift', error);
-      }
-    },
-    true
-  );
+        // 🔒 IMPORTANT: ignore responses (they have data.success)
+        if (data && Object.prototype.hasOwnProperty.call(data, 'success')) {
+          return; // it's a response from Swift/SDK, do NOT forward
+        }
+
+        // Only forward genuine requests to Swift
+        try {
+          postToSwift(msg); // your existing bridge to window.webkit.messageHandlers.secureHandler.postMessage(...)
+        } catch (error) {
+          // optional: console.warn('Failed to forward to Swift', error);
+        }
+      },
+      true // capture phase
+    );
 })();
