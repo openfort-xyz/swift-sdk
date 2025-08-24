@@ -116,7 +116,9 @@ internal final class OFScriptMessageProcessor {
             return
         }
         let js = "window.postMessage(\(json), '*');"
-        webView?.evaluateJavaScript(js, completionHandler: nil)
+        webView?.evaluateJavaScript(js, completionHandler: { result, error in
+            
+        })
     }
     
     private func processMessageForSecureStorage(_ data: [String: Any]) -> Bool {
