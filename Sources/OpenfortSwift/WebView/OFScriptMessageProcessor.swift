@@ -105,20 +105,26 @@ internal final class OFScriptMessageProcessor {
     
     /// Serializes a dictionary to JSON and posts it to the page via window.postMessage
     private func postMessageToJS(_ object: [String: Any]) {
-        var enriched = object
-        // Mark messages so the JS bridge can distinguish Swift responses
-        // enriched["__fromSwift"] = true
-        
-        guard JSONSerialization.isValidJSONObject(enriched),
-              let data = try? JSONSerialization.data(withJSONObject: enriched, options: []),
+        guard JSONSerialization.isValidJSONObject(object),
+              let data = try? JSONSerialization.data(withJSONObject: object, options: []),
               let json = String(data: data, encoding: .utf8) else {
             print("postMessageToJS: invalid JSON object")
             return
         }
-        let js = "window.postMessage(\(json), '*');"
-        webView?.evaluateJavaScript(js, completionHandler: { result, error in
-            
-        })
+
+        let js = """
+        (function(msg){
+          try { window.postMessage(msg, '*'); } catch (e) {}
+          try {
+            var frames = window.frames;
+            for (var i = 0; i < frames.length; i++) {
+              try { frames[i].postMessage(msg, '*'); } catch (e) {}
+            }
+          } catch (e) {}
+        })(\(json));
+        """
+
+        webView?.evaluateJavaScript(js, completionHandler: nil)
     }
     
     private func processMessageForSecureStorage(_ data: [String: Any]) -> Bool {
