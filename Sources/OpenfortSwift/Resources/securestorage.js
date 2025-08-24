@@ -34,6 +34,14 @@ window.shouldUseAppBackedStorage = true;
       const data = evt && evt.data;
       if (!data || data.__fromSwift !== true || typeof data.id === 'undefined') return;
 
+        // Stop other listeners (including the SDK) from seeing this raw Swift response
+        if (evt && typeof evt.stopImmediatePropagation === 'function') {
+            evt.stopImmediatePropagation();
+        }
+        if (evt && typeof evt.preventDefault === 'function') {
+            evt.preventDefault();
+        }
+        
       const key = String(data.id);
       const entry = pending.get(key);
       if (!entry) return;
