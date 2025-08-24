@@ -63,11 +63,6 @@ window.shouldUseAppBackedStorage = true;
         // Only handle secure storage events
         if (!isSecureStorageEvent(event)) return;
 
-        // ✅ Do NOT forward responses (they have data.success)
-        if (data && Object.prototype.hasOwnProperty.call(data, 'success')) {
-          return;
-        }
-
         // ✅ Only forward genuine requests to Swift
         try {
           forwardToSwift(msg);

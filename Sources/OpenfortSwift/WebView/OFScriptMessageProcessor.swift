@@ -107,7 +107,7 @@ internal final class OFScriptMessageProcessor {
     private func postMessageToJS(_ object: [String: Any]) {
         var enriched = object
         // Mark messages so the JS bridge can distinguish Swift responses
-        enriched["__fromSwift"] = true
+        // enriched["__fromSwift"] = true
         
         guard JSONSerialization.isValidJSONObject(enriched),
               let data = try? JSONSerialization.data(withJSONObject: enriched, options: []),
@@ -115,7 +115,7 @@ internal final class OFScriptMessageProcessor {
             print("postMessageToJS: invalid JSON object")
             return
         }
-        let js = "window.postMessage(\(json), window.location.origin);"
+        let js = "window.postMessage(\(json), '*');"
         webView?.evaluateJavaScript(js, completionHandler: { result, error in
             
         })
@@ -139,7 +139,7 @@ internal final class OFScriptMessageProcessor {
         }
         
         func fail(event: String, id: Any?, error: String = "Operation failed") {
-            reply(event: event, id: id, data: ["success": false])
+            reply(event: event, id: id, data: ["success": false, "error": error])
             handleError(["error": error], method: event)
         }
         
@@ -163,7 +163,7 @@ internal final class OFScriptMessageProcessor {
             if let key = (data["data"] as? [String: Any])?["key"] as? String {
                 let value = OFKeychainHelper.retrieve(for: key)
                 let normalizedValue: Any = value ?? NSNull()
-                reply(event: event, id: requestId, data: ["value": normalizedValue])
+                reply(event: event, id: requestId, data: ["success": true, "value": normalizedValue])
             }
             return true
         case "app:secure-storage:set":
