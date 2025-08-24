@@ -105,17 +105,14 @@ internal final class OFScriptMessageProcessor {
     
     /// Serializes a dictionary to JSON and posts it to the page via window.postMessage
     private func postMessageToJS(_ object: [String: Any]) {
-        var enriched = object
-        // Mark messages so the JS bridge can distinguish Swift responses
-        enriched["__fromSwift"] = true
         
-        guard JSONSerialization.isValidJSONObject(enriched),
-              let data = try? JSONSerialization.data(withJSONObject: enriched, options: []),
+        guard JSONSerialization.isValidJSONObject(object),
+              let data = try? JSONSerialization.data(withJSONObject: object, options: []),
               let json = String(data: data, encoding: .utf8) else {
             print("postMessageToJS: invalid JSON object")
             return
         }
-        let js = "window.postMessage(\(json), '*');"
+        let js = "window.postMessage(\(json), window.location.origin);"
         webView?.evaluateJavaScript(js, completionHandler: { result, error in
             
         })
