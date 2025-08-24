@@ -21,18 +21,6 @@ window.shouldUseAppBackedStorage = true;
     window.webkit.messageHandlers[HANDLER_NAME].postMessage(message);
   }
 
-  // Receive responses coming *from Swift* (Swift posts via window.postMessage)
-  window.addEventListener(
-    'message',
-    (evt) => {
-      const data = evt && evt.data;
-      // Let the SDK consume Swift responses directly; do not intercept
-      if (!data || data.__fromSwift !== true) return;
-      // No-op on purpose
-    },
-    true
-  );
-
   // Forward a message to Swift (fire-and-forget)
   function forwardToSwift(message) {
     const toSwift = { ...message };
@@ -55,7 +43,7 @@ window.shouldUseAppBackedStorage = true;
     async (evt) => {
       const msg = evt && evt.data;
       // Ignore messages that originate from Swift to avoid loops
-      if (!msg || msg.__fromSwift === true) return;
+      if (!msg) return;
 
       const { event } = msg;
       if (!isSecureStorageEvent(event)) return;
