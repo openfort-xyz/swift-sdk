@@ -5,12 +5,6 @@ window.shouldUseAppBackedStorage = true;
 
 (function () {
   const HANDLER_NAME = 'secureHandler';
-  const TIMEOUT_MS = 10000;
-  let _id = 1;
-  function nextId() { return String(_id++); }
-  const handled = new Set(); // ids already forwarded back to the page
-
-  const pending = new Map(); // id -> { resolve, reject, timer }
 
   function isSwiftAvailable() {
     try {
@@ -32,43 +26,17 @@ window.shouldUseAppBackedStorage = true;
     'message',
     (evt) => {
       const data = evt && evt.data;
-      if (!data || data.__fromSwift !== true || typeof data.id === 'undefined') return;
-
-        // Stop other listeners (including the SDK) from seeing this raw Swift response
-        if (evt && typeof evt.stopImmediatePropagation === 'function') {
-            evt.stopImmediatePropagation();
-        }
-        if (evt && typeof evt.preventDefault === 'function') {
-            evt.preventDefault();
-        }
-        
-      const key = String(data.id);
-      const entry = pending.get(key);
-      if (!entry) return;
-
-      clearTimeout(entry.timer);
-      pending.delete(key);
-      entry.resolve(data);
+      // Let the SDK consume Swift responses directly; do not intercept
+      if (!data || data.__fromSwift !== true) return;
+      // No-op on purpose
     },
     true
   );
 
-  // Forward a message to Swift and await the response
-  function roundTrip(message) {
-    return new Promise((resolve, reject) => {
-      const id = String(message.id ?? nextId());
-      message.id = id;
-
-      const timer = setTimeout(() => {
-        pending.delete(id);
-        reject(new Error('Secure storage request timed out'));
-      }, TIMEOUT_MS);
-
-      pending.set(id, { resolve, reject, timer });
-
-      const toSwift = { ...message };
-      postToSwift(toSwift);
-    });
+  // Forward a message to Swift (fire-and-forget)
+  function forwardToSwift(message) {
+    const toSwift = { ...message };
+    postToSwift(toSwift);
   }
 
   function isSecureStorageEvent(evtName) {
@@ -92,22 +60,10 @@ window.shouldUseAppBackedStorage = true;
       const { event } = msg;
       if (!isSecureStorageEvent(event)) return;
 
-      const msgId = String(msg.id ?? '');
-      if (msgId && handled.has(msgId)) return; // already forwarded
-
       try {
-        const response = await roundTrip(msg);
-        const respId = String(response.id ?? '');
-        if (respId) handled.add(respId);
-        window.postMessage({ ...response }, '*');
+        forwardToSwift(msg);
       } catch (error) {
-        if (msgId) handled.add(msgId);
-        const fail = {
-          event,
-          id: msg.id ?? null,
-          data: { success: false, value: null, error: String(error && error.message ? error.message : error) }
-        };
-        window.postMessage(fail, window.location.origin);
+        // Optional: console.warn('Failed to forward to Swift', error);
       }
     },
     true
