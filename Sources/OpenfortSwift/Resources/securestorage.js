@@ -1,4 +1,3 @@
-window.isSwift = true;
 window.shouldUseAppBackedStorage = true;
 
 // --- Secure Storage Bridge (JS <-> Swift) -----------------------------------
