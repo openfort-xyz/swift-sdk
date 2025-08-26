@@ -44,6 +44,7 @@ public struct OFErrorDomains {
     
     // EmbeddedWallet
     public static let configure = "OFConfigureErrorDomain"
+    public static let create = "OFCreateErrorDomain"
     public static let exportPrivateKey = "OFExportPrivateKeyErrorDomain"
     public static let get = "OFGetErrorDomain"
     public static let getEmbeddedState = "OFGetEmbeddedStateErrorDomain"
@@ -51,6 +52,7 @@ public struct OFErrorDomains {
     public static let getURL = "OFGetURLErrorDomain"
     public static let list = "OFListErrorDomain"
     public static let ping = "OFPingErrorDomain"
+    public static let recover = "OFRecoverErrorDomain"
     public static let setEmbeddedRecovery = "OFSetEmbeddedRecoveryErrorDomain"
     public static let signMessage = "OFSignMessageErrorDomain"
     public static let signTypedData = "OFSignTypedDataErrorDomain"

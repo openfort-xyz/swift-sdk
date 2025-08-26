@@ -76,6 +76,8 @@ internal final class OFScriptMessageProcessor {
             OFMethods.get: handlerFor(OFGetResponse.self),
             OFMethods.getEthereumProvider: handlerFor(OFGetEthereumProviderResponse.self),
             OFMethods.configure: handlerFor(OFConfigureResponse.self),
+            OFMethods.create: handlerFor(OFEmbeddedAccount.self),
+            OFMethods.recover: handlerFor(OFEmbeddedAccount.self),
             OFMethods.exportPrivateKey: handlerFor(OFExportPrivateKeyResponse.self),
             OFMethods.list: handlerFor(OFListResponse.self),
             OFMethods.ping: handlerFor(OFPingResponse.self),
@@ -97,7 +99,7 @@ internal final class OFScriptMessageProcessor {
     
     // Helper to decode and handle the model
     private func decodeAndHandle<T: Decodable>(_ type: T.Type, from data: Any?, method: String) {
-        var notificationName = Notification.Name(method)
+        let notificationName = Notification.Name(method)
         var object: Any? = nil
         var userInfo = ["success": true]
         

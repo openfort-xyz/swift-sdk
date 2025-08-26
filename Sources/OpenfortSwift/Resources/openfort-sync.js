@@ -216,6 +216,14 @@ window.configureSync = function({ params }) {
     handleResult('configure', window.openfort.embeddedWalletInstance.configure(params));
 };
 
+window.createSync = function({ params }) {
+    handleResult('create', window.openfort.embeddedWalletInstance.create(params));
+};
+
+window.recoverSync = function({ params }) {
+    handleResult('recover', window.openfort.embeddedWalletInstance.recover(params));
+};
+
 window.exportPrivateKeySync = function() {
     handleResult('exportPrivateKey', window.openfort.embeddedWalletInstance.exportPrivateKey());
 };

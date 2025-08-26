@@ -5,7 +5,7 @@
 //  Created by Pavel Gurkovskii on 2025-07-10.
 //
 
-public protocol EmbeddedAccountProtocol {
+public protocol OFEmbeddedAccountProtocol {
     var user: String { get }
     var id: String { get }
     var chainType: String { get }
@@ -22,7 +22,7 @@ public protocol EmbeddedAccountProtocol {
 }
 
 
-public struct EmbeddedAccount: EmbeddedAccountProtocol, OFCodableSendable {
+public struct OFEmbeddedAccount: OFEmbeddedAccountProtocol, OFCodableSendable {
     public let user: String
     public let id: String
     public let chainType: String
@@ -38,4 +38,4 @@ public struct EmbeddedAccount: EmbeddedAccountProtocol, OFCodableSendable {
     public let owner: OFOwner
 }
 
-public typealias OFListResponse = [EmbeddedAccount]
+public typealias OFListResponse = [OFEmbeddedAccount]

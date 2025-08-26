@@ -156,6 +156,78 @@ public extension OFEmbeddedWalletAccessable {
             errorDomain: OFErrorDomains.configure
         )
     }
+
+    /// Creates an embedded wallet account.
+    ///
+    /// Calls `window.createSync(...)` in the web context and waits for the result.
+    /// - Parameter params: The creation parameters (`OFEmbeddedAccountCreateParams`).
+    /// - Returns: An optional `OFCreateResponse` containing the created account.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    func create(params: OFEmbeddedAccountCreateParams) async throws -> OFEmbeddedAccount? {
+        let method = OFMethods.create
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.createSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.create
+        )
+    }
+
+    /// Creates an embedded wallet account (completion-based API).
+    /// - Parameters:
+    ///   - params: The creation parameters (`OFEmbeddedAccountCreateParams`).
+    ///   - completion: Called with an optional `OFCreateResponse` or an error.
+    func create(
+        params: OFEmbeddedAccountCreateParams,
+        completion: @escaping (Result<OFEmbeddedAccount?, Error>) -> Void
+    ) {
+        Task {
+            do {
+                let result = try await create(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Recovers an embedded wallet account.
+    ///
+    /// Calls `window.recoverSync(...)` in the web context and waits for the result.
+    /// - Parameter params: The recovery parameters (`OFEmbeddedAccountRecoverParams`).
+    /// - Returns: An optional `OFRecoverResponse` containing the recovered account.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    func recover(params: OFEmbeddedAccountRecoverParams) async throws -> OFEmbeddedAccount? {
+        let method = OFMethods.recover
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.recoverSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.recover
+        )
+    }
+
+    /// Recovers an embedded wallet account (completion-based API).
+    /// - Parameters:
+    ///   - params: The recovery parameters (`OFEmbeddedAccountRecoverParams`).
+    ///   - completion: Called with an optional `OFRecoverResponse` or an error.
+    func recover(
+        params: OFEmbeddedAccountRecoverParams,
+        completion: @escaping (Result<OFEmbeddedAccount?, Error>) -> Void
+    ) {
+        Task {
+            do {
+                let result = try await recover(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
     
     /// Configures the embedded wallet (completion-based API).
     /// - Parameters:
