@@ -7,14 +7,14 @@
 
 import Foundation
 import WebKit
-import Web3
+@preconcurrency import Web3
 
 /// Bridges Openfort’s JS EIP-1193 provider to Boilertalk/Web3.swift's `Web3Provider`.
 /// It forwards JSON-RPC calls through the WKWebView using `provider.request({ method, params })`.
 public final class OpenfortEIP1193Web3Provider: @preconcurrency Web3Provider {
 
     // MARK: - Web3Provider conformance hooks (not used by this protocol directly, but Web3 may inspect them elsewhere)
-    public typealias Web3ResponseCompletion<Result: Codable> = (_ resp: Web3Response<Result>) -> Void
+    public typealias Web3ResponseCompletion<Result: Codable> = @Sendable (_ resp: Web3Response<Result>) -> Void
 
     // MARK: - Internals
     private weak var webView: WKWebView?
@@ -34,7 +34,7 @@ public final class OpenfortEIP1193Web3Provider: @preconcurrency Web3Provider {
 
     // MARK: - Web3Provider requirement
 
-    @MainActor public func send<Params, Result>(
+    @MainActor public func send<Params, Result: Sendable>(
         request: RPCRequest<Params>,
         response: @escaping Web3ResponseCompletion<Result>
     ) {
