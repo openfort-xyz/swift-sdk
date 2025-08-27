@@ -20,11 +20,4 @@ internal final class OFWebViewCoordinator: NSObject, WKNavigationDelegate {
         print("❌ WebView failed to load: \(error.localizedDescription)")
         didFailedToLoad?(error)
     }
-    
-    private func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if let url = navigationAction.request.url {
-            print("Navigating to:", url.absoluteString)
-        }
-        decisionHandler(.allow)
-    }
 }
