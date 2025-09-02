@@ -6,7 +6,7 @@
 //
 
 public struct OFSignMessageParams: OFCodableSendable {
-    public struct Options: Codable, Sendable {
+    public struct Options: OFCodableSendable {
         public let hashMessage: Bool?
         public let arrayifyMessage: Bool?
 
