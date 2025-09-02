@@ -24,10 +24,10 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     private var coordinator = OFWebViewCoordinator()
     private var messageHandler = OFScriptMessageHandler()
     private var embeddedStateTimer: Timer?
-    private var getAccessToken: (() async -> String?)?
+    private var getAccessToken: (() async throws -> String?)?
     
     @MainActor
-    public static func setupSDK(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async -> String?)? = nil) {
+    public static func setupSDK(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async throws -> String?)? = nil) throws {
         if initialized && thirdParty == nil {
             return
         }
@@ -36,7 +36,7 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     }
     
     @MainActor
-    private func setupInstance(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async -> String?)? = nil) {
+    private func setupInstance(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async throws -> String?)? = nil) {
         let readyName = Notification.Name("openfortReady")
         let failName  = Notification.Name("openfortInitError")
         

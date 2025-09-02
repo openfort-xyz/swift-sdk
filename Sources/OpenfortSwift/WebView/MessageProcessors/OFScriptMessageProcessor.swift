@@ -12,7 +12,7 @@ import Foundation
 
 internal final class OFScriptMessageProcessor {
     
-    var getAccessToken: (() async -> String?)?
+    var getAccessToken: (() async throws -> String?)?
     
     private let jsonDecoder = JSONDecoder()
     private let storageMessageProcessor = OFStorageMessageProcessor()
@@ -47,7 +47,7 @@ internal final class OFScriptMessageProcessor {
             else { return }
 
             Task { @MainActor in
-                let token = await getAccessToken?() ?? nil
+                let token = try await getAccessToken?() ?? nil
                 let value = token != nil ? "\"\(token!)\"" : "null"
                 let js = """
                 window.postMessage({
