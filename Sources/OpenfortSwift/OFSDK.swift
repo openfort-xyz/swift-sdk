@@ -27,7 +27,7 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     private var getAccessToken: (() async -> String?)?
     
     @MainActor
-    public static func setupSDK(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async -> String?)? = nil) throws {
+    public static func setupSDK(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async -> String?)? = nil) {
         if initialized && thirdParty == nil {
             return
         }
