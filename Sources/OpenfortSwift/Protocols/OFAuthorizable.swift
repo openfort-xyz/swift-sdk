@@ -621,39 +621,6 @@ extension OFAuthorizable {
         }
     }
 
-    /// Authenticates with a third-party provider using a token.
-    ///
-    /// Calls `window.authenticateWithThirdPartyProviderSync(...)`.
-    /// - Parameter params: Auth data (`OFAuthenticateWithThirdPartyProviderParams`).
-    /// - Returns: Optional `OFAuthenticateWithThirdPartyProviderResponse` on success.
-    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    public func authenticateWithThirdPartyProvider(params: OFAuthenticateWithThirdPartyProviderParams) async throws -> OFAuthenticateWithThirdPartyProviderResponse? {
-        let method = OFMethods.authenticateWithThirdPartyProvider
-        guard let jsonString = encodeToJSONString(params) else {
-            throw OFError.encodingFailed
-        }
-        return try await evaluateAndObserveAsync(
-            js: "window.authenticateWithThirdPartyProviderSync(\(jsonString));",
-            method: method,
-            errorDomain: OFErrorDomains.authenticateWithThirdPartyProvider
-        )
-    }
-
-    /// Authenticates with a third-party provider (completion-based API).
-    /// - Parameters:
-    ///   - params: Auth data (`OFAuthenticateWithThirdPartyProviderParams`).
-    ///   - completion: Called with an optional `OFAuthenticateWithThirdPartyProviderResponse` or an error.
-    public func authenticateWithThirdPartyProvider(params: OFAuthenticateWithThirdPartyProviderParams, completion: @escaping (Result<OFAuthenticateWithThirdPartyProviderResponse?, Error>) -> Void) {
-        Task {
-            do {
-                let result = try await authenticateWithThirdPartyProvider(params: params)
-                completion(.success(result))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
     /// Authenticates a player using Sign-In with Ethereum (SIWE).
     ///
     /// Calls `window.authenticateWithSIWESync(...)`.

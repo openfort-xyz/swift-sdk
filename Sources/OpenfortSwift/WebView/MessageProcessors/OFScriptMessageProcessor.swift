@@ -89,7 +89,6 @@ internal final class OFScriptMessageProcessor {
             OFMethods.initSIWE: handlerFor(OFInitSIWEResponse.self),
             OFMethods.unlinkWallet: handlerFor(OFUnlinkWalletResponse.self),
             OFMethods.linkThirdPartyProvider: handlerFor(OFAuthPlayerResponse.self),
-            OFMethods.authenticateWithThirdPartyProvider: handlerFor(OFAuthenticateWithThirdPartyProviderResponse.self),
             OFMethods.authenticateWithSIWE: handlerFor(OFAuthorizationResponse.self),
             OFMethods.signTypedData: handlerFor(OFSignTypedDataResponse.self),
             OFMethods.get: handlerFor(OFGetResponse.self),

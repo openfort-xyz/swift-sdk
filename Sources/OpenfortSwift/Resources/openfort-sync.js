@@ -168,15 +168,6 @@ window.linkThirdPartyProviderSync = function({ provider, token, tokenType }) {
     }));
 };
 
-window.authenticateWithThirdPartyProviderSync = function({ provider, token, tokenType, ecosystemGame }) {
-    handleResult('authenticateWithThirdPartyProvider', window.openfort.authInstance.authenticateWithThirdPartyProvider({
-        provider,
-        token,
-        tokenType,
-        ecosystemGame
-    }));
-};
-
 window.authenticateWithSIWESync = function({ signature, message, walletClientType, connectorType }) {
     handleResult('authenticateWithSIWE', window.openfort.authInstance.authenticateWithSIWE({
         signature,

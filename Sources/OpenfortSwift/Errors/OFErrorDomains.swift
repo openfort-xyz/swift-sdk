@@ -13,7 +13,6 @@ public struct OFErrorDomains {
     
     // AuthInstance
     public static let authenticateWithSIWE = "OFAuthenticateWithSIWEErrorDomain"
-    public static let authenticateWithThirdPartyProvider = "OFAuthenticateWithThirdPartyProviderErrorDomain"
     public static let initLinkOAuth = "OFInitLinkOAuthErrorDomain"
     public static let initOAuth = "OFInitOAuthErrorDomain"
     public static let initSIWE = "OFInitSIWEErrorDomain"

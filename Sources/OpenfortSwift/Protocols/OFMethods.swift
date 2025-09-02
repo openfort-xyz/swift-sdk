@@ -7,7 +7,6 @@
 
 public enum OFMethods {
     public static let authenticateWithSIWE = "authenticateWithSIWE"
-    public static let authenticateWithThirdPartyProvider = "authenticateWithThirdPartyProvider"
     public static let configure = "configure"
     public static let create = "create"
     public static let exportPrivateKey = "exportPrivateKey"
