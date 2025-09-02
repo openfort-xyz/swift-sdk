@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFLinkWalletParams: Codable, Sendable {
+public struct OFLinkWalletParams: OFCodableSendable {
     public let signature: String
     public let message: String
     public let walletClientType: String

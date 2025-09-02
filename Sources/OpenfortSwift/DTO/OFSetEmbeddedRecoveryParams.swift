@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFSetEmbeddedRecoveryParams: Codable, Sendable {
+public struct OFSetEmbeddedRecoveryParams: OFCodableSendable {
     public let recoveryMethod: String
     public let recoveryPassword: String
     public let encryptionSession: String

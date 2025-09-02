@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFSignMessageParams: Codable, Sendable {
+public struct OFSignMessageParams: OFCodableSendable {
     public struct Options: Codable, Sendable {
         public let hashMessage: Bool?
         public let arrayifyMessage: Bool?

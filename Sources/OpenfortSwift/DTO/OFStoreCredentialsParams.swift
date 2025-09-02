@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFStoreCredentialsParams: Codable, Sendable {
+public struct OFStoreCredentialsParams: OFCodableSendable {
     public let player: String?
     public let accessToken: String
     public let refreshToken: String

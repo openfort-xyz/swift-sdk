@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFInitLinkOAuthParams: Codable, Sendable {
+public struct OFInitLinkOAuthParams: OFCodableSendable {
     public let provider: String
     public let authToken: String
     public let options: [String: AnyCodable]?

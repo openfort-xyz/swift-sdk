@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFSendSignatureSessionRequestParams: Codable, Sendable {
+public struct OFSendSignatureSessionRequestParams: OFCodableSendable {
     public let sessionId: String
     public let signature: String
     public let optimistic: Bool?

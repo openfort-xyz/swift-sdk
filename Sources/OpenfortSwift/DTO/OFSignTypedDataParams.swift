@@ -51,7 +51,7 @@ public struct EIP712Domain: OFCodableSendable {
     }
 }
 
-public struct OFSignTypedDataParams: Codable, Sendable {
+public struct OFSignTypedDataParams: OFCodableSendable {
     let domain: EIP712Domain
     let types: [String: [EIP712TypeField]]
     let message: EIP712MailMessage

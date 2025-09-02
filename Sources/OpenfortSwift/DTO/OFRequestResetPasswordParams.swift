@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFRequestResetPasswordParams: Codable, Sendable {
+public struct OFRequestResetPasswordParams: OFCodableSendable {
     public let email: String
     public let redirectUrl: String
 

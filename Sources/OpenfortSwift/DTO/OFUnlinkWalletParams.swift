@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct OFUnlinkWalletParams: Codable, Sendable {
+public struct OFUnlinkWalletParams: OFCodableSendable {
     public let address: String
     public let authToken: String
 

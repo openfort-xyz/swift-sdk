@@ -5,7 +5,7 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-25.
 //
 
-public struct AnyCodable: Codable, Sendable {
+public struct AnyCodable: OFCodableSendable {
     public let value: Sendable
 
     public init(_ value: Sendable) {
