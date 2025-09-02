@@ -8,6 +8,8 @@ internal struct OFConfig: Codable {
     let shieldPublishableKey: String
     let shieldUrl: String?
     let debug: Bool
+    let provider: String?
+    let getAccessToken: String?
     
     static func loadFromMainBundle() -> OFConfig? {
         guard let url = Bundle.main.url(forResource: "OFConfig", withExtension: "plist"),
@@ -25,14 +27,14 @@ internal struct OFConfig: Codable {
         }
     }
 
-    static func openfortSyncScript() -> String {
+    static func openfortSyncScript(provider: String? = nil, getAccessToken: String? = nil) -> String {
         guard let config = loadFromMainBundle() else {
             print("OFConfig not loaded")
             return ""
         }
-        
+
         let debugValue = config.debug
-        
+
         var overrides: [String] = []
         if let iframeURL = config.iframeUrl, !iframeURL.isEmpty {
             overrides.append("                iframeUrl: '\(iframeURL)',")
@@ -44,8 +46,65 @@ internal struct OFConfig: Codable {
             overrides.append("                backendUrl: '\(backendURL)',")
         }
         overrides.append("                storage: storage,")
+
+        // Determine effective provider/getter for third party auth
+        let effectiveProvider = provider ?? config.provider
+        let effectiveGetter = getAccessToken ?? config.getAccessToken
+
+        var thirdPartyAuthBlock = ""
+        if let providerStr = effectiveProvider, let _ = effectiveGetter {
+            let uppercasedProvider = providerStr.uppercased()
+            thirdPartyAuthBlock = """
+                thirdPartyAuth: {
+                    provider: ThirdPartyOAuthProvider.\(uppercasedProvider),
+                    getAccessToken: async () => {
+                      try {
+                        console.log('----- Requesting access token from native auth -----');
+                        return await window.__ofAuthBridgeRequest('app:third-party-auth:getAccessToken');
+                      } catch (e) {
+                        console.error('getAccessToken bridge error', e);
+                        return null;
+                      }
+                    },
+                },
+            """
+        }
+
         let overridesString = overrides.joined(separator: "\n")
+        // JS helper for bridge
+        let authBridgeHelper = """
+            (function() {
+              window.__ofAuthBridgeRequest = (eventName) => {
+                if (!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.authHandler)) {
+                  return Promise.resolve(null);
+                }
+                return new Promise((resolve) => {
+                  const id = Math.random().toString(36).substring(2) + Date.now();
+                  function listener(event) {
+                    try {
+                      const data = event.data;
+                      if (
+                        data &&
+                        typeof data === 'object' &&
+                        data.event === eventName &&
+                        data.id === id &&
+                        data.data &&
+                        ('value' in data.data)
+                      ) {
+                        window.removeEventListener('message', listener);
+                        resolve(data.data.value);
+                      }
+                    } catch (e) {}
+                  }
+                  window.addEventListener('message', listener);
+                  window.webkit.messageHandlers.authHandler.postMessage({ event: eventName, id });
+                });
+              };
+            })();
+        """
+        // Compose the script, inserting helper before storage
         return """
+        \(authBridgeHelper)
             const storage = new KeychainStorage();
             const openfort = new Openfort({
                 baseConfiguration: {
@@ -59,6 +118,7 @@ internal struct OFConfig: Codable {
                 overrides: {
         \(overridesString)
                 },
+        \(thirdPartyAuthBlock.isEmpty ? "" : "                \(thirdPartyAuthBlock)")
             });
             
             window.openfort = openfort;

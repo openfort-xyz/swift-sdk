@@ -11,14 +11,14 @@ import Foundation
 @MainActor
 
 internal final class OFStorageMessageProcessor {
-    private let webView: WKWebView?
+
     private let jsonDecoder = JSONDecoder()
     
-    init(webView: WKWebView?) {
-        self.webView = webView
-    }
-    
-    internal func processMessageForKeychain(_ data: [String: Any]) -> Bool {
+    internal func processMessageForKeychain(_ message: WKScriptMessage) -> Bool {
+        guard let data = message.body as? [String: Any] else {
+            print("Received message is not a dictionary: \(message.body)")
+            return false
+        }
         
         let method = data["method"] as? String ?? ""
         
@@ -27,13 +27,13 @@ internal final class OFStorageMessageProcessor {
             OFKeychainHelper.save(data["value"] as! String, for: data["key"] as! String)
             let requestId = data["requestId"] as! Int
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
-            webView?.evaluateJavaScript(js)
+            message.webView?.evaluateJavaScript(js)
             return true
         case "KeychainRemove":
             OFKeychainHelper.delete(for: data["key"] as! String)
             let requestId = data["requestId"] as! Int
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
-            webView?.evaluateJavaScript(js)
+            message.webView?.evaluateJavaScript(js)
             return true
         case "KeychainGet":
             let value = OFKeychainHelper.retrieve(for: data["key"] as! String) ?? ""
@@ -45,30 +45,35 @@ internal final class OFStorageMessageProcessor {
                    JSONSerialization.isValidJSONObject(jsonObject) {
                     // It's a JSON object/array, pass as-is
                     let js = "window.__keychainOnGet({ requestId: \(requestId), value: \(value) })"
-                    webView?.evaluateJavaScript(js)
+                    message.webView?.evaluateJavaScript(js)
                 } else {
                     // It's a plain string, escape and quote
                     let js = "window.__keychainOnGet({ requestId: \(requestId), value: \"\(value)\" })"
-                    webView?.evaluateJavaScript(js)
+                    message.webView?.evaluateJavaScript(js)
                 }
             } else {
                 // If nil or empty, send null
                 let js = "window.__keychainOnGet({ requestId: \(requestId), value: null })"
-                webView?.evaluateJavaScript(js)
+                message.webView?.evaluateJavaScript(js)
             }
             return true
         case "KeychainFlush":
             OFKeychainHelper.clearAll()
             let requestId = data["requestId"] as! Int
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
-            webView?.evaluateJavaScript(js)
+            message.webView?.evaluateJavaScript(js)
             return true
         default:
             return false
         }
     }
     
-    internal func processMessageForSecureStorage(_ data: [String: Any]) -> Bool {
+    internal func processMessageForSecureStorage(_ message: WKScriptMessage) -> Bool {
+        
+        guard let data = message.body as? [String: Any] else {
+            print("Received message is not a dictionary: \(message.body)")
+            return false
+        }
         
         func reply(event: String, id: Any?, data: [String: Any]) {
             let payload: [String: Any] = [
@@ -76,7 +81,7 @@ internal final class OFStorageMessageProcessor {
                 "id": id as Any,
                 "data": data
             ]
-            postSecureMessageToJS(payload)
+            postSecureMessageToJS(payload, webView: message.webView)
         }
         
         func succeed(event: String, id: Any?, data: [String: Any] = [:]) {
@@ -141,7 +146,7 @@ internal final class OFStorageMessageProcessor {
     }
     
     /// Serializes a dictionary to JSON and posts it to the page via window.postMessage
-    private func postSecureMessageToJS(_ object: [String: Any]) {
+    private func postSecureMessageToJS(_ object: [String: Any], webView: WKWebView?) {
         guard JSONSerialization.isValidJSONObject(object),
               let data = try? JSONSerialization.data(withJSONObject: object, options: []),
               let json = String(data: data, encoding: .utf8) else {

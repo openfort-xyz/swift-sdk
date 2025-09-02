@@ -27,6 +27,7 @@ internal class OFWebView: WKWebView {
         if let messageHandler = scriptMessageHandler {
             userContentController.add(messageHandler, name: "userHandler")
             userContentController.add(messageHandler, name: "secureHandler")
+            userContentController.add(messageHandler, name: "authHandler")
         }
         
         func addScript(named name: String, injectionTime: WKUserScriptInjectionTime) {

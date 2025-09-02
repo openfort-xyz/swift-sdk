@@ -24,18 +24,19 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     private var coordinator = OFWebViewCoordinator()
     private var messageHandler = OFScriptMessageHandler()
     private var embeddedStateTimer: Timer?
+    private var getAccessToken: (() async -> String?)?
     
     @MainActor
-    public static func setupSDK() {
-        if initialized {
+    public static func setupSDK(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async -> String?)? = nil) {
+        if initialized && thirdParty == nil {
             return
         }
-        shared.setupInstance()
+        shared.setupInstance(thirdParty: thirdParty, getAccessToken: getAccessToken)
         initialized = true
     }
     
     @MainActor
-    private func setupInstance() {
+    private func setupInstance(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async -> String?)? = nil) {
         let readyName = Notification.Name("openfortReady")
         let failName  = Notification.Name("openfortInitError")
         
@@ -54,7 +55,7 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
         }
         
         self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
-        messageHandler.webView = self.webView
+        messageHandler.initScriptMessageProcessor(with: self.webView, getAccessToken: getAccessToken)
     }
     
     private func startPollingEmbeddedState() {

@@ -12,14 +12,10 @@ import Foundation
 
 internal final class OFScriptMessageProcessor {
     
-    private let webView: WKWebView?
-    private let jsonDecoder = JSONDecoder()
-    private let storageMessageProcessor: OFStorageMessageProcessor?
+    var getAccessToken: (() async -> String?)?
     
-    init(webView: WKWebView?) {
-        self.webView = webView
-        self.storageMessageProcessor = OFStorageMessageProcessor(webView: webView)
-    }
+    private let jsonDecoder = JSONDecoder()
+    private let storageMessageProcessor = OFStorageMessageProcessor()
     
     internal func process(_ message: WKScriptMessage) {
         guard let dict = message.body as? [String: Any] else {
@@ -28,7 +24,7 @@ internal final class OFScriptMessageProcessor {
         }
         
         if message.name == "secureHandler" {
-            if let storageMessageProcessor = self.storageMessageProcessor, storageMessageProcessor.processMessageForSecureStorage(dict) {
+            if storageMessageProcessor.processMessageForSecureStorage(message) {
                 return
             }
         }
@@ -38,7 +34,30 @@ internal final class OFScriptMessageProcessor {
             return
         }
         
-        if let storageMessageProcessor = self.storageMessageProcessor, storageMessageProcessor.processMessageForKeychain(dict) {
+        if storageMessageProcessor.processMessageForKeychain(message) {
+            return
+        }
+        
+        if message.name == "authHandler" {
+            guard
+                let body = message.body as? [String: Any],
+                let event = body["event"] as? String,
+                let id = body["id"] as? String,
+                event == "app:third-party-auth:getAccessToken"
+            else { return }
+
+            Task { @MainActor in
+                let token = await getAccessToken?() ?? nil
+                let value = token != nil ? "\"\(token!)\"" : "null"
+                let js = """
+                window.postMessage({
+                  event: "app:third-party-auth:getAccessToken",
+                  id: "\(id)",
+                  data: { value: \(value) }
+                }, window.location.origin);
+                """
+                try await message.webView?.evaluateJavaScript(js)
+            }
             return
         }
         
