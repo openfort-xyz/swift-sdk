@@ -27,7 +27,7 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
     private var getAccessToken: (() async -> String?)?
     
     @MainActor
-    public static func setupSDK(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async -> String?)? = nil) {
+    public static func setupSDK(thirdParty: OFAuthProvider? = nil, getAccessToken: (() async -> String?)? = nil) throws {
         if initialized && thirdParty == nil {
             return
         }
@@ -55,7 +55,7 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
         }
         
         self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
-        messageHandler.initScriptMessageProcessor(with: self.webView, getAccessToken: getAccessToken)
+        messageHandler.set(getAccessToken: getAccessToken)
     }
     
     private func startPollingEmbeddedState() {

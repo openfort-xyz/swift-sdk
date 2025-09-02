@@ -10,14 +10,13 @@ import Foundation
 
 internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
-    private var scriptMessageProcessor: OFScriptMessageProcessor?
+    private let scriptMessageProcessor = OFScriptMessageProcessor()
     
-    func initScriptMessageProcessor(with webView: WKWebView?, getAccessToken: (() async -> String?)?) {
-        scriptMessageProcessor = OFScriptMessageProcessor(webView: webView)
-        scriptMessageProcessor?.getAccessToken = getAccessToken
+    func set(getAccessToken: (() async -> String?)?) {
+        scriptMessageProcessor.getAccessToken = getAccessToken
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        scriptMessageProcessor?.process(message)
+        scriptMessageProcessor.process(message)
     }
 }
