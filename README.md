@@ -20,11 +20,8 @@
 
 # Openfort iOS SDK
 
-[![Downloads](https://img.shields.io/npm/dm/@openfort/react.svg)](https://swiftpackageindex.com/openfort-xyz/swift-sdk)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-openfort.io-blue)](https://www.openfort.io/docs/products/embedded-wallet/swift)
-[![Version](https://img.shields.io/npm/v/@openfort/react.svg)](https://swiftpackageindex.com/openfort-xyz/swift-sdk)
-
 
 The easiest way to use embedded wallets, with built-in authentication and payments capabilities in Swift.
 
