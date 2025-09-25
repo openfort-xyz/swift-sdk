@@ -1,4 +1,31 @@
-# swift-sdk
+<img width="1920" height="1080" alt="Group 48096483" src="https://github.com/user-attachments/assets/62af14ff-bd36-451d-bd29-46b32fec4749" />
+
+
+<div align="center">
+  <h4>
+    <a href="https://www.openfort.io/">
+      Website
+    </a>
+    <span> | </span>
+    <a href="https://www.openfort.io/docs/products/embedded-wallet/swift">
+      Documentation
+    </a>
+    <span> | </span>
+    <a href="https://x.com/openfort_hq">
+      X
+    </a>
+  </h4>
+</div>
+
+
+# Openfort iOS SDK
+
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Documentation](https://img.shields.io/badge/docs-openfort.io-blue)](https://www.openfort.io/docs/products/embedded-wallet/swift)
+
+The easiest way to use embedded wallets, with built-in authentication and payments capabilities in Swift.
+
+## Installation
 
 📦 Adding OpenfortSwift to Your Project (Swift Package Manager)
 
