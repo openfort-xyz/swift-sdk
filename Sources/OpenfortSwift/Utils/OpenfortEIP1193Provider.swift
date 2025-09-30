@@ -22,8 +22,9 @@ public final class OpenfortEIP1193Web3Provider: @preconcurrency Web3Provider {
     private let getProviderParams: OFGetEthereumProviderParams?
     
     /// - Parameters:
-    ///   - webView: The WKWebView hosting the Openfort page where `openfort.getEthereumProvider()` is available.
-    ///   - callbackQueue: Queue used to deliver `Web3Response` callbacks (defaults to `.main`).
+    ///   - webView: The `WKWebView` hosting the Openfort page where `openfort.getEthereumProvider()` is available.
+    ///   - getProviderParams: Optional parameters forwarded to `openfort.getEthereumProvider(...)` (e.g., policy, chains, providerInfo, announceProvider). If `nil`, the provider is requested without arguments.
+    ///   - callbackQueue: The dispatch queue on which `Web3Response` callbacks are delivered. Defaults to `.main`.
     public init(webView: WKWebView,
                 getProviderParams: OFGetEthereumProviderParams? = nil,
                 callbackQueue: DispatchQueue = .main) {

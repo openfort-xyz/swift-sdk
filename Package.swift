@@ -6,20 +6,19 @@ import PackageDescription
 let package = Package(
     name: "OpenfortSwift",
     platforms: [
-            .iOS(.v16) // Set your minimum supported iOS version
+            .iOS(.v16),
+            .macOS(.v11),
         ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "OpenfortSwift",
             targets: ["OpenfortSwift"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/Boilertalk/Web3.swift.git", branch: "master")
+        .package(url: "https://github.com/Boilertalk/Web3.swift.git", branch: "master"),
+        .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.3.0")
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "OpenfortSwift",
             dependencies: [.product(name: "Web3", package: "Web3.swift"),
