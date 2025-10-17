@@ -60,7 +60,6 @@ import OpenfortSwift
    - **iframeURL** – URL of your iframe environment (optional).
    - **openfortPublishableKey** – Your Openfort publishable key.
    - **shieldPublishableKey** – Your Shield publishable key.
-   - **shieldEncryptionKey** – Your Shield encryption key.
    - **shieldURL** – Shield service URL (optional).
 
 **5️⃣ Initialize the SDK**
