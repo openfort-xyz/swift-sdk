@@ -34,9 +34,9 @@ public struct OFPasskeyInfoDTO: OFCodableSendable {
 // MARK: - RecoveryParams
 
 public enum OFRecoveryMethod: String, OFCodableSendable {
-    case automatic = "AUTOMATIC"
-    case password = "PASSWORD"
-    case passkey = "PASSKEY"
+    case automatic = "automatic"
+    case password = "password"
+    case passkey = "passkey"
 }
 
 public struct OFRecoveryParamsDTO: OFCodableSendable {
