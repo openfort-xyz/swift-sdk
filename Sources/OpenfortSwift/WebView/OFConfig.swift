@@ -4,7 +4,6 @@ internal struct OFConfig: Codable {
     let backendUrl: String?
     let iframeUrl: String?
     let openfortPublishableKey: String
-    let shieldEncryptionKey: String
     let shieldPublishableKey: String
     let shieldUrl: String?
     let debug: Bool
@@ -112,7 +111,6 @@ internal struct OFConfig: Codable {
                 },
                 shieldConfiguration: {
                     shieldPublishableKey: '\(config.shieldPublishableKey)',
-                    shieldEncryptionKey: '\(config.shieldEncryptionKey)',
                     debug: \(debugValue ? "true" : "false")
                 },
                 overrides: {
