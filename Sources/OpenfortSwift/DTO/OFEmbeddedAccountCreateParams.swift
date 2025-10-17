@@ -19,51 +19,77 @@ public enum OFChainType: String, OFCodableSendable {
     case svm = "SVM"
 }
 
-public enum OFRecoveryMethod: String, OFCodableSendable {
-    case automatic = "AUTOMATIC"
-    case password = "PASSWORD"
+// MARK: - PasskeyInfo
+
+public struct OFPasskeyInfoDTO: OFCodableSendable {
+    public let passkeyId: String
+    public let passkeyKey: [UInt8]?
+
+    public init(passkeyId: String, passkeyKey: [UInt8]? = nil) {
+        self.passkeyId = passkeyId
+        self.passkeyKey = passkeyKey
+    }
 }
 
 // MARK: - RecoveryParams
 
-public enum OFRecoveryParamsDTO: OFCodableSendable {
-    case automatic(encryptionSession: String)
-    case password(password: String)
+public enum OFRecoveryMethod: String, OFCodableSendable {
+    case automatic = "AUTOMATIC"
+    case password = "PASSWORD"
+    case passkey = "PASSKEY"
+}
+
+public struct OFRecoveryParamsDTO: OFCodableSendable {
+    public let recoveryMethod: OFRecoveryMethod
+    public let encryptionSession: String?
+    public let password: String?
+    public let passkeyInfo: OFPasskeyInfoDTO?
 
     enum CodingKeys: String, CodingKey {
         case recoveryMethod
         case encryptionSession
         case password
+        case passkeyInfo
     }
 
-    enum RecoveryMethodKey: String, OFCodableSendable {
-        case automatic = "AUTOMATIC"
-        case password = "PASSWORD"
+    // Memberwise init for convenience
+    public init(
+        recoveryMethod: OFRecoveryMethod,
+        encryptionSession: String? = nil,
+        password: String? = nil,
+        passkeyInfo: OFPasskeyInfoDTO? = nil
+    ) {
+        self.recoveryMethod = recoveryMethod
+        self.encryptionSession = encryptionSession
+        self.password = password
+        self.passkeyInfo = passkeyInfo
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let method = try container.decode(RecoveryMethodKey.self, forKey: .recoveryMethod)
-
-        switch method {
-        case .automatic:
-            let session = try container.decode(String.self, forKey: .encryptionSession)
-            self = .automatic(encryptionSession: session)
-        case .password:
-            let pwd = try container.decode(String.self, forKey: .password)
-            self = .password(password: pwd)
-        }
+        self.recoveryMethod = try container.decode(OFRecoveryMethod.self, forKey: .recoveryMethod)
+        self.encryptionSession = try container.decodeIfPresent(String.self, forKey: .encryptionSession)
+        self.password = try container.decodeIfPresent(String.self, forKey: .password)
+        self.passkeyInfo = try container.decodeIfPresent(OFPasskeyInfoDTO.self, forKey: .passkeyInfo)
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        switch self {
-        case .automatic(let encryptionSession):
-            try container.encode(RecoveryMethodKey.automatic, forKey: .recoveryMethod)
-            try container.encode(encryptionSession, forKey: .encryptionSession)
-        case .password(let password):
-            try container.encode(RecoveryMethodKey.password, forKey: .recoveryMethod)
-            try container.encode(password, forKey: .password)
+        try container.encode(recoveryMethod, forKey: .recoveryMethod)
+        // Only encode the field relevant to the method (others remain omitted)
+        switch recoveryMethod {
+        case .automatic:
+            if let encryptionSession {
+                try container.encode(encryptionSession, forKey: .encryptionSession)
+            }
+        case .password:
+            if let password {
+                try container.encode(password, forKey: .password)
+            }
+        case .passkey:
+            if let passkeyInfo {
+                try container.encode(passkeyInfo, forKey: .passkeyInfo)
+            }
         }
     }
 }
