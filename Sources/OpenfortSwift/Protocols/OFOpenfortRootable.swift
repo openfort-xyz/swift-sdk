@@ -238,9 +238,20 @@ extension OFOpenfortRootable {
         method: String,
         errorDomain: String
     ) async throws {
-        try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            var resumed = false
+            func finish(_ result: Result<Void, Error>) {
+                guard !resumed else { return }
+                resumed = true
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
             evaluateAndObserveVoid(js: js, method: method, errorDomain: errorDomain) { (result: Result<Void, Error>) in
-                continuation.resume(with: result)
+                finish(result)
             }
         }
     }
@@ -255,16 +266,25 @@ extension OFOpenfortRootable {
     ///   - errorDomain: The error domain to use for errors.
     /// - Returns: A decoded object of type `T`, or `nil` if decoding fails.
     /// - Throws: An error if the operation fails.
-    internal func evaluateAndObserveAsync<T: Decodable>(
+    internal func evaluateAndObserveAsync<T: Decodable & Sendable>(
         js: String,
         method: String,
         errorDomain: String
     ) async throws -> T? {
-        try await withCheckedThrowingContinuation { continuation in
-            evaluateAndObserve(js: js, method: method, errorDomain: errorDomain) { (result: Result<T?, Error>) in
-                Task {
-                    continuation.resume(with: result)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<T?, Error>) in
+            var resumed = false
+            func finish(_ result: Result<T?, Error>) {
+                guard !resumed else { return }
+                resumed = true
+                switch result {
+                case .success(let value):
+                    continuation.resume(returning: value)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
                 }
+            }
+            evaluateAndObserve(js: js, method: method, errorDomain: errorDomain) { (result: Result<T?, Error>) in
+                finish(result)
             }
         }
     }
