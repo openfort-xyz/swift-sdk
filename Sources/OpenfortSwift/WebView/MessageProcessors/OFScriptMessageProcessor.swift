@@ -109,7 +109,7 @@ internal final class OFScriptMessageProcessor {
         ]
     }
     
-    private func handlerFor<T: Decodable>(_ type: T.Type) -> (Any, String) -> Void {
+    private func handlerFor<T: Decodable>(_ type: T.Type) -> (Any?, String) -> Void {
         return { [weak self] data, method in
             self?.decodeAndHandle(type, from: data, method: method)
         }
