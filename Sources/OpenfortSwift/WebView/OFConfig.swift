@@ -7,7 +7,6 @@ internal struct OFConfig: Codable {
     let shieldPublishableKey: String
     let shieldUrl: String?
     let debug: Bool
-    let provider: String?
     
     static func loadFromMainBundle() -> OFConfig? {
         guard let url = Bundle.main.url(forResource: "OFConfig", withExtension: "plist"),
@@ -25,7 +24,7 @@ internal struct OFConfig: Codable {
         }
     }
 
-    static func openfortSyncScript(provider: String? = nil, getAccessToken: String? = nil) -> String {
+    static func openfortSyncScript(provider: String? = nil) -> String {
         guard let config = loadFromMainBundle() else {
             print("OFConfig not loaded")
             return ""
@@ -45,11 +44,8 @@ internal struct OFConfig: Codable {
         }
         overrides.append("                storage: storage,")
 
-        // Determine effective provider/getter for third party auth
-        let effectiveProvider = provider ?? config.provider
-
         var thirdPartyAuthBlock = ""
-        if let providerStr = effectiveProvider {
+        if let providerStr = provider {
             thirdPartyAuthBlock = """
                 thirdPartyAuth: {
                     provider: \(providerStr),
