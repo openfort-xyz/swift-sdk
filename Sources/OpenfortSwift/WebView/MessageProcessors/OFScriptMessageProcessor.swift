@@ -31,9 +31,8 @@ internal final class OFScriptMessageProcessor {
         
         if message.name == "authHandler" {
             guard
-                let body = message.body as? [String: Any],
-                let event = body["event"] as? String,
-                let id = body["id"] as? String,
+                let event = dict["event"] as? String,
+                let id = dict["id"] as? String,
                 event == "app:third-party-auth:getAccessToken"
             else { return }
 
