@@ -29,15 +29,6 @@ internal final class OFScriptMessageProcessor {
             }
         }
         
-        guard let method = dict["method"] as? String else {
-            print("No 'method' key in message: \(dict)")
-            return
-        }
-        
-        if storageMessageProcessor.processMessageForKeychain(message) {
-            return
-        }
-        
         if message.name == "authHandler" {
             guard
                 let body = message.body as? [String: Any],
@@ -58,6 +49,15 @@ internal final class OFScriptMessageProcessor {
                 """
                 try await message.webView?.evaluateJavaScript(js)
             }
+            return
+        }
+        
+        guard let method = dict["method"] as? String else {
+            print("No 'method' key in message: \(dict)")
+            return
+        }
+        
+        if storageMessageProcessor.processMessageForKeychain(message) {
             return
         }
         
