@@ -54,7 +54,7 @@ public final class OFSDK: NSObject, OFOpenfortRootable, OFAuthorizable, OFProxib
             NotificationCenter.default.post(name: failName, object: self, userInfo: ["error": (error as NSError).localizedDescription])
         }
         
-        self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler)
+        self.webView = OFWebView(fileUrl: contentUrl, delegate: coordinator, scriptMessageHandler: messageHandler, provider: thirdParty?.rawValue)
         messageHandler.set(getAccessToken: getAccessToken)
     }
     

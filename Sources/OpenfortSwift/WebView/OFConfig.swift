@@ -8,7 +8,6 @@ internal struct OFConfig: Codable {
     let shieldUrl: String?
     let debug: Bool
     let provider: String?
-    let getAccessToken: String?
     
     static func loadFromMainBundle() -> OFConfig? {
         guard let url = Bundle.main.url(forResource: "OFConfig", withExtension: "plist"),
@@ -48,10 +47,9 @@ internal struct OFConfig: Codable {
 
         // Determine effective provider/getter for third party auth
         let effectiveProvider = provider ?? config.provider
-        let effectiveGetter = getAccessToken ?? config.getAccessToken
 
         var thirdPartyAuthBlock = ""
-        if let providerStr = effectiveProvider, let _ = effectiveGetter {
+        if let providerStr = effectiveProvider {
             let uppercasedProvider = providerStr.uppercased()
             thirdPartyAuthBlock = """
                 thirdPartyAuth: {
