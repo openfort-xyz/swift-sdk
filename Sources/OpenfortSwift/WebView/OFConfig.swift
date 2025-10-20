@@ -50,10 +50,9 @@ internal struct OFConfig: Codable {
 
         var thirdPartyAuthBlock = ""
         if let providerStr = effectiveProvider {
-            let uppercasedProvider = providerStr.uppercased()
             thirdPartyAuthBlock = """
                 thirdPartyAuth: {
-                    provider: ThirdPartyOAuthProvider.\(uppercasedProvider),
+                    provider: \(providerStr),
                     getAccessToken: async () => {
                       try {
                         console.log('----- Requesting access token from native auth -----');
