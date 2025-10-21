@@ -141,7 +141,7 @@ internal final class OFScriptMessageProcessor {
         }
     
         do {
-            let jsonData: Data?
+            var jsonData: Data?
             
             // Treat empty data (nil, empty dict, empty string) as allowed: post nil object
             if data == nil ||
@@ -171,9 +171,15 @@ internal final class OFScriptMessageProcessor {
                 postNotification()
                 return
             }
-            object = try jsonDecoder.decode(T.self, from: jsonData!)
+            guard let jsonData else {
+                print("decodeAndHandle: missing jsonData for \(method)")
+                userInfo = ["success": false]
+                postNotification()
+                return
+            }
+            object = try jsonDecoder.decode(T.self, from: jsonData)
             postNotification()
-            print("Decoded \(method) data:", object!)
+            print("Decoded \(method) data:", String(describing: object))
         } catch {
             print("Decoding error for \(method):", error)
             userInfo = ["success": false]
