@@ -89,7 +89,15 @@ internal struct OFConfig: Codable {
                     } catch (e) {}
                   }
                   window.addEventListener('message', listener);
-                  window.webkit.messageHandlers.authHandler.postMessage({ event: eventName, id });
+                  setTimeout(() => {
+                    try {
+                      window.webkit.messageHandlers.authHandler.postMessage({ event: eventName, id });
+                    } catch (e) {
+                      console.error('[OF] auth bridge postMessage failed', e);
+                      try { window.removeEventListener('message', listener); } catch (_) {}
+                      resolve(null);
+                    }
+                  }, 0);
                 });
               };
             })();
