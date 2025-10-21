@@ -36,7 +36,7 @@ internal final class OFScriptMessageProcessor {
                 event == "app:third-party-auth:getAccessToken"
             else { return }
 
-            Task { @MainActor in
+            Task {
                 let token = try await getAccessToken?() ?? nil
                 let value = token != nil ? "\"\(token!)\"" : "null"
                 let js = """
@@ -46,7 +46,7 @@ internal final class OFScriptMessageProcessor {
                   data: { value: \(value) }
                 }, window.location.origin);
                 """
-//                try await message.webView?.evaluateJavaScript(js)
+                try await message.webView?.evaluateJavaScript(js)
             }
             return
         }
