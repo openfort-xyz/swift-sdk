@@ -46,8 +46,7 @@ internal final class OFScriptMessageProcessor {
                   data: { value: \(value) }
                 }, window.location.origin);
                 """
-                print(js)
-//                try await message.webView?.evaluateJavaScript(js)
+                try await message.webView?.evaluateJavaScript(js)
             }
             return
         }
