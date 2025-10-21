@@ -36,17 +36,30 @@ internal final class OFScriptMessageProcessor {
                 event == "app:third-party-auth:getAccessToken"
             else { return }
 
-            Task {
-                let token = try await getAccessToken?() ?? nil
-                let value = token != nil ? "\"\(token!)\"" : "null"
-                let js = """
-                window.postMessage({
-                  event: "app:third-party-auth:getAccessToken",
-                  id: "\(id)",
-                  data: { value: \(value) }
-                }, window.location.origin);
-                """
-                try await message.webView?.evaluateJavaScript(js)
+            Task { @MainActor in
+                do {
+                    let token = try await getAccessToken?()
+                    let value = token.map { "\"\($0)\"" } ?? "null"
+
+                    let js = """
+                    window.postMessage({
+                      event: "app:third-party-auth:getAccessToken",
+                      id: "\(id)",
+                      data: { value: \(value) }
+                    }, window.location.origin);
+                    """
+
+                    guard let webView = message.webView else {
+                        print("⚠️ message.webView is nil — skipping JS eval")
+                        return
+                    }
+
+                    print("Evaluating JS in \(webView)")
+                    _ = try await webView.evaluateJavaScript(js)
+                    print("✅ JS evaluated OK")
+                } catch {
+                    print("authHandler error:", error)
+                }
             }
             return
         }
