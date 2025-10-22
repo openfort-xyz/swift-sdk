@@ -14,7 +14,7 @@ internal class OFWebView: WKWebView {
     let scriptMessageHandler: WKScriptMessageHandler?
     let provider: String?
     
-    init(fileUrl: URL, delegate: WKNavigationDelegate?, scriptMessageHandler: WKScriptMessageHandler?, provider: String? = nil) {
+    init(fileUrl: URL, delegate: WKNavigationDelegate?, scriptMessageHandler: WKScriptMessageHandler?, provider: String? = nil, getAccessToken: (() async throws -> String?)? = nil) {
         self.fileUrl = fileUrl
         self.delegate = delegate
         self.scriptMessageHandler = scriptMessageHandler
@@ -29,7 +29,13 @@ internal class OFWebView: WKWebView {
         if let messageHandler = scriptMessageHandler {
             userContentController.add(messageHandler, name: "userHandler")
             userContentController.add(messageHandler, name: "secureHandler")
-            userContentController.add(messageHandler, name: "authHandler")
+        }
+        if let getAccessToken = getAccessToken {
+            let authHandler = OFAuthReplyHandler()
+            authHandler.getAccessToken = {
+                try await getAccessToken()
+            }
+            userContentController.addScriptMessageHandler(authHandler, contentWorld: .page, name: "authHandler")
         }
         
         func addScript(named name: String, injectionTime: WKUserScriptInjectionTime) {

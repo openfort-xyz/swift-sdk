@@ -12,10 +12,6 @@ internal final class OFScriptMessageHandler: NSObject, WKScriptMessageHandler {
     
     private let scriptMessageProcessor = OFScriptMessageProcessor()
     
-    func set(getAccessToken: (() async throws -> String?)?) {
-        scriptMessageProcessor.getAccessToken = getAccessToken
-    }
-    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         scriptMessageProcessor.process(message)
     }

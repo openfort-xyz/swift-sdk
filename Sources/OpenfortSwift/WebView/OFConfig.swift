@@ -65,39 +65,43 @@ internal struct OFConfig: Codable {
         let overridesString = overrides.joined(separator: "\n")
         // JS helper for bridge
         let authBridgeHelper = """
-            (function() {
+            (function () {
               window.__ofAuthBridgeRequest = (eventName) => {
-                if (!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.authHandler)) {
-                  return Promise.resolve(null);
+                const hasReply = !!(window.webkit &&
+                                    window.webkit.messageHandlers &&
+                                    window.webkit.messageHandlers.authHandler &&
+                                    typeof window.webkit.messageHandlers.authHandler.postMessage === 'function' &&
+                                    // reply-capable postMessage returns a Promise on iOS 16+
+                                    window.webkit.messageHandlers.authHandler.postMessage.length === 1);
+
+                if (hasReply) {
+                  // iOS 16+: native replies directly — no message listener, no eval
+                  return window.webkit.messageHandlers.authHandler.postMessage({ event: eventName })
+                    .then(val => (val === undefined ? null : val))
+                    .catch(() => null);
                 }
+
+                // Fallback: your existing window.postMessage listener flow
                 return new Promise((resolve) => {
                   const id = Math.random().toString(36).substring(2) + Date.now();
                   function listener(event) {
                     try {
                       const data = event.data;
-                      if (
-                        data &&
-                        typeof data === 'object' &&
-                        data.event === eventName &&
-                        data.id === id &&
-                        data.data &&
-                        ('value' in data.data)
-                      ) {
+                      if (data && typeof data === 'object' &&
+                          data.event === eventName && data.id === id &&
+                          data.data && ('value' in data.data)) {
                         window.removeEventListener('message', listener);
                         resolve(data.data.value);
                       }
-                    } catch (e) {}
+                    } catch (e) { /* ignore */ }
                   }
                   window.addEventListener('message', listener);
-                  setTimeout(() => {
-                    try {
-                      window.webkit.messageHandlers.authHandler.postMessage({ event: eventName, id });
-                    } catch (e) {
-                      console.error('[OF] auth bridge postMessage failed', e);
-                      try { window.removeEventListener('message', listener); } catch (_) {}
-                      resolve(null);
-                    }
-                  }, 0);
+                  try {
+                    window.webkit.messageHandlers.authHandler.postMessage({ event: eventName, id });
+                  } catch (e) {
+                    window.removeEventListener('message', listener);
+                    resolve(null);
+                  }
                 });
               };
             })();
