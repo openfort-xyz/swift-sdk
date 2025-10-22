@@ -69,32 +69,25 @@ internal struct OFConfig: Codable {
 
         // JS helper for bridge
         let authBridgeHelper = """
-            (function() {
+            (function () {
               window.__ofAuthBridgeRequest = (eventName) => {
-                if (!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.authHandler)) {
+                const handler = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.authHandler;
+                if (!handler || typeof handler.postMessage !== 'function') {
+                  console.error('[OF] authHandler not available');
                   return Promise.resolve(null);
                 }
-                return new Promise((resolve) => {
-                  const id = Math.random().toString(36).substring(2) + Date.now();
-                  function listener(event) {
-                    try {
-                      const data = event.data;
-                      if (
-                        data &&
-                        typeof data === 'object' &&
-                        data.event === eventName &&
-                        data.id === id &&
-                        data.data &&
-                        ('value' in data.data)
-                      ) {
-                        window.removeEventListener('message', listener);
-                        resolve(data.data.value);
-                      }
-                    } catch (e) {}
-                  }
-                  window.addEventListener('message', listener);
-                  window.webkit.messageHandlers.authHandler.postMessage({ event: eventName, id });
-                });
+                try {
+                  // iOS 16+ — native reply handler returns a Promise
+                  return handler.postMessage({ event: eventName })
+                    .then(v => (v == null ? null : v))
+                    .catch(e => {
+                      console.error('[OF] getAccessToken bridge error', e);
+                      return null;
+                    });
+                } catch (e) {
+                  console.error('[OF] getAccessToken bridge error (outer)', e);
+                  return Promise.resolve(null);
+                }
               };
             })();
         """

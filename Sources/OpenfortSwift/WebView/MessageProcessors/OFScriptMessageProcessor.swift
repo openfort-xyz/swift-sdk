@@ -12,8 +12,6 @@ import Foundation
 
 internal final class OFScriptMessageProcessor {
     
-    var getAccessToken: (() async throws -> String?)?
-    
     private let jsonDecoder = JSONDecoder()
     private let storageMessageProcessor = OFStorageMessageProcessor()
     
@@ -27,28 +25,6 @@ internal final class OFScriptMessageProcessor {
             if storageMessageProcessor.processMessageForSecureStorage(message) {
                 return
             }
-        }
-        
-        if message.name == "authHandler" {
-            guard
-                let event = dict["event"] as? String,
-                let id = dict["id"] as? String,
-                event == "app:third-party-auth:getAccessToken"
-            else { return }
-
-            Task { @MainActor in
-                let token = try await getAccessToken?() ?? nil
-                let value = token != nil ? "\"\(token!)\"" : "null"
-                let js = """
-                window.postMessage({
-                  event: "app:third-party-auth:getAccessToken",
-                  id: "\(id)",
-                  data: { value: \(value) }
-                }, window.location.origin);
-                """
-                try await message.webView?.evaluateJavaScript(js)
-            }
-            return
         }
         
         guard let method = dict["method"] as? String else {
@@ -128,7 +104,7 @@ internal final class OFScriptMessageProcessor {
         }
     
         do {
-            let jsonData: Data?
+            var jsonData: Data?
             
             // Treat empty data (nil, empty dict, empty string) as allowed: post nil object
             if data == nil ||
@@ -158,9 +134,15 @@ internal final class OFScriptMessageProcessor {
                 postNotification()
                 return
             }
-            object = try jsonDecoder.decode(T.self, from: jsonData!)
+            guard let jsonData else {
+                print("decodeAndHandle: missing jsonData for \(method)")
+                userInfo = ["success": false]
+                postNotification()
+                return
+            }
+            object = try jsonDecoder.decode(T.self, from: jsonData)
             postNotification()
-            print("Decoded \(method) data:", object!)
+            print("Decoded \(method) data:", String(describing: object))
         } catch {
             print("Decoding error for \(method):", error)
             userInfo = ["success": false]
