@@ -63,6 +63,10 @@ internal struct OFConfig: Codable {
         }
 
         let overridesString = overrides.joined(separator: "\n")
+
+        // Get native app identifier (bundle identifier)
+        let nativeAppIdentifier = Bundle.main.bundleIdentifier ?? "unknown"
+
         // JS helper for bridge
         let authBridgeHelper = """
             (function() {
@@ -101,6 +105,7 @@ internal struct OFConfig: Codable {
             const openfort = new Openfort({
                 baseConfiguration: {
                     publishableKey: '\(config.openfortPublishableKey)',
+                    nativeAppIdentifier: '\(nativeAppIdentifier)',
                 },
                 shieldConfiguration: {
                     shieldPublishableKey: '\(config.shieldPublishableKey)',
