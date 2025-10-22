@@ -43,7 +43,7 @@ internal final class OFScriptMessageProcessor {
 
                     let js = """
                     window.postMessage({
-                      event: "app:third-party-auth:getAccessToken",
+                      event: "app:third-party-auth:getAccessToke",
                       id: "\(id)",
                       data: { value: \(value) }
                     }, window.location.origin);
