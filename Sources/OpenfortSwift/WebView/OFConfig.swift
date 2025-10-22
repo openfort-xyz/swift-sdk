@@ -67,21 +67,21 @@ internal struct OFConfig: Codable {
         let authBridgeHelper = """
             (function () {
               window.__ofAuthBridgeRequest = (eventName) => {
-                const hasReply = !!(window.webkit &&
-                                    window.webkit.messageHandlers &&
-                                    window.webkit.messageHandlers.authHandler &&
-                                    typeof window.webkit.messageHandlers.authHandler.postMessage === 'function' &&
-                                    // reply-capable postMessage returns a Promise on iOS 16+
-                                    window.webkit.messageHandlers.authHandler.postMessage.length === 1);
-
-                if (hasReply) {
-                  // iOS 16+: native replies directly — no message listener, no eval
-                  return window.webkit.messageHandlers.authHandler.postMessage({ event: eventName })
-                    .then(val => (val === undefined ? null : val))
-                    .catch(() => null);
+                const handler = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.authHandler;
+                if (!handler || typeof handler.postMessage !== 'function') {
+                  return Promise.resolve(null);
+                }
+                // Prefer native reply (iOS 16+): postMessage returns a Promise
+                try {
+                  const maybe = handler.postMessage({ event: eventName });
+                  if (maybe && typeof maybe.then === 'function') {
+                    return maybe.then(v => (v == null ? null : v)).catch(() => null);
+                  }
+                } catch (_) {
+                  // fall through to listener-based bridge
                 }
 
-                // Fallback: your existing window.postMessage listener flow
+                // Fallback: listener + window.postMessage handshake
                 return new Promise((resolve) => {
                   const id = Math.random().toString(36).substring(2) + Date.now();
                   function listener(event) {
@@ -93,12 +93,12 @@ internal struct OFConfig: Codable {
                         window.removeEventListener('message', listener);
                         resolve(data.data.value);
                       }
-                    } catch (e) { /* ignore */ }
+                    } catch (_) {}
                   }
                   window.addEventListener('message', listener);
                   try {
-                    window.webkit.messageHandlers.authHandler.postMessage({ event: eventName, id });
-                  } catch (e) {
+                    handler.postMessage({ event: eventName, id });
+                  } catch (_) {
                     window.removeEventListener('message', listener);
                     resolve(null);
                   }
