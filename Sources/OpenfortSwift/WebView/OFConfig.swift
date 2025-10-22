@@ -69,40 +69,21 @@ internal struct OFConfig: Codable {
               window.__ofAuthBridgeRequest = (eventName) => {
                 const handler = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.authHandler;
                 if (!handler || typeof handler.postMessage !== 'function') {
+                  console.error('[OF] authHandler not available');
                   return Promise.resolve(null);
                 }
-                // Prefer native reply (iOS 16+): postMessage returns a Promise
                 try {
-                  const maybe = handler.postMessage({ event: eventName });
-                  if (maybe && typeof maybe.then === 'function') {
-                    return maybe.then(v => (v == null ? null : v)).catch(() => null);
-                  }
-                } catch (_) {
-                  // fall through to listener-based bridge
+                  // iOS 16+ — native reply handler returns a Promise
+                  return handler.postMessage({ event: eventName })
+                    .then(v => (v == null ? null : v))
+                    .catch(e => {
+                      console.error('[OF] getAccessToken bridge error', e);
+                      return null;
+                    });
+                } catch (e) {
+                  console.error('[OF] getAccessToken bridge error (outer)', e);
+                  return Promise.resolve(null);
                 }
-
-                // Fallback: listener + window.postMessage handshake
-                return new Promise((resolve) => {
-                  const id = Math.random().toString(36).substring(2) + Date.now();
-                  function listener(event) {
-                    try {
-                      const data = event.data;
-                      if (data && typeof data === 'object' &&
-                          data.event === eventName && data.id === id &&
-                          data.data && ('value' in data.data)) {
-                        window.removeEventListener('message', listener);
-                        resolve(data.data.value);
-                      }
-                    } catch (_) {}
-                  }
-                  window.addEventListener('message', listener);
-                  try {
-                    handler.postMessage({ event: eventName, id });
-                  } catch (_) {
-                    window.removeEventListener('message', listener);
-                    resolve(null);
-                  }
-                });
               };
             })();
         """
