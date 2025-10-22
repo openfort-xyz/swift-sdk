@@ -13,56 +13,98 @@ import Foundation
 internal final class OFStorageMessageProcessor {
 
     private let jsonDecoder = JSONDecoder()
-    
+
+    private func jsEscape(_ s: String) -> String {
+        return s
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+            .replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\r", with: "\\r")
+    }
+
+    private func toInt(_ any: Any?) -> Int? {
+        if let i = any as? Int { return i }
+        if let d = any as? Double { return Int(d) }
+        if let s = any as? String, let i = Int(s) { return i }
+        return nil
+    }
+
     internal func processMessageForKeychain(_ message: WKScriptMessage) -> Bool {
         guard let data = message.body as? [String: Any] else {
             print("Received message is not a dictionary: \(message.body)")
             return false
         }
-        
+
         let method = data["method"] as? String ?? ""
-        
+
         switch method {
         case "KeychainSave":
-            OFKeychainHelper.save(data["value"] as! String, for: data["key"] as! String)
-            let requestId = data["requestId"] as! Int
+            guard let key = data["key"] as? String, let value = data["value"] as? String else {
+                print("KeychainSave: missing key/value")
+                return false
+            }
+            OFKeychainHelper.save(value, for: key)
+            guard let requestId = toInt(data["requestId"]) else {
+                print("KeychainSave: missing/invalid requestId")
+                return true
+            }
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
-            message.webView?.evaluateJavaScript(js)
+            if let webView = message.webView { webView.evaluateJavaScript(js) }
             return true
+
         case "KeychainRemove":
-            OFKeychainHelper.delete(for: data["key"] as! String)
-            let requestId = data["requestId"] as! Int
+            guard let key = data["key"] as? String else {
+                print("KeychainRemove: missing key")
+                return false
+            }
+            OFKeychainHelper.delete(for: key)
+            guard let requestId = toInt(data["requestId"]) else {
+                print("KeychainRemove: missing/invalid requestId")
+                return true
+            }
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
-            message.webView?.evaluateJavaScript(js)
+            if let webView = message.webView { webView.evaluateJavaScript(js) }
             return true
+
         case "KeychainGet":
-            let value = OFKeychainHelper.retrieve(for: data["key"] as! String) ?? ""
-            let requestId = data["requestId"] as! Int
+            guard let key = data["key"] as? String else {
+                print("KeychainGet: missing key")
+                return false
+            }
+            guard let requestId = toInt(data["requestId"]) else {
+                print("KeychainGet: missing/invalid requestId")
+                return true
+            }
+            let value = OFKeychainHelper.retrieve(for: key) ?? ""
             if !value.isEmpty {
-                // Try to parse value as JSON
-                if let data = value.data(using: .utf8),
-                   let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
+                if let bytes = value.data(using: .utf8),
+                   let jsonObject = try? JSONSerialization.jsonObject(with: bytes, options: []),
                    JSONSerialization.isValidJSONObject(jsonObject) {
-                    // It's a JSON object/array, pass as-is
+                    // JSON object/array – pass as-is
                     let js = "window.__keychainOnGet({ requestId: \(requestId), value: \(value) })"
-                    message.webView?.evaluateJavaScript(js)
+                    if let webView = message.webView { webView.evaluateJavaScript(js) }
                 } else {
-                    // It's a plain string, escape and quote
-                    let js = "window.__keychainOnGet({ requestId: \(requestId), value: \"\(value)\" })"
-                    message.webView?.evaluateJavaScript(js)
+                    // Plain string – escape and quote
+                    let escaped = jsEscape(value)
+                    let js = "window.__keychainOnGet({ requestId: \(requestId), value: \"\(escaped)\" })"
+                    if let webView = message.webView { webView.evaluateJavaScript(js) }
                 }
             } else {
-                // If nil or empty, send null
                 let js = "window.__keychainOnGet({ requestId: \(requestId), value: null })"
-                message.webView?.evaluateJavaScript(js)
+                if let webView = message.webView { webView.evaluateJavaScript(js) }
             }
             return true
+
         case "KeychainFlush":
             OFKeychainHelper.clearAll()
-            let requestId = data["requestId"] as! Int
+            guard let requestId = toInt(data["requestId"]) else {
+                print("KeychainFlush: missing/invalid requestId")
+                return true
+            }
             let js = "window.__keychainOnOp({ requestId: \(requestId) })"
-            message.webView?.evaluateJavaScript(js)
+            if let webView = message.webView { webView.evaluateJavaScript(js) }
             return true
+
         default:
             return false
         }
