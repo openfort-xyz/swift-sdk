@@ -231,12 +231,11 @@ window.signMessageSync = function({ message, options }) {
     handleResult('signMessage', window.openfort.embeddedWalletInstance.signMessage(message, options));
 };
 
-window.setEmbeddedRecoverySync = function({ recoveryMethod, recoveryPassword, encryptionSession }) {
-    handleResult('setEmbeddedRecovery', window.openfort.embeddedWalletInstance.setEmbeddedRecovery({
-        recoveryMethod,
-        recoveryPassword,
-        encryptionSession
-    }));
+window.setRecoveryMethodSync = function({ previousRecovery, newRecovery }) {
+    handleResult('setRecoveryMethod', window.openfort.embeddedWalletInstance.setRecoveryMethod(
+        previousRecovery,
+        newRecovery
+    ));
 };
 
 window.getEmbeddedStateSync = function() {

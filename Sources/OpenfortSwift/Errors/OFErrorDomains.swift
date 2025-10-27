@@ -52,7 +52,7 @@ public struct OFErrorDomains {
     public static let list = "OFListErrorDomain"
     public static let ping = "OFPingErrorDomain"
     public static let recover = "OFRecoverErrorDomain"
-    public static let setEmbeddedRecovery = "OFSetEmbeddedRecoveryErrorDomain"
+    public static let setRecoveryMethod = "OFSetRecoveryMethodErrorDomain"
     public static let signMessage = "OFSignMessageErrorDomain"
     public static let signTypedData = "OFSignTypedDataErrorDomain"
     

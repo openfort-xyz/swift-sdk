@@ -376,32 +376,32 @@ public extension OFEmbeddedWalletAccessable {
 
     /// Configures recovery for the embedded wallet.
     ///
-    /// Calls `window.setEmbeddedRecoverySync(...)`.
-    /// - Parameter params: Recovery configuration (`OFSetEmbeddedRecoveryParams`).
+    /// Calls `window.setRecoveryMethodSync(...)`.
+    /// - Parameter params: Recovery configuration (`OFSetRecoveryMethodParams`).
     /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    func setEmbeddedRecovery(params: OFSetEmbeddedRecoveryParams) async throws {
-        let method = OFMethods.setEmbeddedRecovery
+    func setRecoveryMethod(params: OFSetRecoveryMethodParams) async throws {
+        let method = OFMethods.setRecoveryMethod
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
         try await evaluateAndObserveVoidAsync(
-            js: "window.setEmbeddedRecoverySync(\(jsonString));",
+            js: "window.setRecoveryMethodSync(\(jsonString));",
             method: method,
-            errorDomain: OFErrorDomains.setEmbeddedRecovery
+            errorDomain: OFErrorDomains.setRecoveryMethod
         )
     }
     
     /// Configures embedded wallet recovery (completion-based API).
     /// - Parameters:
-    ///   - params: Recovery configuration (`OFSetEmbeddedRecoveryParams`).
+    ///   - params: Recovery configuration (`OFSetRecoveryMethodParams`).
     ///   - completion: Called with `Void` on success or an error.
-    func setEmbeddedRecovery(
-        params: OFSetEmbeddedRecoveryParams,
+    func setRecoveryMethod(
+        params: OFSetRecoveryMethodParams,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         Task {
             do {
-                try await setEmbeddedRecovery(params: params)
+                try await setRecoveryMethod(params: params)
                 completion(.success(()))
             } catch {
                 completion(.failure(error))
