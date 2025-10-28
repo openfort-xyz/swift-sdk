@@ -68,7 +68,7 @@ internal final class OFScriptMessageProcessor {
             OFMethods.signTypedData: handlerFor(OFSignTypedDataResponse.self),
             OFMethods.get: handlerFor(OFEmbeddedAccount.self),
             OFMethods.getEthereumProvider: handlerFor(OFGetEthereumProviderResponse.self),
-            OFMethods.configure: handlerFor(OFConfigureResponse.self),
+            OFMethods.configure: handlerFor(OFEmbeddedAccount.self),
             OFMethods.create: handlerFor(OFEmbeddedAccount.self),
             OFMethods.recover: handlerFor(OFEmbeddedAccount.self),
             OFMethods.exportPrivateKey: handlerFor(OFExportPrivateKeyResponse.self),
