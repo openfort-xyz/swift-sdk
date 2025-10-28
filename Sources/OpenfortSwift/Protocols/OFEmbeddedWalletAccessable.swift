@@ -70,13 +70,12 @@ public extension OFEmbeddedWalletAccessable {
     /// Retrieves an embedded account entity by key.
     ///
     /// Calls `window.getSync(key)` and decodes the embedded account fields.
-    /// - Parameter key: A lookup key.
     /// - Returns: `OFGetResponse` with embedded account fields, or `nil`.
     /// - Throws: An error from the JS bridge.
-    func get(key: String) async throws -> OFGetResponse? {
+    func get() async throws -> OFEmbeddedAccount? {
         let method = OFMethods.get
         return try await evaluateAndObserveAsync(
-            js: "window.getSync('\(key)');",
+            js: "window.getSync();",
             method: method,
             errorDomain: OFErrorDomains.get
         )
@@ -84,15 +83,13 @@ public extension OFEmbeddedWalletAccessable {
     
     /// Retrieves an embedded account entity by key (completion-based API).
     /// - Parameters:
-    ///   - key: A lookup key.
     ///   - completion: Called with an optional `OFGetResponse` or an error.
     func get(
-        key: String,
-        completion: @escaping (Result<OFGetResponse?, Error>) -> Void
+        completion: @escaping (Result<OFEmbeddedAccount?, Error>) -> Void
     ) {
         Task {
             do {
-                let result = try await get(key: key)
+                let result = try await get()
                 completion(.success(result))
             } catch {
                 completion(.failure(error))

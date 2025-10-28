@@ -66,7 +66,7 @@ internal final class OFScriptMessageProcessor {
             OFMethods.linkThirdPartyProvider: handlerFor(OFAuthPlayerResponse.self),
             OFMethods.authenticateWithSIWE: handlerFor(OFAuthorizationResponse.self),
             OFMethods.signTypedData: handlerFor(OFSignTypedDataResponse.self),
-            OFMethods.get: handlerFor(OFGetResponse.self),
+            OFMethods.get: handlerFor(OFEmbeddedAccount.self),
             OFMethods.getEthereumProvider: handlerFor(OFGetEthereumProviderResponse.self),
             OFMethods.configure: handlerFor(OFConfigureResponse.self),
             OFMethods.create: handlerFor(OFEmbeddedAccount.self),
