@@ -136,24 +136,6 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
 
-    /// Configures the embedded wallet for the current player.
-    ///
-    /// Calls `window.configureSync({ params: ... })` with the provided configuration.
-    /// - Parameter params: Configuration payload (`OFConfigureEmbeddedWalletDTO`).
-    /// - Returns: Optional `OFConfigureResponse`.
-    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    func configure(params: OFConfigureEmbeddedWalletDTO) async throws -> OFConfigureResponse? {
-        let method = OFMethods.configure
-        guard let jsonString = encodeToJSONString(params) else {
-            throw OFError.encodingFailed
-        }
-        return try await evaluateAndObserveAsync(
-            js: "window.configureSync({ params: \(jsonString) });",
-            method: method,
-            errorDomain: OFErrorDomains.configure
-        )
-    }
-
     /// Creates an embedded wallet account.
     ///
     /// Calls `window.createSync(...)` in the web context and waits for the result.
@@ -226,13 +208,31 @@ public extension OFEmbeddedWalletAccessable {
         }
     }
     
+    /// Configures the embedded wallet for the current player.
+    ///
+    /// Calls `window.configureSync({ params: ... })` with the provided configuration.
+    /// - Parameter params: Configuration payload (`OFConfigureEmbeddedWalletDTO`).
+    /// - Returns: Optional `OFEmbeddedAccount`.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    func configure(params: OFConfigureEmbeddedWalletDTO) async throws -> OFEmbeddedAccount? {
+        let method = OFMethods.configure
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.configureSync({ params: \(jsonString) });",
+            method: method,
+            errorDomain: OFErrorDomains.configure
+        )
+    }
+    
     /// Configures the embedded wallet (completion-based API).
     /// - Parameters:
     ///   - params: Configuration payload (`OFConfigureEmbeddedWalletDTO`).
-    ///   - completion: Called with an optional `OFConfigureResponse` or an error.
+    ///   - completion: Called with an optional `OFEmbeddedAccount` or an error.
     func configure(
         params: OFConfigureEmbeddedWalletDTO,
-        completion: @escaping (Result<OFConfigureResponse?, Error>) -> Void
+        completion: @escaping (Result<OFEmbeddedAccount?, Error>) -> Void
     ) {
         Task {
             do {
