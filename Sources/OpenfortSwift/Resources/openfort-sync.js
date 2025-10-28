@@ -195,8 +195,8 @@ window.signTypedDataSync = function({ domain, types, message }) {
     handleResult('signTypedData', window.openfort.embeddedWalletInstance.signTypedData(domain, types, message));
 };
 
-window.getSync = function({ key }) {
-    handleResult('get', window.openfort.embeddedWalletInstance.get(key));
+window.getSync = function() {
+    handleResult('get', window.openfort.embeddedWalletInstance.get());
 };
 
 window.getEthereumProviderSync = function({ options } = {}) {
