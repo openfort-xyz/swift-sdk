@@ -15,7 +15,7 @@ let package = Package(
             targets: ["OpenfortSwift"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/Boilertalk/Web3.swift.git", branch: "master"),
+        .package(url: "https://github.com/Boilertalk/Web3.swift.git", from: "0.8.8"),
         .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.3.0")
     ],
     targets: [
