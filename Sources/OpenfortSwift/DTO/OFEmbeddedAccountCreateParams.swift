@@ -12,6 +12,7 @@ import Foundation
 public enum OFAccountType: String, OFCodableSendable {
     case eoa = "Externally Owned Account"
     case smartAccount = "Smart Account"
+    case delegatedAccount = "Delegated Account"
 }
 
 public enum OFChainType: String, OFCodableSendable {
