@@ -5,7 +5,8 @@
 //  Created by Pavlo Hurkovskyi on 2025-07-22.
 //
 
-public struct OFConfigureEmbeddedWalletDTO: OFCodableSendable {
+/// Maps to the JS `EmbeddedAccountConfigureParams` type.
+public struct OFEmbeddedAccountConfigureParams: OFCodableSendable {
     let chainId: Int?
     let recoveryParams: OFRecoveryParamsDTO
 

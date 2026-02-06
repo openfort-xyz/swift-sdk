@@ -5,14 +5,29 @@
 //  Created by Pavel Gurkovskii on 2025-06-30.
 //
 
-function handleResult(method, promise) {
-    promise
-        .then(result => {
-            window.webkit.messageHandlers.userHandler.postMessage({ method: method, success: true, data: result });
-        })
-        .catch(error => {
-            window.webkit.messageHandlers.userHandler.postMessage({ method: method, success: false, error: error && error.message ? error.message : String(error) });
-        });
+function handleResult(method, promiseOrValue) {
+    try {
+        var promise = (promiseOrValue && typeof promiseOrValue.then === 'function')
+            ? promiseOrValue
+            : Promise.resolve(promiseOrValue);
+        promise
+            .then(result => {
+                window.webkit.messageHandlers.userHandler.postMessage({ method: method, success: true, data: result });
+            })
+            .catch(error => {
+                window.webkit.messageHandlers.userHandler.postMessage({ method: method, success: false, error: error && error.message ? error.message : String(error) });
+            });
+    } catch (syncError) {
+        window.webkit.messageHandlers.userHandler.postMessage({ method: method, success: false, error: syncError && syncError.message ? syncError.message : String(syncError) });
+    }
+}
+
+function safeCall(method, fn) {
+    try {
+        handleResult(method, fn());
+    } catch (e) {
+        window.webkit.messageHandlers.userHandler.postMessage({ method: method, success: false, error: e && e.message ? e.message : String(e) });
+    }
 }
 
 // AuthInstance sync methods
@@ -38,41 +53,10 @@ window.signUpWithEmailPasswordSync = function({ email, password, name, ecosystem
     );
 };
 
-window.linkEmailPasswordSync = function({ email, password, authToken, ecosystemGame }) {
-    handleResult(
-        'linkEmailPassword',
-        window.openfort.authInstance.linkEmailPassword({ email, password, authToken, ecosystemGame })
-    );
-};
-
-window.unlinkEmailPasswordSync = function({ email, authToken }) {
-    handleResult(
-        'unlinkEmailPassword',
-        window.openfort.authInstance.unlinkEmailPassword({ email, authToken })
-    );
-};
-
-window.sendVerificationEmailSync = function() {
-    handleResult('sendVerificationEmail', window.openfort.authInstance.sendVerificationEmail());
-};
-
-window.isUserVerifiedSync = function() {
-    handleResult('isUserVerified', window.openfort.authInstance.isUserVerified());
-};
-
-window.reauthenticateWithPasswordSync = function({ password }) {
-    handleResult('reauthenticateWithPassword', window.openfort.authInstance.reauthenticateWithPassword({ password }));
-};
-
-window.deleteUserSync = function() {
-    handleResult('deleteUser', window.openfort.authInstance.deleteUser());
-};
-
-window.resetPasswordSync = function({ email, password, state }) {
+window.resetPasswordSync = function({ password, token }) {
     handleResult('resetPassword', window.openfort.authInstance.resetPassword({
-        email,
         password,
-        state
+        token
     }));
 };
 
@@ -90,10 +74,10 @@ window.requestEmailVerificationSync = function({ email, redirectUrl }) {
     }));
 };
 
-window.verifyEmailSync = function({ email, state }) {
+window.verifyEmailSync = function({ token, callbackURL }) {
     handleResult('verifyEmail', window.openfort.authInstance.verifyEmail({
-        email,
-        state
+        token,
+        callbackURL
     }));
 };
 
@@ -160,14 +144,6 @@ window.unlinkWalletSync = function({ address, authToken }) {
     }));
 };
 
-window.linkThirdPartyProviderSync = function({ provider, token, tokenType }) {
-    handleResult('linkThirdPartyProvider', window.openfort.authInstance.linkThirdPartyProvider({
-        provider,
-        token,
-        tokenType
-    }));
-};
-
 window.authenticateWithSIWESync = function({ signature, message, walletClientType, connectorType }) {
     handleResult('authenticateWithSIWE', window.openfort.authInstance.authenticateWithSIWE({
         signature,
@@ -177,16 +153,77 @@ window.authenticateWithSIWESync = function({ signature, message, walletClientTyp
     }));
 };
 
-window.storeCredentialsSync = function({ provider, token, tokenType, ecosystemGame }) {
+window.storeCredentialsSync = function({ token, userId }) {
     handleResult(
         'storeCredentials',
         window.openfort.authInstance.storeCredentials({
-            provider,
             token,
-            tokenType,
-            ecosystemGame
+            userId
         })
     );
+};
+
+// Email OTP sync methods
+
+window.requestEmailOtpSync = function({ email }) {
+    handleResult('requestEmailOtp', window.openfort.authInstance.requestEmailOtp({ email }));
+};
+
+window.logInWithEmailOtpSync = function({ email, otp }) {
+    handleResult('logInWithEmailOtp', window.openfort.authInstance.logInWithEmailOtp({ email, otp }));
+};
+
+// Phone OTP sync methods
+
+window.requestPhoneOtpSync = function({ phoneNumber }) {
+    handleResult('requestPhoneOtp', window.openfort.authInstance.requestPhoneOtp({ phoneNumber }));
+};
+
+window.logInWithPhoneOtpSync = function({ phoneNumber, otp }) {
+    handleResult('logInWithPhoneOtp', window.openfort.authInstance.logInWithPhoneOtp({ phoneNumber, otp }));
+};
+
+window.linkPhoneOtpSync = function({ phoneNumber, otp }) {
+    handleResult('linkPhoneOtp', window.openfort.authInstance.linkPhoneOtp({ phoneNumber, otp }));
+};
+
+// Email verification OTP sync method
+
+window.verifyEmailOtpSync = function({ email, otp }) {
+    handleResult('verifyEmailOtp', window.openfort.authInstance.verifyEmailOtp({ email, otp }));
+};
+
+// SIWE authentication sync methods
+
+window.loginWithSiweSync = function({ signature, message, walletClientType, connectorType, address }) {
+    handleResult('loginWithSiwe', window.openfort.authInstance.loginWithSiwe({
+        signature,
+        message,
+        walletClientType,
+        connectorType,
+        address
+    }));
+};
+
+window.initLinkSiweSync = function({ address }) {
+    handleResult('initLinkSiwe', window.openfort.authInstance.initLinkSiwe({ address }));
+};
+
+window.linkWithSiweSync = function({ signature, message, walletClientType, connectorType, address, chainId }) {
+    handleResult('linkWithSiwe', window.openfort.authInstance.linkWithSiwe({
+        signature,
+        message,
+        walletClientType,
+        connectorType,
+        address,
+        chainId
+    }));
+};
+
+// Add email sync method
+
+window.addEmailSync = function({ email, callbackURL }) {
+    handleResult('addEmail', window.openfort.authInstance.addEmail({ email, callbackURL }));
 };
 
 // EmbeddedWalletInstance sync methods
@@ -204,7 +241,7 @@ window.getEthereumProviderSync = function({ options } = {}) {
 };
 
 window.configureSync = function({ params }) {
-    handleResult('configure', window.openfort.embeddedWalletInstance.configure(params));
+    safeCall('configure', () => window.openfort.embeddedWalletInstance.configure(params));
 };
 
 window.createSync = function({ params }) {
@@ -265,7 +302,7 @@ window.sendSignatureSessionRequestSync = function({ sessionId, signature, optimi
 // UserInstance sync methods
 
 window.getUserSync = function() {
-    handleResult('getUserInstance', window.openfort.userInstance.get());
+    safeCall('getUserInstance', () => window.openfort.userInstance.get());
 };
 
 // Openfort sync methods

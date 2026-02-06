@@ -10,7 +10,7 @@ public protocol OFUserAccessable: OFOpenfortRootable {}
 
 public extension OFUserAccessable {
     
-    func getUser() async throws -> OFGetUserInstanceResponse? {
+    func getUser() async throws -> OFUser? {
         let method = OFMethods.getUserInstance
         let js = "window.getUserSync();"
         return try await evaluateAndObserveAsync(
@@ -22,10 +22,10 @@ public extension OFUserAccessable {
 
     /// Retrieves the current user instance from Openfort asynchronously via a completion handler.
     ///
-    /// - Parameter completion: A closure that contains a `Result` with either the `OFGetUserInstanceResponse?` or an `Error`.
+    /// - Parameter completion: A closure that contains a `Result` with either the `OFUser?` or an `Error`.
     ///                         The result can be `nil` if no user is logged in.
     func getUser(
-        completion: @escaping (Result<OFGetUserInstanceResponse?, Error>) -> Void
+        completion: @escaping (Result<OFUser?, Error>) -> Void
     ) {
         Task {
             do {

@@ -6,13 +6,11 @@
 //
 
 public struct OFResetPasswordParams: OFCodableSendable {
-    public let email: String
     public let password: String
-    public let state: String
+    public let token: String
 
-    public init(email: String, password: String, state: String) {
-        self.email = email
+    public init(password: String, token: String) {
         self.password = password
-        self.state = state
+        self.token = token
     }
 }

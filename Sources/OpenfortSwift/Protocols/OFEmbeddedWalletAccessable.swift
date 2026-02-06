@@ -211,10 +211,10 @@ public extension OFEmbeddedWalletAccessable {
     /// Configures the embedded wallet for the current player.
     ///
     /// Calls `window.configureSync({ params: ... })` with the provided configuration.
-    /// - Parameter params: Configuration payload (`OFConfigureEmbeddedWalletDTO`).
+    /// - Parameter params: Configuration payload (`OFEmbeddedAccountConfigureParams`).
     /// - Returns: Optional `OFEmbeddedAccount`.
     /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    func configure(params: OFConfigureEmbeddedWalletDTO) async throws -> OFEmbeddedAccount? {
+    func configure(params: OFEmbeddedAccountConfigureParams) async throws -> OFEmbeddedAccount? {
         let method = OFMethods.configure
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -228,10 +228,10 @@ public extension OFEmbeddedWalletAccessable {
     
     /// Configures the embedded wallet (completion-based API).
     /// - Parameters:
-    ///   - params: Configuration payload (`OFConfigureEmbeddedWalletDTO`).
+    ///   - params: Configuration payload (`OFEmbeddedAccountConfigureParams`).
     ///   - completion: Called with an optional `OFEmbeddedAccount` or an error.
     func configure(
-        params: OFConfigureEmbeddedWalletDTO,
+        params: OFEmbeddedAccountConfigureParams,
         completion: @escaping (Result<OFEmbeddedAccount?, Error>) -> Void
     ) {
         Task {

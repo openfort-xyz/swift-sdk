@@ -6,13 +6,11 @@
 //
 
 public struct OFStoreCredentialsParams: OFCodableSendable {
-    public let player: String?
-    public let accessToken: String
-    public let refreshToken: String
+    public let token: String
+    public let userId: String
 
-    public init(player: String? = nil, accessToken: String, refreshToken: String) {
-        self.player = player
-        self.accessToken = accessToken
-        self.refreshToken = refreshToken
+    public init(token: String, userId: String) {
+        self.token = token
+        self.userId = userId
     }
 }
