@@ -6,11 +6,11 @@
 //
 
 public struct OFVerifyEmailParams: OFCodableSendable {
-    public let email: String
-    public let state: String
+    public let token: String
+    public let callbackURL: String?
 
-    public init(email: String, state: String) {
-        self.email = email
-        self.state = state
+    public init(token: String, callbackURL: String? = nil) {
+        self.token = token
+        self.callbackURL = callbackURL
     }
 }

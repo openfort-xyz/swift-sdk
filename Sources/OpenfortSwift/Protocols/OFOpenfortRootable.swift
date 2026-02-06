@@ -141,7 +141,8 @@ extension OFOpenfortRootable {
                 if isSuccess {
                     completion(.success(()))
                 } else {
-                    let error = NSError(domain: errorDomain, code: -1, userInfo: nil)
+                    let msg = userInfo["errorMessage"] as? String
+                    let error = NSError(domain: errorDomain, code: -1, userInfo: msg.map { [NSLocalizedDescriptionKey: $0] })
                     completion(.failure(error))
                 }
                 return
@@ -203,7 +204,8 @@ extension OFOpenfortRootable {
                         completion(.success(nil))
                     }
                 } else {
-                    let error = NSError(domain: errorDomain, code: -1, userInfo: nil)
+                    let msg = userInfo["errorMessage"] as? String
+                    let error = NSError(domain: errorDomain, code: -1, userInfo: msg.map { [NSLocalizedDescriptionKey: $0] })
                     completion(.failure(error))
                 }
                 return

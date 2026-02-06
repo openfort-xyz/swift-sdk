@@ -18,15 +18,15 @@ public struct OFRecoveryMethodDetails: Codable, Sendable {
 }
 
 public protocol OFEmbeddedAccountProtocol {
-    var user: String { get }
     var id: String { get }
-    var chainType: String { get }
+    var chainType: OFChainType { get }
     var address: String { get }
     var createdAt: Int? { get }
     var implementationType: String? { get }
+    var implementationAddress: String? { get }
     var factoryAddress: String? { get }
     var salt: String? { get }
-    var accountType: String { get }
+    var accountType: OFAccountType { get }
     var recoveryMethod: OFRecoveryMethod? { get }
     var recoveryMethodDetails: OFRecoveryMethodDetails? { get }
     var chainId: Int? { get }
@@ -37,15 +37,15 @@ public protocol OFEmbeddedAccountProtocol {
 }
 
 public struct OFEmbeddedAccount: OFEmbeddedAccountProtocol, OFCodableSendable {
-    public let user: String
     public let id: String
-    public let chainType: String
+    public let chainType: OFChainType
     public let address: String
     public let createdAt: Int?
     public let implementationType: String?
+    public let implementationAddress: String?
     public let factoryAddress: String?
     public let salt: String?
-    public let accountType: String
+    public let accountType: OFAccountType
     public let recoveryMethod: OFRecoveryMethod?
     public let recoveryMethodDetails: OFRecoveryMethodDetails?
     public let chainId: Int?

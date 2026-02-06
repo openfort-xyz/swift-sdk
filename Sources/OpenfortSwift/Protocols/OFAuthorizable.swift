@@ -17,11 +17,11 @@ extension OFAuthorizable {
     /// Logs in with email & password.
     ///
     /// Calls `window.logInWithEmailPasswordSync(...)` in the WebView, waits for completion, and returns an optional authorization payload.
-    /// - Parameter params: Email/password credentials (`OFAuthEmailPasswordParams`).
-    /// - Returns: Optional `OFAuthorizationResponse` on success.
+    /// - Parameter params: Email/password credentials (`OFLogInWithEmailPasswordParams`).
+    /// - Returns: Optional `OFAuthResponse` on success.
     /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    public func loginWith(params: OFAuthEmailPasswordParams) async throws -> OFAuthorizationResponse? {
-        let method = OFMethods.loginWith
+    public func logInWithEmailPassword(params: OFLogInWithEmailPasswordParams) async throws -> OFAuthResponse? {
+        let method = OFMethods.logInWithEmailPassword
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
@@ -34,12 +34,12 @@ extension OFAuthorizable {
 
     /// Logs in with email & password (completion-based API).
     /// - Parameters:
-    ///   - params: Email/password credentials (`OFAuthEmailPasswordParams`).
-    ///   - completion: Called with an optional `OFAuthorizationResponse` or an error.
-    public func loginWith(params: OFAuthEmailPasswordParams, completion: @escaping (Result<OFAuthorizationResponse?, Error>) -> Void) {
+    ///   - params: Email/password credentials (`OFLogInWithEmailPasswordParams`).
+    ///   - completion: Called with an optional `OFAuthResponse` or an error.
+    public func logInWithEmailPassword(params: OFLogInWithEmailPasswordParams, completion: @escaping (Result<OFAuthResponse?, Error>) -> Void) {
         Task {
             do {
-                let result = try await loginWith(params: params)
+                let result = try await logInWithEmailPassword(params: params)
                 completion(.success(result))
             } catch {
                 completion(.failure(error))
@@ -106,8 +106,8 @@ extension OFAuthorizable {
     /// - Parameter params: Sign-up data (`OFSignUpWithEmailPasswordParams`).
     /// - Returns: Optional `OFSignUpResponse` on success.
     /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    public func signUpWith(params: OFSignUpWithEmailPasswordParams) async throws -> OFSignUpResponse? {
-        let method = OFMethods.signUpWith
+    public func signUpWithEmailPassword(params: OFSignUpWithEmailPasswordParams) async throws -> OFSignUpResponse? {
+        let method = OFMethods.signUpWithEmailPassword
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
@@ -122,76 +122,10 @@ extension OFAuthorizable {
     /// - Parameters:
     ///   - params: Sign-up data (`OFSignUpWithEmailPasswordParams`).
     ///   - completion: Called with an optional `OFSignUpResponse` or an error.
-    public func signUpWith(params: OFSignUpWithEmailPasswordParams, completion: @escaping (Result<OFSignUpResponse?, Error>) -> Void) {
+    public func signUpWithEmailPassword(params: OFSignUpWithEmailPasswordParams, completion: @escaping (Result<OFSignUpResponse?, Error>) -> Void) {
         Task {
             do {
-                let result = try await signUpWith(params: params)
-                completion(.success(result))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
-    /// Links an email/password to the current account.
-    ///
-    /// Calls `window.linkEmailPasswordSync(...)` in the web context.
-    /// - Parameter params: Link data (`OFLinkEmailPasswordParams`).
-    /// - Returns: Optional `OFLinkEmailPasswordResponse` on success.
-    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    public func linkEmailPassword(params: OFLinkEmailPasswordParams) async throws -> OFLinkEmailPasswordResponse? {
-        let method = OFMethods.linkEmailPassword
-        guard let jsonString = encodeToJSONString(params) else {
-            throw OFError.encodingFailed
-        }
-        return try await evaluateAndObserveAsync(
-            js: "window.linkEmailPasswordSync(\(jsonString));",
-            method: method,
-            errorDomain: OFErrorDomains.linkEmailPassword
-        )
-    }
-
-    /// Links an email/password to the current account (completion-based API).
-    /// - Parameters:
-    ///   - params: Link data (`OFLinkEmailPasswordParams`).
-    ///   - completion: Called with an optional `OFLinkEmailPasswordResponse` or an error.
-    public func linkEmailPassword(params: OFLinkEmailPasswordParams, completion: @escaping (Result<OFLinkEmailPasswordResponse?, Error>) -> Void) {
-        Task {
-            do {
-                let result = try await linkEmailPassword(params: params)
-                completion(.success(result))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
-    /// Unlinks an email/password from the current account.
-    ///
-    /// Calls `window.unlinkEmailPasswordSync(...)` in the web context.
-    /// - Parameter params: Unlink data (`OFUnlinkEmailPasswordParams`).
-    /// - Returns: Optional `OFUnlinkEmailPasswordResponse` on success.
-    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    public func unlinkEmailPassword(params: OFUnlinkEmailPasswordParams) async throws -> OFUnlinkEmailPasswordResponse? {
-        let method = OFMethods.unlinkEmailPassword
-        guard let jsonString = encodeToJSONString(params) else {
-            throw OFError.encodingFailed
-        }
-        return try await evaluateAndObserveAsync(
-            js: "window.unlinkEmailPasswordSync(\(jsonString));",
-            method: method,
-            errorDomain: OFErrorDomains.unlinkEmailPassword
-        )
-    }
-
-    /// Unlinks an email/password (completion-based API).
-    /// - Parameters:
-    ///   - params: Unlink data (`OFUnlinkEmailPasswordParams`).
-    ///   - completion: Called with an optional `OFUnlinkEmailPasswordResponse` or an error.
-    public func unlinkEmailPassword(params: OFUnlinkEmailPasswordParams, completion: @escaping (Result<OFUnlinkEmailPasswordResponse?, Error>) -> Void) {
-        Task {
-            do {
-                let result = try await unlinkEmailPassword(params: params)
+                let result = try await signUpWithEmailPassword(params: params)
                 completion(.success(result))
             } catch {
                 completion(.failure(error))
@@ -526,9 +460,9 @@ extension OFAuthorizable {
     ///
     /// Calls `window.initSIWESync(...)`.
     /// - Parameter params: Init data (`OFInitSIWEParams`).
-    /// - Returns: Optional `OFInitSIWEResponse` (includes `address`, `nonce`, `expiresAt`).
+    /// - Returns: Optional `OFSIWEInitResponse` (includes `address`, `nonce`, `expiresAt`).
     /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    public func initSIWE(params: OFInitSIWEParams) async throws -> OFInitSIWEResponse? {
+    public func initSIWE(params: OFInitSIWEParams) async throws -> OFSIWEInitResponse? {
         let method = OFMethods.initSIWE
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
@@ -543,8 +477,8 @@ extension OFAuthorizable {
     /// Initializes a SIWE flow (completion-based API).
     /// - Parameters:
     ///   - params: Init data (`OFInitSIWEParams`).
-    ///   - completion: Called with an optional `OFInitSIWEResponse` or an error.
-    public func initSIWE(params: OFInitSIWEParams, completion: @escaping (Result<OFInitSIWEResponse?, Error>) -> Void) {
+    ///   - completion: Called with an optional `OFSIWEInitResponse` or an error.
+    public func initSIWE(params: OFInitSIWEParams, completion: @escaping (Result<OFSIWEInitResponse?, Error>) -> Void) {
         Task {
             do {
                 let result = try await initSIWE(params: params)
@@ -581,39 +515,6 @@ extension OFAuthorizable {
         Task {
             do {
                 let result = try await unlinkWallet(params: params)
-                completion(.success(result))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
-    /// Links a third-party provider account to the current player.
-    ///
-    /// Calls `window.linkThirdPartyProviderSync(...)`.
-    /// - Parameter params: Link data (`OFLinkThirdPartyProviderParams`).
-    /// - Returns: Optional `OFAuthPlayerResponse` on success.
-    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams) async throws -> OFAuthPlayerResponse? {
-        let method = OFMethods.linkThirdPartyProvider
-        guard let jsonString = encodeToJSONString(params) else {
-            throw OFError.encodingFailed
-        }
-        return try await evaluateAndObserveAsync(
-            js: "window.linkThirdPartyProviderSync(\(jsonString));",
-            method: method,
-            errorDomain: OFErrorDomains.linkThirdPartyProvider
-        )
-    }
-
-    /// Links a third-party provider (completion-based API).
-    /// - Parameters:
-    ///   - params: Link data (`OFLinkThirdPartyProviderParams`).
-    ///   - completion: Called with an optional `OFAuthPlayerResponse` or an error.
-    public func linkThirdPartyProvider(params: OFLinkThirdPartyProviderParams, completion: @escaping (Result<OFAuthPlayerResponse?, Error>) -> Void) {
-        Task {
-            do {
-                let result = try await linkThirdPartyProvider(params: params)
                 completion(.success(result))
             } catch {
                 completion(.failure(error))
@@ -680,6 +581,343 @@ extension OFAuthorizable {
             do {
                  try await storeCredentials(params: params)
                 completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: - Email OTP Methods
+
+    /// Requests an email OTP to be sent to the given address.
+    ///
+    /// Calls `window.requestEmailOtpSync(...)` and waits for completion.
+    /// - Parameter params: Request data (`OFRequestEmailOtpParams`).
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func requestEmailOtp(params: OFRequestEmailOtpParams) async throws {
+        let method = OFMethods.requestEmailOtp
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        try await evaluateAndObserveVoidAsync(
+            js: "window.requestEmailOtpSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.requestEmailOtp
+        )
+    }
+
+    /// Requests an email OTP (completion-based API).
+    /// - Parameters:
+    ///   - params: Request data (`OFRequestEmailOtpParams`).
+    ///   - completion: Called with `Void` on success or an error.
+    public func requestEmailOtp(params: OFRequestEmailOtpParams, completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                try await requestEmailOtp(params: params)
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Logs in using an email OTP.
+    ///
+    /// Calls `window.logInWithEmailOtpSync(...)` and returns an optional authorization response.
+    /// - Parameter params: Login data (`OFLogInWithEmailOtpParams`).
+    /// - Returns: Optional `OFAuthResponse` on success.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func logInWithEmailOtp(params: OFLogInWithEmailOtpParams) async throws -> OFAuthResponse? {
+        let method = OFMethods.logInWithEmailOtp
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.logInWithEmailOtpSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.logInWithEmailOtp
+        )
+    }
+
+    /// Logs in using an email OTP (completion-based API).
+    /// - Parameters:
+    ///   - params: Login data (`OFLogInWithEmailOtpParams`).
+    ///   - completion: Called with an optional `OFAuthResponse` or an error.
+    public func logInWithEmailOtp(params: OFLogInWithEmailOtpParams, completion: @escaping (Result<OFAuthResponse?, Error>) -> Void) {
+        Task {
+            do {
+                let result = try await logInWithEmailOtp(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: - Phone OTP Methods
+
+    /// Requests a phone OTP to be sent to the given number.
+    ///
+    /// Calls `window.requestPhoneOtpSync(...)` and waits for completion.
+    /// - Parameter params: Request data (`OFRequestPhoneOtpParams`).
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func requestPhoneOtp(params: OFRequestPhoneOtpParams) async throws {
+        let method = OFMethods.requestPhoneOtp
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        try await evaluateAndObserveVoidAsync(
+            js: "window.requestPhoneOtpSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.requestPhoneOtp
+        )
+    }
+
+    /// Requests a phone OTP (completion-based API).
+    /// - Parameters:
+    ///   - params: Request data (`OFRequestPhoneOtpParams`).
+    ///   - completion: Called with `Void` on success or an error.
+    public func requestPhoneOtp(params: OFRequestPhoneOtpParams, completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                try await requestPhoneOtp(params: params)
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Logs in using a phone OTP.
+    ///
+    /// Calls `window.logInWithPhoneOtpSync(...)` and returns an optional authorization response.
+    /// - Parameter params: Login data (`OFLogInWithPhoneOtpParams`).
+    /// - Returns: Optional `OFAuthResponse` on success.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func logInWithPhoneOtp(params: OFLogInWithPhoneOtpParams) async throws -> OFAuthResponse? {
+        let method = OFMethods.logInWithPhoneOtp
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.logInWithPhoneOtpSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.logInWithPhoneOtp
+        )
+    }
+
+    /// Logs in using a phone OTP (completion-based API).
+    /// - Parameters:
+    ///   - params: Login data (`OFLogInWithPhoneOtpParams`).
+    ///   - completion: Called with an optional `OFAuthResponse` or an error.
+    public func logInWithPhoneOtp(params: OFLogInWithPhoneOtpParams, completion: @escaping (Result<OFAuthResponse?, Error>) -> Void) {
+        Task {
+            do {
+                let result = try await logInWithPhoneOtp(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Links a phone number using OTP to the current player.
+    ///
+    /// Calls `window.linkPhoneOtpSync(...)` and returns an optional authorization response.
+    /// - Parameter params: Link data (`OFLinkPhoneOtpParams`).
+    /// - Returns: Optional `OFAuthResponse` on success.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func linkPhoneOtp(params: OFLinkPhoneOtpParams) async throws -> OFAuthResponse? {
+        let method = OFMethods.linkPhoneOtp
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.linkPhoneOtpSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.linkPhoneOtp
+        )
+    }
+
+    /// Links a phone number using OTP (completion-based API).
+    /// - Parameters:
+    ///   - params: Link data (`OFLinkPhoneOtpParams`).
+    ///   - completion: Called with an optional `OFAuthResponse` or an error.
+    public func linkPhoneOtp(params: OFLinkPhoneOtpParams, completion: @escaping (Result<OFAuthResponse?, Error>) -> Void) {
+        Task {
+            do {
+                let result = try await linkPhoneOtp(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: - Email Verification OTP
+
+    /// Verifies an email address using an OTP code.
+    ///
+    /// Calls `window.verifyEmailOtpSync(...)` and waits for completion.
+    /// - Parameter params: Verify data (`OFVerifyEmailOtpParams`).
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func verifyEmailOtp(params: OFVerifyEmailOtpParams) async throws {
+        let method = OFMethods.verifyEmailOtp
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        try await evaluateAndObserveVoidAsync(
+            js: "window.verifyEmailOtpSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.verifyEmailOtp
+        )
+    }
+
+    /// Verifies an email address using an OTP code (completion-based API).
+    /// - Parameters:
+    ///   - params: Verify data (`OFVerifyEmailOtpParams`).
+    ///   - completion: Called with `Void` on success or an error.
+    public func verifyEmailOtp(params: OFVerifyEmailOtpParams, completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                try await verifyEmailOtp(params: params)
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: - SIWE Authentication Methods
+
+    /// Logs in using Sign-In with Ethereum (SIWE).
+    ///
+    /// Calls `window.loginWithSiweSync(...)` and returns an optional authorization response.
+    /// - Parameter params: Login data (`OFLoginWithSiweParams`).
+    /// - Returns: Optional `OFAuthResponse` on success.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func loginWithSiwe(params: OFLoginWithSiweParams) async throws -> OFAuthResponse? {
+        let method = OFMethods.loginWithSiwe
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.loginWithSiweSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.loginWithSiwe
+        )
+    }
+
+    /// Logs in using SIWE (completion-based API).
+    /// - Parameters:
+    ///   - params: Login data (`OFLoginWithSiweParams`).
+    ///   - completion: Called with an optional `OFAuthResponse` or an error.
+    public func loginWithSiwe(params: OFLoginWithSiweParams, completion: @escaping (Result<OFAuthResponse?, Error>) -> Void) {
+        Task {
+            do {
+                let result = try await loginWithSiwe(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Initializes linking a SIWE wallet to the current player.
+    ///
+    /// Calls `window.initLinkSiweSync(...)` and returns an optional SIWE init response.
+    /// - Parameter params: Init data (`OFInitLinkSiweParams`).
+    /// - Returns: Optional `OFSIWEInitResponse` on success.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func initLinkSiwe(params: OFInitLinkSiweParams) async throws -> OFSIWEInitResponse? {
+        let method = OFMethods.initLinkSiwe
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.initLinkSiweSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.initLinkSiwe
+        )
+    }
+
+    /// Initializes linking a SIWE wallet (completion-based API).
+    /// - Parameters:
+    ///   - params: Init data (`OFInitLinkSiweParams`).
+    ///   - completion: Called with an optional `OFSIWEInitResponse` or an error.
+    public func initLinkSiwe(params: OFInitLinkSiweParams, completion: @escaping (Result<OFSIWEInitResponse?, Error>) -> Void) {
+        Task {
+            do {
+                let result = try await initLinkSiwe(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Links a wallet using SIWE to the current player.
+    ///
+    /// Calls `window.linkWithSiweSync(...)` and returns an optional link wallet response.
+    /// - Parameter params: Link data (`OFLinkWithSiweParams`).
+    /// - Returns: Optional `OFLinkWalletResponse` on success.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func linkWithSiwe(params: OFLinkWithSiweParams) async throws -> OFLinkWalletResponse? {
+        let method = OFMethods.linkWithSiwe
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.linkWithSiweSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.linkWithSiwe
+        )
+    }
+
+    /// Links a wallet using SIWE (completion-based API).
+    /// - Parameters:
+    ///   - params: Link data (`OFLinkWithSiweParams`).
+    ///   - completion: Called with an optional `OFLinkWalletResponse` or an error.
+    public func linkWithSiwe(params: OFLinkWithSiweParams, completion: @escaping (Result<OFLinkWalletResponse?, Error>) -> Void) {
+        Task {
+            do {
+                let result = try await linkWithSiwe(params: params)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: - Add Email
+
+    /// Adds an email address to the current player's account.
+    ///
+    /// Calls `window.addEmailSync(...)` and returns an optional add email response.
+    /// - Parameter params: Add email data (`OFAddEmailParams`).
+    /// - Returns: Optional `OFAddEmailResponse` on success.
+    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
+    public func addEmail(params: OFAddEmailParams) async throws -> OFAddEmailResponse? {
+        let method = OFMethods.addEmail
+        guard let jsonString = encodeToJSONString(params) else {
+            throw OFError.encodingFailed
+        }
+        return try await evaluateAndObserveAsync(
+            js: "window.addEmailSync(\(jsonString));",
+            method: method,
+            errorDomain: OFErrorDomains.addEmail
+        )
+    }
+
+    /// Adds an email address (completion-based API).
+    /// - Parameters:
+    ///   - params: Add email data (`OFAddEmailParams`).
+    ///   - completion: Called with an optional `OFAddEmailResponse` or an error.
+    public func addEmail(params: OFAddEmailParams, completion: @escaping (Result<OFAddEmailResponse?, Error>) -> Void) {
+        Task {
+            do {
+                let result = try await addEmail(params: params)
+                completion(.success(result))
             } catch {
                 completion(.failure(error))
             }
