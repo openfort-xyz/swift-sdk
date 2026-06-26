@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2026-06-26
+
+Cross-chain funding (deposit) support, mirroring `@openfort/react`'s `useFunding`.
+
+### New
+
+- **Funding (cross-chain deposit).** `OFFunding` — a SwiftUI `ObservableObject`
+  mirroring `@openfort/react`'s `useFunding` (`fund` / `createSession` / `track` /
+  `payLink` / `reset`, publishing `session` / `status` / `loading` / `error` /
+  `isAvailable`). Fund an embedded wallet from any chain or a centralized
+  exchange; source routes are `evm` / `solana` / `cex`. The namespace is also
+  available directly on `OFSDK.shared` (`fundingCreateSession`,
+  `fundingSetPaymentMethod`, `fundingGetSession`, `fundingPayLink`,
+  `fundingChains`) for headless use. Funding authenticates with the project
+  publishable key, so it works for guest and authenticated users alike.
+- `OFFundingChains` — a SwiftUI loader mirroring `@openfort/react`'s
+  `useFundingChains`, fetching the live funding source-chain catalog instead of
+  hardcoding it in the UI.
+- The bundled `openfort.js` WebView is now inspectable in debug builds (Safari
+  Web Inspector) to diagnose embedded-wallet / Shield setup.
+
+### Changed
+
+- Upgraded the vendored `openfort.js` bundle from 1.3.7 to 1.5.0 — the release
+  that ships the `window.openfort.funding` namespace. Rebuildable via
+  `js-src/openfort-entry.js`.
+
 ## [2.0.0] - 2026-06-15
 
 Surfaced by dogfooding the SDK to build a Cash App–style wallet.
