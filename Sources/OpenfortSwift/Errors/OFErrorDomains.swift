@@ -43,7 +43,7 @@ public struct OFErrorDomains {
 
     // Proxy
     public static let sendSignatureSessionRequest = "OFSendSignatureSessionRequestErrorDomain"
-    public static let sendSignatureTransactionIntentRequest = "OFSendSignatureTransactionIntentRequestErrorDomain"
+    public static let sendTransactionSignatureRequest = "OFSendTransactionSignatureRequestErrorDomain"
 
     // UserInstance
     public static let getUserInstance = "OFGetUserInstanceErrorDomain"

@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+Transactions v2 (`/v2/transactions`), matching openfort-js 2.4.
+
+### Breaking
+
+- `sendSignatureTransactionIntentRequest(params:)` is now `sendTransactionSignatureRequest(params:)`.
+  It takes `OFSendTransactionSignatureRequestParams(transactionId:hash:signature:optimistic:)` — the
+  `tin_` id and the `nextAction.hash` returned by `POST /v2/transactions` — and returns
+  `OFTransactionResponse` (`status`, `receipt`, `nextAction`, `execution`) instead of
+  `OFTransactionIntentResponse`.
+- The bundled `openfort.js` is now openfort-js 2.4.2 (was 1.5.0), so provider sends
+  (`eth_sendTransaction`, `wallet_sendCalls`) go through `/v2/transactions` as well.
+
+### Fixed
+
+- The WebView bridge passed a single object to `proxy.sendSignatureTransactionIntentRequest` and
+  `proxy.sendSignatureSessionRequest`, which take positional arguments, so both calls failed.
+  They now pass the arguments positionally.
+
 ## [2.1.0] - 2026-06-26
 
 Cross-chain funding (deposit) support, mirroring `@openfort/react`'s `useFunding`.

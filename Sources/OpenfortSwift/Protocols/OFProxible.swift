@@ -13,37 +13,39 @@ public protocol OFProxible: OFOpenfortRootable {}
 
 public extension OFProxible {
     
-    /// Sends a signature transaction intent request asynchronously.
+    /// Signs (when no signature is given) and submits the signature of a `/v2/transactions` transaction
+    /// created by your backend, then broadcasts it.
     ///
-    /// - Parameter params: The parameters for the signature transaction intent request (`OFSendSignatureTransactionIntentRequestParams`).
-    /// - Returns: An optional `OFSendSignatureTransactionIntentRequestResponse` if the request succeeds.
+    /// - Parameter params: The `tin_` transaction id plus the `nextAction.hash` to sign, or a ready-made signature
+    ///   (`OFSendTransactionSignatureRequestParams`).
+    /// - Returns: An optional `OFTransactionResponse`; poll `status` until it is terminal if `optimistic` was set.
     /// - Throws: An error if encoding the parameters fails or if the JavaScript execution encounters an error.
-    func sendSignatureTransactionIntentRequest(
-        params: OFSendSignatureTransactionIntentRequestParams
-    ) async throws -> OFSendSignatureTransactionIntentRequestResponse? {
-        let method = OFMethods.sendSignatureTransactionIntentRequest
+    func sendTransactionSignatureRequest(
+        params: OFSendTransactionSignatureRequestParams
+    ) async throws -> OFTransactionResponse? {
+        let method = OFMethods.sendTransactionSignatureRequest
         guard let jsonString = encodeToJSONString(params) else {
             throw OFError.encodingFailed
         }
         return try await evaluateAndObserveAsync(
-            js: "window.sendSignatureTransactionIntentRequestSync(\(jsonString));",
+            js: "window.sendTransactionSignatureRequestSync(\(jsonString));",
             method: method,
-            errorDomain: OFErrorDomains.sendSignatureTransactionIntentRequest
+            errorDomain: OFErrorDomains.sendTransactionSignatureRequest
         )
     }
-    
-    /// Sends a signature transaction intent request and delivers the result via a completion handler.
+
+    /// Submits a transaction signature and delivers the result via a completion handler.
     ///
     /// - Parameters:
-    ///   - params: The parameters for the signature transaction intent request (`OFSendSignatureTransactionIntentRequestParams`).
-    ///   - completion: A closure called with the result containing an optional `OFSendSignatureTransactionIntentRequestResponse` or an error.
-    func sendSignatureTransactionIntentRequest(
-        params: OFSendSignatureTransactionIntentRequestParams,
-        completion: @escaping (Result<OFSendSignatureTransactionIntentRequestResponse?, Error>) -> Void
+    ///   - params: The parameters for the transaction signature request (`OFSendTransactionSignatureRequestParams`).
+    ///   - completion: A closure called with the result containing an optional `OFTransactionResponse` or an error.
+    func sendTransactionSignatureRequest(
+        params: OFSendTransactionSignatureRequestParams,
+        completion: @escaping (Result<OFTransactionResponse?, Error>) -> Void
     ) {
         Task {
             do {
-                let result = try await sendSignatureTransactionIntentRequest(params: params)
+                let result = try await sendTransactionSignatureRequest(params: params)
                 completion(.success(result))
             } catch {
                 completion(.failure(error))
