@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.1] - 2026-09-25
+
+### Fixes
+
+- Bridge calls no longer stall when WebKit suspends the hidden WebView. `OFWebView` is never in a
+  window, so WebKit suspends its content process a few seconds after the last `evaluateJavaScript`;
+  asynchronous work openfort-js does in that gap (the embedded-signer iframe during `configure`,
+  `create`, `recover` and signing) hung until an unrelated call woke it. The SDK now ticks a no-op
+  script every 0.5s while any bridge call is pending. The always-on 1s embedded-state poll that
+  2.0.0 removed had masked this.
+
 ## [3.0.0] - 2026-09-25
 
 Transactions v2: the SDK now signs and submits `/v2/transactions` transactions, backed by the
