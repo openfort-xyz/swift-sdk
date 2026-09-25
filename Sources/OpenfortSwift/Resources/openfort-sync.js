@@ -87,27 +87,14 @@ window.initOAuthSync = function({ provider, options }) {
     }));
 };
 
-window.unlinkOAuthSync = function({ provider, authToken }) {
-    handleResult('unlinkOAuth', window.openfort.authInstance.unlinkOAuth({
-        provider,
-        authToken
-    }));
+window.unlinkOAuthSync = function({ provider }) {
+    handleResult('unlinkOAuth', window.openfort.authInstance.unlinkOAuth({ provider }));
 };
 
 window.loginWithIdTokenSync = function({ provider, token }) {
-    handleResult('loginWithIdToken', window.openfort.authInstance.loginWithIdToken({
+    handleResult('loginWithIdToken', window.openfort.authInstance.logInWithIdToken({
         provider,
         token
-    }));
-};
-
-window.linkWalletSync = function({ signature, message, walletClientType, connectorType, authToken }) {
-    handleResult('linkWallet', window.openfort.authInstance.linkWallet({
-        signature,
-        message,
-        walletClientType,
-        connectorType,
-        authToken
     }));
 };
 
@@ -122,29 +109,16 @@ window.initLinkOAuthSync = function({ provider, options }) {
     }));
 };
 
-window.poolOAuthSync = function({ key }) {
-    handleResult('poolOAuth', window.openfort.authInstance.poolOAuth({ key }));
-};
-
 window.initSIWESync = function({ address }) {
     handleResult('initSIWE', window.openfort.authInstance.initSiwe({
         address
     }));
 };
 
-window.unlinkWalletSync = function({ address, authToken }) {
+window.unlinkWalletSync = function({ address, chainId }) {
     handleResult('unlinkWallet', window.openfort.authInstance.unlinkWallet({
         address,
-        authToken
-    }));
-};
-
-window.authenticateWithSIWESync = function({ signature, message, walletClientType, connectorType }) {
-    handleResult('authenticateWithSIWE', window.openfort.authInstance.loginWithSiwe({
-        signature,
-        message,
-        walletClientType,
-        connectorType
+        chainId
     }));
 };
 
@@ -231,7 +205,7 @@ window.getSync = function() {
     handleResult('get', window.openfort.embeddedWalletInstance.get());
 };
 
-window.getEthereumProviderSync = function({ options } = {}) {
+window.getEthereumProviderSync = function(options = {}) {
     handleResult('getEthereumProvider', window.openfort.embeddedWalletInstance.getEthereumProvider(options));
 };
 
@@ -239,11 +213,11 @@ window.configureSync = function({ params }) {
     safeCall('configure', () => window.openfort.embeddedWalletInstance.configure(params));
 };
 
-window.createSync = function({ params }) {
+window.createSync = function(params) {
     handleResult('create', window.openfort.embeddedWalletInstance.create(params));
 };
 
-window.recoverSync = function({ params }) {
+window.recoverSync = function(params) {
     handleResult('recover', window.openfort.embeddedWalletInstance.recover(params));
 };
 
@@ -255,7 +229,7 @@ window.listSync = function() {
     handleResult('list', window.openfort.embeddedWalletInstance.list());
 };
 
-window.pingSync = function({ delay }) {
+window.pingSync = function(delay) {
     handleResult('ping', window.openfort.embeddedWalletInstance.ping(delay));
 };
 

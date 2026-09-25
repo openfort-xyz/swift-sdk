@@ -7,10 +7,10 @@
 
 public struct OFUnlinkWalletParams: OFCodableSendable {
     public let address: String
-    public let authToken: String
+    public let chainId: Int
 
-    public init(address: String, authToken: String) {
+    public init(address: String, chainId: Int) {
         self.address = address
-        self.authToken = authToken
+        self.chainId = chainId
     }
 }

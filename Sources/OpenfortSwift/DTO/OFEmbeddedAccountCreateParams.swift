@@ -24,9 +24,10 @@ public enum OFChainType: String, OFCodableSendable {
 
 public struct OFPasskeyInfoDTO: OFCodableSendable {
     public let passkeyId: String
-    public let passkeyKey: [UInt8]?
+    /// Base64url-encoded passkey public key.
+    public let passkeyKey: String?
 
-    public init(passkeyId: String, passkeyKey: [UInt8]? = nil) {
+    public init(passkeyId: String, passkeyKey: String? = nil) {
         self.passkeyId = passkeyId
         self.passkeyKey = passkeyKey
     }
