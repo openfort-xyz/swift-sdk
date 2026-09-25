@@ -80,6 +80,21 @@ public extension OFOpenfortRootable {
 
 extension OFOpenfortRootable {
     
+    /// Wraps a bridge-call completion so the content process stays awake until it fires once.
+    private func keepingBridgeAlive<R>(
+        _ webView: WKWebView?,
+        _ completion: @escaping (R) -> Void
+    ) -> (R) -> Void {
+        OFBridgeKeepAlive.shared.begin(webView)
+        var finished = false
+        return { result in
+            guard !finished else { return }
+            finished = true
+            OFBridgeKeepAlive.shared.end()
+            completion(result)
+        }
+    }
+
     /// Runs `onReady` once the SDK is initialized, or immediately if it's already initialized.
     /// If initialization fails, calls `onFail` with the error. This does not mutate `self`.
     @inline(__always)
@@ -123,6 +138,7 @@ extension OFOpenfortRootable {
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         let webView = self.webView
+        let completion = keepingBridgeAlive(webView, completion)
         let runEval = {
             webView?.evaluateJavaScript(js) { _, error in
                 if let error = error {
@@ -180,8 +196,8 @@ extension OFOpenfortRootable {
         errorDomain: String,
         completion: @escaping (Result<T?, Error>) -> Void
     ) {
-        
         let webView = self.webView
+        let completion = keepingBridgeAlive(webView, completion)
         let runEval = {
             webView?.evaluateJavaScript(js) { _, error in
                 if let error = error {
