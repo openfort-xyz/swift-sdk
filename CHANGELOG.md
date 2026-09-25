@@ -2,6 +2,52 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] - 2026-09-25
+
+Transactions v2: the SDK now signs and submits `/v2/transactions` transactions, backed by the
+openfort-js 2.5.0 bundle.
+
+### Breaking Changes
+
+- **`sendSignatureTransactionIntentRequest` is now `sendTransactionSignatureRequest`.** It takes
+  `OFSendTransactionSignatureRequestParams(transactionId:hash:signature:optimistic:)` (was
+  `OFSendSignatureTransactionIntentRequestParams(transactionIntentId:signableHash:...)`) and
+  returns `OFTransactionResponse` (was `OFTransactionIntentResponse`). Create the transaction
+  from your backend with `POST /v2/transactions` and pass its `id` and `nextAction.hash`.
+- **Removed the v1 transaction-intent, player and policy models**: `OFTransactionIntentResponse`,
+  `OFNextActionResponse`, `OFNextActionPayload`, `OFResponseResponse`, `OFInteraction`,
+  `OFTransactionDetails`, `OFTransactionAbstractionType`, `OFPolicyOrEntity`, `OFPlayerOrEntity`,
+  `OFAccountOrEntity`, `OFEntityIdResponse`, `OFAuthPlayerResponse`, `OFLinkedAccountResponse`
+  and their protocols. `OFAuthProvider`, `OFLog` and `JSONValue` are unchanged and live in their
+  own files.
+- **`OFSessionResponse`** drops `transactionIntents`; `nextAction` is now `OFSessionNextAction`
+  (`type`, `payload.signableHash`).
+- **Removed `linkWallet`, `poolOAuth` and `authenticateWithSIWE`** (with `OFLinkWalletParams`,
+  `OFPoolOAuthResponse`, `OFAuthenticateWithSIWEParams`, `OFAuthenticateWithSIWEResponse`). They
+  have no counterpart in openfort-js 2.5.0; use `linkWithSiwe` and `loginWithSiwe`.
+- `OFUnlinkWalletParams` takes `chainId: Int` instead of `authToken`; `OFUnlinkOAuthParams` no
+  longer takes `authToken`.
+- `OFGetEthereumProviderParams.policy` is now `feeSponsorship`.
+- `OFPasskeyInfoDTO.passkeyKey` is a base64url `String?` (was `[UInt8]?`).
+- Removed the unused `OFGetResponse`, `OFEmbeddedOwner` and `OFEmbeddedChainType`; `get()` has
+  returned `OFEmbeddedAccount` since 1.0.0.
+
+### Changed
+
+- Upgraded the vendored `openfort.js` bundle from 1.5.0 to 2.5.0. Rebuild instructions in
+  `js-src/README.md`.
+
+### Fixes
+
+- The bridge passed a single object where openfort-js expects positional arguments in
+  `sendSignatureSessionRequest` (and the former transaction-intent call); both now call
+  positionally.
+- `create`, `recover`, `getEthereumProvider` and `ping` forwarded `undefined` to openfort-js
+  because the bridge destructured a wrapper the Swift side never sent. `getEthereumProvider`
+  therefore ignored `feeSponsorship` and `chains`.
+- `loginWithIdToken` called a non-existent `authInstance.loginWithIdToken`; it now calls
+  `logInWithIdToken`.
+
 ## [2.1.0] - 2026-06-26
 
 Cross-chain funding (deposit) support, mirroring `@openfort/react`'s `useFunding`.

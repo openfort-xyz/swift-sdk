@@ -18,7 +18,7 @@ public final class OpenfortEIP1193Web3Provider {
 
     /// - Parameters:
     ///   - webView: The `WKWebView` hosting the Openfort page where `getEthereumProvider()` is available.
-    ///   - getProviderParams: Optional parameters forwarded to `getEthereumProvider(...)` (e.g. policy,
+    ///   - getProviderParams: Optional parameters forwarded to `getEthereumProvider(...)` (e.g. feeSponsorship,
     ///     chains, providerInfo, announceProvider). If `nil`, the provider is requested without arguments.
     public init(webView: WKWebView, getProviderParams: OFGetEthereumProviderParams? = nil) {
         self.webView = webView

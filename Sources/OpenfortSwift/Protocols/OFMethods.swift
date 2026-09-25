@@ -7,7 +7,6 @@
 
 public enum OFMethods {
     public static let addEmail = "addEmail"
-    public static let authenticateWithSIWE = "authenticateWithSIWE"
     public static let configure = "configure"
     public static let create = "create"
     public static let exportPrivateKey = "exportPrivateKey"
@@ -22,7 +21,6 @@ public enum OFMethods {
     public static let initOAuth = "initOAuth"
     public static let initSIWE = "initSIWE"
     public static let linkPhoneOtp = "linkPhoneOtp"
-    public static let linkWallet = "linkWallet"
     public static let linkWithSiwe = "linkWithSiwe"
     public static let list = "list"
     public static let logInWithEmailOtp = "logInWithEmailOtp"
@@ -31,7 +29,6 @@ public enum OFMethods {
     public static let loginWithIdToken = "loginWithIdToken"
     public static let loginWithSiwe = "loginWithSiwe"
     public static let logOut = "logout"
-    public static let poolOAuth = "poolOAuth"
     public static let ping = "ping"
     public static let recover = "recover"
     public static let requestEmailOtp = "requestEmailOtp"
@@ -40,7 +37,7 @@ public enum OFMethods {
     public static let requestResetPassword = "requestResetPassword"
     public static let resetPassword = "resetPassword"
     public static let sendSignatureSessionRequest = "sendSignatureSessionRequest"
-    public static let sendSignatureTransactionIntentRequest = "sendSignatureTransactionIntentRequest"
+    public static let sendTransactionSignatureRequest = "sendTransactionSignatureRequest"
     public static let signMessage = "signMessage"
     public static let signTypedData = "signTypedData"
     public static let signUpGuest = "signUpGuest"

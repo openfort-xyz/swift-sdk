@@ -360,39 +360,6 @@ extension OFAuthorizable {
         }
     }
 
-    /// Links an external wallet to the current player.
-    ///
-    /// Calls `window.linkWalletSync(...)` in the web context.
-    /// - Parameter params: Link data (`OFLinkWalletParams`).
-    /// - Returns: Optional `OFLinkWalletResponse` on success.
-    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    public func linkWallet(params: OFLinkWalletParams) async throws -> OFLinkWalletResponse? {
-        let method = OFMethods.linkWallet
-        guard let jsonString = encodeToJSONString(params) else {
-            throw OFError.encodingFailed
-        }
-        return try await evaluateAndObserveAsync(
-            js: "window.linkWalletSync(\(jsonString));",
-            method: method,
-            errorDomain: OFErrorDomains.linkWallet
-        )
-    }
-
-    /// Links an external wallet (completion-based API).
-    /// - Parameters:
-    ///   - params: Link data (`OFLinkWalletParams`).
-    ///   - completion: Called with an optional `OFLinkWalletResponse` or an error.
-    public func linkWallet(params: OFLinkWalletParams, completion: @escaping (Result<OFLinkWalletResponse?, Error>) -> Void) {
-        Task {
-            do {
-                let result = try await linkWallet(params: params)
-                completion(.success(result))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
     /// Initializes linking of an OAuth provider.
     ///
     /// Calls `window.initLinkOAuthSync(...)`.
@@ -419,36 +386,6 @@ extension OFAuthorizable {
         Task {
             do {
                 let result = try await initLinkOAuth(params: params)
-                completion(.success(result))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
-    /// Polls the OAuth result using the provided key.
-    ///
-    /// Calls `window.poolOAuthSync(key)` and returns the OAuth result once available.
-    /// - Parameter key: The pooling key obtained from init.
-    /// - Returns: Optional `OFPoolOAuthResponse` on success.
-    /// - Throws: An error from the JS bridge.
-    public func poolOAuth(key: String) async throws -> OFPoolOAuthResponse? {
-        let method = OFMethods.poolOAuth
-        return try await evaluateAndObserveAsync(
-            js: "window.poolOAuthSync(\(key));",
-            method: method,
-            errorDomain: OFErrorDomains.poolOAuth
-        )
-    }
-
-    /// Polls the OAuth result (completion-based API).
-    /// - Parameters:
-    ///   - key: The pooling key obtained from init.
-    ///   - completion: Called with an optional `OFPoolOAuthResponse` or an error.
-    public func poolOAuth(key: String, completion: @escaping (Result<OFPoolOAuthResponse?, Error>) -> Void) {
-        Task {
-            do {
-                let result = try await poolOAuth(key: key)
                 completion(.success(result))
             } catch {
                 completion(.failure(error))
@@ -515,39 +452,6 @@ extension OFAuthorizable {
         Task {
             do {
                 let result = try await unlinkWallet(params: params)
-                completion(.success(result))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
-    /// Authenticates a player using Sign-In with Ethereum (SIWE).
-    ///
-    /// Calls `window.authenticateWithSIWESync(...)`.
-    /// - Parameter params: Auth data (`OFAuthenticateWithSIWEParams`).
-    /// - Returns: Optional `OFAuthenticateWithSIWEResponse` on success.
-    /// - Throws: `OFError.encodingFailed` or an error from the JS bridge.
-    public func authenticateWithSIWE(params: OFAuthenticateWithSIWEParams) async throws -> OFAuthenticateWithSIWEResponse? {
-        let method = OFMethods.authenticateWithSIWE
-        guard let jsonString = encodeToJSONString(params) else {
-            throw OFError.encodingFailed
-        }
-        return try await evaluateAndObserveAsync(
-            js: "window.authenticateWithSIWESync(\(jsonString));",
-            method: method,
-            errorDomain: OFErrorDomains.authenticateWithSIWE
-        )
-    }
-
-    /// Authenticates with SIWE (completion-based API).
-    /// - Parameters:
-    ///   - params: Auth data (`OFAuthenticateWithSIWEParams`).
-    ///   - completion: Called with an optional `OFAuthenticateWithSIWEResponse` or an error.
-    public func authenticateWithSIWE(params: OFAuthenticateWithSIWEParams, completion: @escaping (Result<OFAuthenticateWithSIWEResponse?, Error>) -> Void) {
-        Task {
-            do {
-                let result = try await authenticateWithSIWE(params: params)
                 completion(.success(result))
             } catch {
                 completion(.failure(error))

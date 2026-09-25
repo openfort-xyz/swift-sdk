@@ -239,13 +239,13 @@ let accounts: [OFEmbeddedAccount]? = try await OFSDK.shared.list()
 
 ### Ethereum Provider & Transactions
 
-Get an EIP-1193 provider, optionally with a gas-sponsorship policy. The provider exposes an
+Get an EIP-1193 provider, optionally with a fee sponsorship (gas policy). The provider exposes an
 `async` `request(method:params:)` that returns the result as a `String` (e.g. a transaction hash).
 The SDK has no third-party Web3 dependency — `request` is the single JSON-RPC entry point:
 
 ```swift
 let provider = try await OFSDK.shared.getEthereumProvider(
-    params: OFGetEthereumProviderParams(policy: "pol_...") // optional, for gasless tx
+    params: OFGetEthereumProviderParams(feeSponsorship: "pol_...") // optional, for gasless tx
 )
 
 // Send a transaction (returns the tx hash)
@@ -264,6 +264,27 @@ let result = try await provider?.request(
     method: "eth_call",
     params: [["to": tokenAddress, "data": balanceOfCalldata], "latest"]
 )
+```
+
+To keep transaction construction on your backend, create the transaction there with
+`POST /v2/transactions` and return its `id` and `nextAction.hash` to the app. The SDK signs the
+hash with the embedded signer and submits it; by default the call waits for the receipt:
+
+```swift
+let transaction = try await OFSDK.shared.sendTransactionSignatureRequest(
+    params: OFSendTransactionSignatureRequestParams(
+        transactionId: "tin_...",   // from your backend
+        hash: nextActionHash,       // transaction.nextAction.hash from your backend
+        signature: nil,             // or a session-key signature instead of `hash`
+        optimistic: false           // true returns at broadcast (`.submitted`) instead of the receipt
+    )
+)
+
+switch transaction?.status {
+case .succeeded: print("mined in", transaction?.receipt?.transactionHash ?? "")
+case .reverted, .failed: print("failed:", transaction?.receipt?.error?.reason ?? "")
+default: break
+}
 ```
 
 ### Token helpers & on-chain utilities
@@ -376,6 +397,7 @@ The lower-level namespace is also available directly on `OFSDK.shared` for headl
 | `OFEmbeddedAccount` | Embedded wallet account with `address`, `chainType`, `accountType` |
 | `OFSIWEInitResponse` | SIWE init response with `address`, `nonce` |
 | `OFFundingSession` | Deposit session with `status`, `clientSecret`, `target`, `paymentMethod` |
+| `OFTransactionResponse` | `/v2/transactions` transaction with `status`, `nextAction`, `receipt`, `calls`, `execution` |
 
 ### Enums
 
@@ -383,7 +405,8 @@ The lower-level namespace is also available directly on `OFSDK.shared` for headl
 |------|--------|
 | `OFEmbeddedState` | `.none`, `.unauthenticated`, `.embeddedSignerNotConfigured`, `.creatingAccount`, `.ready` |
 | `OFRecoveryMethod` | `.password`, `.automatic`, `.passkey` |
-| `OFAccountType` | `.eoa`, `.smartAccount` |
+| `OFAccountType` | `.eoa`, `.smartAccount`, `.delegatedAccount` |
+| `OFTransactionStatus` | `.awaitingSignature`, `.submitted`, `.succeeded`, `.reverted`, `.failed`, `.expired` |
 | `OFChainType` | `.evm`, `.svm` |
 
 ### Errors

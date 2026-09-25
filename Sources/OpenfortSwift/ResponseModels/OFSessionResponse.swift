@@ -5,6 +5,16 @@
 //  Created by Pavel Gurkovskii on 2025-07-09.
 //
 
+public struct OFSessionNextActionPayload: OFCodableSendable {
+    public let signableHash: String?
+}
+
+/// The signature a session key registration is waiting for. `type` is `"sign_with_wallet"`.
+public struct OFSessionNextAction: OFCodableSendable {
+    public let type: String
+    public let payload: OFSessionNextActionPayload
+}
+
 public protocol OFSessionResponseProtocol {
     var id: String { get }
     var object: String { get }
@@ -16,8 +26,7 @@ public protocol OFSessionResponseProtocol {
     var validUntil: String? { get }
     var whitelist: [String]? { get }
     var limit: Int? { get }
-    var nextAction: OFNextActionResponse? { get }
-    var transactionIntents: [OFTransactionIntentResponse]? { get }
+    var nextAction: OFSessionNextAction? { get }
 }
 
 public struct OFSessionResponse: OFSessionResponseProtocol, OFCodableSendable {
@@ -31,6 +40,5 @@ public struct OFSessionResponse: OFSessionResponseProtocol, OFCodableSendable {
     public let validUntil: String?
     public let whitelist: [String]?
     public let limit: Int?
-    public let nextAction: OFNextActionResponse?
-    public let transactionIntents: [OFTransactionIntentResponse]?
+    public let nextAction: OFSessionNextAction?
 }

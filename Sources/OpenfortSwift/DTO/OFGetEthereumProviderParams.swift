@@ -18,18 +18,18 @@ public struct OFGetEthereumProviderParams: OFCodableSendable {
         }
     }
 
-    public let policy: String?
+    public let feeSponsorship: String?
     public let chains: [Int: String]?
     public let providerInfo: ProviderInfo?
     public let announceProvider: Bool?
 
     public init(
-        policy: String? = nil,
+        feeSponsorship: String? = nil,
         chains: [Int: String]? = nil,
         providerInfo: ProviderInfo? = nil,
         announceProvider: Bool? = nil
     ) {
-        self.policy = policy
+        self.feeSponsorship = feeSponsorship
         self.chains = chains
         self.providerInfo = providerInfo
         self.announceProvider = announceProvider

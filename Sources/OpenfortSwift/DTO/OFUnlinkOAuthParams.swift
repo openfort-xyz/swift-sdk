@@ -7,10 +7,8 @@
 
 public struct OFUnlinkOAuthParams: OFCodableSendable {
     public let provider: String
-    public let authToken: String
 
-    public init(provider: String, authToken: String) {
+    public init(provider: String) {
         self.provider = provider
-        self.authToken = authToken
     }
 }
