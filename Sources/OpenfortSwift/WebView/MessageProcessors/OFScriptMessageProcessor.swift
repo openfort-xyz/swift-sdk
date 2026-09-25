@@ -85,7 +85,7 @@ internal final class OFScriptMessageProcessor {
             OFMethods.signMessage: handlerFor(OFSignMessageResponse.self),
             OFMethods.getEmbeddedState: handlerFor(OFGetEmbeddedStateResponse.self),
             OFMethods.getURL: handlerFor(OFGetURLResponse.self),
-            OFMethods.sendSignatureTransactionIntentRequest: handlerFor(OFSendSignatureTransactionIntentRequestResponse.self),
+            OFMethods.sendTransactionSignatureRequest: handlerFor(OFTransactionResponse.self),
             OFMethods.sendSignatureSessionRequest: handlerFor(OFSessionResponse.self),
             OFMethods.getUserInstance: handlerFor(OFUser.self),
             OFMethods.getAccessToken: handlerFor(OFGetAccessTokenResponse.self),

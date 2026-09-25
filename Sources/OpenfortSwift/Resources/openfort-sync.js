@@ -328,19 +328,19 @@ window.getURLSync = function() {
     handleResult('getURL', window.openfort.embeddedWalletInstance.getURL());
 };
 
-// ProxyInstance sync methods
+// ProxyInstance sync methods (openfort-js takes these positionally)
 
-window.sendSignatureTransactionIntentRequestSync = function({ transactionIntentId, signableHash = null, signature = null, optimistic = false }) {
+window.sendTransactionSignatureRequestSync = function({ transactionId, hash = null, signature = null, optimistic = false }) {
     handleResult(
-        'sendSignatureTransactionIntentRequest',
-        window.openfort.proxyInstance.sendSignatureTransactionIntentRequest({ transactionIntentId, signableHash, signature, optimistic })
+        'sendTransactionSignatureRequest',
+        window.openfort.proxyInstance.sendTransactionSignatureRequest(transactionId, hash, signature, optimistic)
     );
 };
 
 window.sendSignatureSessionRequestSync = function({ sessionId, signature, optimistic }) {
     handleResult(
         'sendSignatureSessionRequest',
-        window.openfort.proxyInstance.sendSignatureSessionRequest({ sessionId, signature, optimistic })
+        window.openfort.proxyInstance.sendSignatureSessionRequest(sessionId, signature, optimistic)
     );
 };
 

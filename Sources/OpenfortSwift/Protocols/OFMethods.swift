@@ -40,7 +40,7 @@ public enum OFMethods {
     public static let requestResetPassword = "requestResetPassword"
     public static let resetPassword = "resetPassword"
     public static let sendSignatureSessionRequest = "sendSignatureSessionRequest"
-    public static let sendSignatureTransactionIntentRequest = "sendSignatureTransactionIntentRequest"
+    public static let sendTransactionSignatureRequest = "sendTransactionSignatureRequest"
     public static let signMessage = "signMessage"
     public static let signTypedData = "signTypedData"
     public static let signUpGuest = "signUpGuest"
