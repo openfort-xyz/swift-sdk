@@ -32,12 +32,18 @@ private func runBridge(_ call: String, outcome: String) throws -> (request: [Str
 @Test(arguments: ["initOAuth", "initLinkOAuth"])
 func oauthBridgeLiftsRedirectToAndWrapsURL(method: String) throws {
     let (request, message) = try runBridge(
-        "window.\(method)Sync({ provider: 'google', options: { redirectTo: 'myapp://cb', scopes: 'email' } });",
+        """
+        window.\(method)Sync({ provider: 'google',
+            options: { redirectTo: 'myapp://cb', scopes: 'email', skipBrowserRedirect: false } });
+        """,
         outcome: "Promise.resolve('https://accounts.example/auth')"
     )
     #expect(request["provider"] as? String == "google")
     #expect(request["redirectTo"] as? String == "myapp://cb")
-    #expect(request["options"] as? [String: String] == ["scopes": "email"])
+    let options = try #require(request["options"] as? [String: Any])
+    #expect(options["redirectTo"] == nil)
+    #expect(options["scopes"] as? String == "email")
+    #expect(options["skipBrowserRedirect"] as? Bool == true)
     #expect(message["method"] as? String == method)
     #expect(message["success"] as? Bool == true)
     #expect(message["data"] as? [String: String] == ["url": "https://accounts.example/auth"])

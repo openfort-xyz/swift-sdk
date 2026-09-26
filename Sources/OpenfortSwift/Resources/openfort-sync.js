@@ -81,10 +81,12 @@ window.verifyEmailSync = function({ token, callbackURL }) {
 };
 
 // openfort-js takes `redirectTo` at the top level and resolves to the URL string; the Swift API
-// passes it inside `options` and decodes `{ url }`.
+// passes it inside `options` and decodes `{ url }`. `skipBrowserRedirect` is forced on because
+// openfort-js would otherwise navigate this WebView (and the SDK in it) to the provider page;
+// the app opens the returned URL itself.
 function oauthRequest(provider, options) {
     const { redirectTo, ...rest } = options || {};
-    return { provider, redirectTo, options: rest };
+    return { provider, redirectTo, options: { ...rest, skipBrowserRedirect: true } };
 }
 
 window.initOAuthSync = function({ provider, options }) {

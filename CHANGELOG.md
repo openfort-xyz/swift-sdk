@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
 - `options["redirectTo"]` now reaches openfort-js. It reads `redirectTo` as a top-level argument,
   so the bridge dropped the value and the OAuth request went out without a callback URL. The
   bridge lifts `redirectTo` out of `options` and forwards the remaining options unchanged.
+- The bridge always sets `skipBrowserRedirect: true`. Without it, openfort-js's `initLinkOAuth`
+  called `window.location.assign` on the provider URL, navigating the SDK's WebView away from the
+  bundled page. The app opens the returned URL itself.
 
 ## [3.0.1] - 2026-09-25
 
