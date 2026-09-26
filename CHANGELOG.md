@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixes
+
+- `initOAuth` and `initLinkOAuth` now return the provider URL. openfort-js resolves these calls to
+  a URL string, which the bridge posted as-is, so decoding into `OFInitOAuthResponse` /
+  `OFInitLinkOAuthResponse` failed and both methods always threw. The bridge now wraps the string
+  as `{ url }`.
+- `options["redirectTo"]` now reaches openfort-js. It reads `redirectTo` as a top-level argument,
+  so the bridge dropped the value and the OAuth request went out without a callback URL. The
+  bridge lifts `redirectTo` out of `options` and forwards the remaining options unchanged.
+
 ## [3.0.1] - 2026-09-25
 
 ### Fixes
